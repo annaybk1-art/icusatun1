@@ -660,8 +660,8 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <button class="btn btn-outline" onclick="loadBedMap()">↻ รีเฟรช</button>
       </div>
       <div class="dash-card" style="margin-bottom:12px">
-        <div id="bedMapScroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-          <div id="bedMap"></div>
+        <div id="bedMapScroll" style="width:100%;overflow:hidden">
+          <div id="bedMap" style="transform-origin:top left"></div>
         </div>
         <div id="bedStat" style="margin-top:10px;font-size:12px;font-weight:700;color:var(--g800)"></div>
       </div>
@@ -3732,6 +3732,23 @@ function getStats(pts){
 // ============================================================
 // DASHBOARD
 // ============================================================
+function scaleBedMap(){
+  const wrap=document.getElementById('bedMapScroll');
+  const map=document.getElementById('bedMap');
+  if(!wrap||!map) return;
+  map.style.transform='scale(1)';
+  const mapW=map.scrollWidth;
+  const wrapW=wrap.offsetWidth;
+  if(mapW>wrapW){
+    const scale=wrapW/mapW;
+    map.style.transform=`scale(${scale})`;
+    map.style.transformOrigin='top left';
+    wrap.style.height=(map.scrollHeight*scale)+'px';
+  } else {
+    wrap.style.height='';
+  }
+}
+
 function renderBedMap(pts){
   const admittedBeds=pts.filter(p=>p['สถานะ']!=='จำหน่ายแล้ว'&&p['สถานะ']!=='ค้างเดือน');
   const bedMapEl=document.getElementById('bedMap');
@@ -3774,6 +3791,8 @@ function renderBedMap(pts){
     _e,_e,_e,_e,_e,_e,_e,_e,_e, _bc(11),
     _bc(8),_bc(7), _nsw, _ns, _bc(14),_bc(13), _e, _bc(12),
   ].join('');
+  setTimeout(scaleBedMap, 50);
+  window.addEventListener('resize', scaleBedMap);
   if(bedStatEl && bedStatEl.id==='bedStat' && !bedMapEl.contains(bedStatEl)){
     bedStatEl.textContent=`ใช้งาน ${admittedBeds.length} / ${TOTAL_BEDS} เตียง  •  ว่าง ${Math.max(0,TOTAL_BEDS-admittedBeds.length)} เตียง`;
   }
