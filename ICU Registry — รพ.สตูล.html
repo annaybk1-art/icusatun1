@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0052)file:///C:/Users/YBK/Downloads/ICU_Registry_120.html -->
-<html lang="th" style="--theme-primary: #2e7d32; --theme-primary-dark: #1b5e20; --theme-light: #f1f8e9; --theme-sec-head: #1b3a2f; --theme-sec-head-text: #ffffff; --theme-bg: #f1f8e9; --theme-card-bg: #ffffff; --theme-btn-primary: #689f38; --theme-btn-primary-text: #ffffff; --theme-btn-danger: #c62828; --theme-btn-danger-text: #ffffff; --theme-btn-outline-border: #aed581; --theme-btn-outline-text: #689f38; --theme-tbl-row-even: #f1f8e9; --theme-tbl-border: #dcedc8; --theme-input-bg: #f1f8e9; --theme-input-border: #7c975e; --theme-chart-1: #2e7d32; --theme-chart-2: #42a5f5; --theme-chart-3: #ffca28; --theme-chart-4: #ef4444; --theme-chart-5: #9c27b0; --theme-chart-6: #00bcd4; --theme-bed-free-bg: #f5ffeb; --theme-bed-free-text: #103d12; --theme-bed-used-bg: #ffcdd2; --theme-bed-used-text: #c62828; --theme-bed-nurse-bg: #e3f2fd; --theme-bed-nurse-text: #1565c0; --theme-bed-door-bg: #e3f2fd; --theme-bed-door-text: #1565c0; --theme-ic-bg: #e5ffe8; --theme-ic-value-text: #1f2937; --theme-stat-admit: #ccc500; --theme-stat-dc: #9e9e9e; --theme-stat-used: #2f6f3f; --theme-stat-male: #5480a6; --theme-stat-female: #db7b9b;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="th">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ICU Registry — รพ.สตูล</title>
-<link href="./ICU Registry — รพ.สตูล_files/css2" rel="stylesheet">
-<script src="./ICU Registry — รพ.สตูล_files/chart.min.js.ดาวน์โหลด"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <style>
 :root{
   --g50:#f1f8e9;--g100:#dcedc8;--g200:#c5e1a5;--g300:#aed581;
@@ -253,7 +253,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
    R3:  [11] [ ]  [ ]  [ ]  [ ]  [ ]  [ ]  [ ] [🏥] [ ]  [ ]  [ ]
    R4:  [12] [8]  [7] [←──เคาน์เตอร์span3──→][🏥][14][13] [ ]  [ ]  [ ]
    ═══════════════════════════════════════════════════════════════ */
-#bedMap{display:grid;grid-template-columns:repeat(10,1fr);gap:5px}
+#bedMap{display:grid;grid-template-columns:repeat(10,minmax(52px,1fr));gap:4px;min-width:520px}
 /* ── bed cells ── */
 .bed-c{border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:700;padding:8px 4px;min-height:72px;text-align:center;position:relative;cursor:default}
 .bed-c span,.bed-iso span{line-height:1.2;display:block}
@@ -269,7 +269,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
 .bed-nurse small{font-size:8px;color:#1565c0;margin-top:3px}
 .bed-nurse-wide{grid-column:span 3;border-radius:8px;display:flex;align-items:center;justify-content:center;background:#e3f2fd;border:2px dashed #64b5f6;color:#1565c0;font-size:12px;font-weight:700;gap:8px;padding:6px;min-height:72px}
 .bed-nurse-wide span{font-size:24px}
-#bedMap{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+#bedMapScroll{overflow-x:auto;-webkit-overflow-scrolling:touch}#bedMap{display:grid;grid-template-columns:repeat(10,minmax(52px,1fr));gap:4px;min-width:520px}
 /* tooltip */
 .bed-tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:white;border:1px solid #e5e7eb;border-radius:10px;padding:10px 13px;min-width:170px;max-width:220px;z-index:999;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.12);text-align:left}
 .bed-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#e5e7eb}
@@ -394,10 +394,10 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
 }
 </style>
 </head>
-<body class="has-marquee">
+<body>
 
 <!-- CONFIG -->
-<div id="configPage" style="display: none;">
+<div id="configPage">
   <div class="config-box">
     <h2>⚙️ ตั้งค่า Google Apps Script URL</h2>
     <p>กรอก URL ของ Web App ที่ได้จากการ Deploy Google Apps Script</p>
@@ -417,14 +417,14 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
 </div>
 
 <!-- LOGIN -->
-<div id="loginPage" style="display: flex;">
+<div id="loginPage">
   <div class="login-box">
-    <div class="login-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"></path></svg></div>
+    <div class="login-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div>
     <div class="login-title">ระบบลงทะเบียนผู้ป่วย<br>หอผู้ป่วยหนัก โรงพยาบาลสตูล</div>
     <div class="login-sub">ICU Patient Registry System</div>
     <div class="err-box" id="loginErr"></div>
     <div class="f-group"><label>ชื่อผู้ใช้</label><input type="text" id="inUser" placeholder="กรอกชื่อผู้ใช้" autocomplete="username"></div>
-    <div class="f-group"><label>รหัสผ่าน</label><div style="position:relative"><input type="password" id="inPass" placeholder="กรอกรหัสผ่าน" autocomplete="current-password" style="padding-right:42px"><button type="button" onclick="togglePw(&#39;inPass&#39;,this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray400);font-size:18px;padding:0;line-height:1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></div>
+    <div class="f-group"><label>รหัสผ่าน</label><div style="position:relative"><input type="password" id="inPass" placeholder="กรอกรหัสผ่าน" autocomplete="current-password" style="padding-right:42px"><button type="button" onclick="togglePw('inPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray400);font-size:18px;padding:0;line-height:1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
     <button class="btn-login" id="loginBtnEl" onclick="doLogin()">เข้าสู่ระบบ</button>
     <div style="text-align:center;margin-top:12px">
       <span style="font-size:12px;color:#558b2f">ยังไม่มีบัญชี? </span>
@@ -437,7 +437,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
 <!-- REGISTER PAGE -->
 <div id="registerPage" style="display:none;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#e8f5e9,#c8e6c9,#a5d6a7);padding:16px">
   <div class="login-box">
-    <div class="login-icon"><svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg></div>
+    <div class="login-icon"><svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
     <div class="login-title">สมัครสมาชิก<br>ระบบ ICU Registry</div>
     <div class="login-sub">กรอกข้อมูลเพื่อขอสมัครบัญชี</div>
     <div class="err-box" id="regErr"></div>
@@ -448,15 +448,15 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     <div class="f-group"><label>ชื่อผู้ใช้ *</label><input type="text" id="regUsername" placeholder="ตั้งชื่อผู้ใช้ (ภาษาอังกฤษ/ตัวเลข)"></div>
     <div class="f-group">
       <label>รหัสผ่าน *</label>
-      <div style="position:relative"><input type="password" id="regPassword" placeholder="ตั้งรหัสผ่าน (อย่างน้อย 6 ตัว)" style="padding-right:42px"><button type="button" onclick="togglePw(&#39;regPassword&#39;,this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ca3af;font-size:18px;padding:0;line-height:1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div>
+      <div style="position:relative"><input type="password" id="regPassword" placeholder="ตั้งรหัสผ่าน (อย่างน้อย 6 ตัว)" style="padding-right:42px"><button type="button" onclick="togglePw('regPassword',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ca3af;font-size:18px;padding:0;line-height:1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
     </div>
     <div class="f-group">
       <label>ยืนยันรหัสผ่าน *</label>
-      <div style="position:relative"><input type="password" id="regPassword2" placeholder="พิมพ์รหัสผ่านอีกครั้ง" style="padding-right:42px"><button type="button" onclick="togglePw(&#39;regPassword2&#39;,this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ca3af;font-size:18px;padding:0;line-height:1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div>
+      <div style="position:relative"><input type="password" id="regPassword2" placeholder="พิมพ์รหัสผ่านอีกครั้ง" style="padding-right:42px"><button type="button" onclick="togglePw('regPassword2',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ca3af;font-size:18px;padding:0;line-height:1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
     </div>
     <div class="f-group">
       <label>บทบาท</label>
-      <select id="regRole" style="width:100%;padding:12px 13px;border:1.5px solid #a5d6a7;border-radius:9px;font-family:&#39;Sarabun&#39;,sans-serif;font-size:16px;color:#1b5e20;background:#f9fff9;outline:none">
+      <select id="regRole" style="width:100%;padding:12px 13px;border:1.5px solid #a5d6a7;border-radius:9px;font-family:'Sarabun',sans-serif;font-size:16px;color:#1b5e20;background:#f9fff9;outline:none">
         <option value="nurse">👩‍⚕️ พยาบาล</option>
         <option value="doctor">👨‍⚕️ แพทย์</option>
         <option value="staff">🏥 เจ้าหน้าที่</option>
@@ -469,11 +469,11 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     </div>
   </div>
 </div>
-<div id="appPage" style="display: none;">
+<div id="appPage">
   <div class="topbar">
     <div class="topbar-l">
       <button class="btn-hamburger" onclick="toggleSidebar()">☰</button>
-      <div class="topbar-logo"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"></path></svg></div>
+      <div class="topbar-logo"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div>
       <div><div class="topbar-title">ICU Registry — รพ.สตูล</div><div class="topbar-sub">หอผู้ป่วยหนัก</div></div>
     </div>
     <div class="topbar-r">
@@ -486,51 +486,51 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
   </div>
 
   <!-- MARQUEE BAR ใต้ Topbar -->
-  <div id="marqueeBar" style="display: flex; position: fixed; top: var(--topbar-h); left: 0px; right: 0px; z-index: 90; background: rgb(0, 0, 0); color: rgb(255, 255, 255); font-size: 12.5px; font-weight: 500; height: 28px; overflow: hidden; align-items: center;">
+  <div id="marqueeBar" style="display:none;position:fixed;top:var(--topbar-h);left:0;right:0;z-index:90;background:var(--theme-primary-dark);color:white;font-size:12.5px;font-weight:500;height:28px;overflow:hidden;align-items:center">
     <span style="flex-shrink:0;padding:0 10px;background:rgba(0,0,0,.2);height:100%;display:flex;align-items:center;font-size:10px;font-weight:700;letter-spacing:.04em;white-space:nowrap">📢 ประกาศ</span>
-    <div style="flex: 1 1 0%; overflow: hidden; position: relative; display: block;">
-      <div id="marqueeText" style="white-space: nowrap; display: inline-block; animation: 15s linear 0s infinite normal none running mq-rtl; padding-left: 0px; font-size: 13px; font-weight: 600; position: relative;">Welcome to ICU Registry</div>
+    <div style="flex:1;overflow:hidden;position:relative">
+      <div id="marqueeText" style="white-space:nowrap;display:inline-block;animation:marqueeScroll 20s linear infinite;padding-left:0">ยินดีต้อนรับสู่ระบบ ICU Registry</div>
     </div>
   </div>
 
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
   <div class="sidebar" id="sidebar">
     <div class="nav-sec">เมนูหลัก</div>
-    <div class="nav-item active" id="nav-patients" onclick="showSec(&#39;patients&#39;,this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>รายชื่อผู้ป่วย
+    <div class="nav-item active" id="nav-patients" onclick="showSec('patients',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>รายชื่อผู้ป่วย
     </div>
-    <div class="nav-item" id="nav-dashboard" onclick="showSec(&#39;dashboard&#39;,this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path></svg>Dashboard
+    <div class="nav-item" id="nav-dashboard" onclick="showSec('dashboard',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Dashboard
     </div>
-    <div class="nav-item" id="nav-bedmap" onclick="showSec(&#39;bedmap&#39;,this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z"></path></svg>แผนผังเตียง
+    <div class="nav-item" id="nav-bedmap" onclick="showSec('bedmap',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z"/></svg>แผนผังเตียง
     </div>
-    <div class="nav-item" id="nav-ic" onclick="showSec(&#39;ic&#39;,this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"></path></svg>ข้อมูล IC
+    <div class="nav-item" id="nav-ic" onclick="showSec('ic',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>ข้อมูล IC
     </div>
     <div class="nav-sec">สถิติ</div>
-    <div class="nav-item" id="nav-monthly" onclick="showSec(&#39;monthly&#39;,this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path></svg>รายเดือน
+    <div class="nav-item" id="nav-monthly" onclick="showSec('monthly',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>รายเดือน
     </div>
-    <div class="nav-item" id="nav-yearly" onclick="showSec(&#39;yearly&#39;,this)">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"></path></svg>รายปี
+    <div class="nav-item" id="nav-yearly" onclick="showSec('yearly',this)">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>รายปี
     </div>
     <div class="nav-sec" id="adminNav" style="display:none">จัดการระบบ</div>
-    <div class="nav-item" id="nav-users" onclick="showSec(&#39;users&#39;,this)" style="display:none">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+    <div class="nav-item" id="nav-users" onclick="showSec('users',this)" style="display:none">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
       จัดการผู้ใช้งาน
       <span id="pendingBadge" style="display:none;margin-left:auto;background:#ef4444;color:white;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center">0</span>
     </div>
     <div class="nav-item" id="nav-carryover" onclick="openCarryOverModal()" style="display:none">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
       ยกยอดเดือน
     </div>
-    <div class="nav-item" id="nav-opts" onclick="showSec(&#39;opts&#39;,this)" style="display:none">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"></path></svg>ตั้งค่า Dropdown
+    <div class="nav-item" id="nav-opts" onclick="showSec('opts',this)" style="display:none">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>ตั้งค่า Dropdown
       <span id="pendingOptsBadge" style="display:none;margin-left:auto;background:#f59e0b;color:white;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center">0</span>
     </div>
-    <div class="nav-item" id="nav-theme" onclick="showSec(&#39;theme&#39;,this)" style="display:none">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C6.49,2,2,6.49,2,12s4.49,10,10,10c1.38,0,2.5-1.12,2.5-2.5c0-0.61-0.23-1.2-0.64-1.67c-0.08-0.1-0.13-0.21-0.13-0.33c0-0.28,0.22-0.5,0.5-0.5H16c3.31,0,6-2.69,6-6C22,6.04,17.51,2,12,2z M6.5,11c-0.83,0-1.5-0.67-1.5-1.5S5.67,8,6.5,8S8,8.67,8,9.5S7.33,11,6.5,11z M9.5,7C8.67,7,8,6.33,8,5.5S8.67,4,9.5,4S11,4.67,11,5.5S10.33,7,9.5,7z M14.5,7C13.67,7,13,6.33,13,5.5S13.67,4,14.5,4S16,4.67,16,5.5S15.33,7,14.5,7z M17.5,11c-0.83,0-1.5-0.67-1.5-1.5S16.67,8,17.5,8S19,8.67,19,9.5S18.33,11,17.5,11z"></path></svg>ตกแต่ง/ปรับสี
+    <div class="nav-item" id="nav-theme" onclick="showSec('theme',this)" style="display:none">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C6.49,2,2,6.49,2,12s4.49,10,10,10c1.38,0,2.5-1.12,2.5-2.5c0-0.61-0.23-1.2-0.64-1.67c-0.08-0.1-0.13-0.21-0.13-0.33c0-0.28,0.22-0.5,0.5-0.5H16c3.31,0,6-2.69,6-6C22,6.04,17.51,2,12,2z M6.5,11c-0.83,0-1.5-0.67-1.5-1.5S5.67,8,6.5,8S8,8.67,8,9.5S7.33,11,6.5,11z M9.5,7C8.67,7,8,6.33,8,5.5S8.67,4,9.5,4S11,4.67,11,5.5S10.33,7,9.5,7z M14.5,7C13.67,7,13,6.33,13,5.5S13.67,4,14.5,4S16,4.67,16,5.5S15.33,7,14.5,7z M17.5,11c-0.83,0-1.5-0.67-1.5-1.5S16.67,8,17.5,8S19,8.67,19,9.5S18.33,11,17.5,11z"/></svg>ตกแต่ง/ปรับสี
     </div>
     <div class="sidebar-spacer"></div>
     <div class="log-box">
@@ -544,40 +544,40 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     <div class="sec active" id="sec-patients">
       <div class="stats-grid">
         <div class="stat-card c-admit-dc">
-          <div class="stat-half top" onclick="filterBy(&#39;&#39;)" style="cursor:pointer" title="ดูทั้งหมด">
+          <div class="stat-half top" onclick="filterBy('')" style="cursor:pointer" title="ดูทั้งหมด">
             <div class="stat-lbl">👥 ผู้ป่วยทั้งหมด</div>
             <div class="stat-val" id="st-admit">0</div>
           </div>
           <div class="stat-divider"></div>
-          <div class="stat-half bot" onclick="filterBy(&#39;dc&#39;)" style="cursor:pointer" title="กรองเฉพาะ D/C">
+          <div class="stat-half bot" onclick="filterBy('dc')" style="cursor:pointer" title="กรองเฉพาะ D/C">
             <div class="stat-lbl">✅ D/C แล้ว</div>
             <div class="stat-val" id="st-dc">0</div>
           </div>
         </div>
         <div class="stat-card c-carryover">
-          <div class="stat-half top" onclick="filterBy(&#39;carryover&#39;)" style="cursor:pointer" title="กรองเฉพาะค้างเดือน">
+          <div class="stat-half top" onclick="filterBy('carryover')" style="cursor:pointer" title="กรองเฉพาะค้างเดือน">
             <div class="stat-lbl">📅 ค้างเดือน</div>
             <div class="stat-val" id="st-carryover">0</div>
           </div>
           <div class="stat-divider"></div>
-          <div class="stat-half bot" onclick="filterBy(&#39;carriedin&#39;)" style="cursor:pointer" title="กรองเฉพาะยกมา">
+          <div class="stat-half bot" onclick="filterBy('carriedin')" style="cursor:pointer" title="กรองเฉพาะยกมา">
             <div class="stat-lbl">↩️ ยกมาจากเดือนก่อน</div>
             <div class="stat-val" id="st-total">0</div>
           </div>
         </div>
         <div class="stat-card c-gender">
-          <div class="stat-half top" onclick="filterBy(&#39;male&#39;)" style="cursor:pointer" title="กรองเฉพาะชาย">
+          <div class="stat-half top" onclick="filterBy('male')" style="cursor:pointer" title="กรองเฉพาะชาย">
             <div class="stat-lbl">♂ ชาย</div>
             <div class="stat-val" id="st-male">0</div>
           </div>
           <div class="stat-divider"></div>
-          <div class="stat-half bot" onclick="filterBy(&#39;female&#39;)" style="cursor:pointer" title="กรองเฉพาะหญิง">
+          <div class="stat-half bot" onclick="filterBy('female')" style="cursor:pointer" title="กรองเฉพาะหญิง">
             <div class="stat-lbl">♀ หญิง</div>
             <div class="stat-val" id="st-female">0</div>
           </div>
         </div>
         <div class="stat-card c-bed">
-          <div class="stat-half top" onclick="filterBy(&#39;admit&#39;)" style="cursor:pointer" title="กรองเฉพาะกำลัง Admit">
+          <div class="stat-half top" onclick="filterBy('admit')" style="cursor:pointer" title="กรองเฉพาะกำลัง Admit">
             <div class="stat-lbl">🔴 ใช้งาน (Admit)</div>
             <div class="stat-val" id="st-used">0</div>
           </div>
@@ -593,7 +593,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         </div>
       </div>
       <div class="fbar">
-        <button class="btn btn-outline btn-sm" id="btnPrevMonth" onclick="navMonth(-1)">← มิถุนายน</button>
+        <button class="btn btn-outline btn-sm" id="btnPrevMonth" onclick="navMonth(-1)">← ...</button>
         <label>เดือน:</label>
         <select id="fMonth" onchange="loadPatients();updateMonthNavBtns()">
           <option value="1">ม.ค.</option><option value="2">ก.พ.</option><option value="3">มี.ค.</option>
@@ -601,8 +601,8 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
           <option value="7">ก.ค.</option><option value="8">ส.ค.</option><option value="9">ก.ย.</option>
           <option value="10">ต.ค.</option><option value="11">พ.ย.</option><option value="12">ธ.ค.</option>
         </select>
-        <button class="btn btn-outline btn-sm" id="btnNextMonth" onclick="navMonth(1)">สิงหาคม →</button>
-        <label>ปี:</label><select id="fYear" onchange="loadPatients();updateMonthNavBtns()"><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option></select>
+        <button class="btn btn-outline btn-sm" id="btnNextMonth" onclick="navMonth(1)">... →</button>
+        <label>ปี:</label><select id="fYear" onchange="loadPatients();updateMonthNavBtns()"></select>
         <label>สถานะ:</label>
         <select id="fStatus" onchange="applyFilter()">
           <option value="">ทั้งหมด</option>
@@ -629,7 +629,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <div class="tbl-head">
           <div class="tbl-title" id="ptTblTitle">รายชื่อผู้ป่วย</div>
           <div class="search-wrap">
-            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
             <input type="text" id="srch" placeholder="ค้นหา HN, ชื่อ, Dx..." oninput="applyFilter()">
           </div>
         </div>
@@ -660,7 +660,9 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <button class="btn btn-outline" onclick="loadBedMap()">↻ รีเฟรช</button>
       </div>
       <div class="dash-card" style="margin-bottom:12px">
-        <div id="bedMap"></div>
+        <div id="bedMapScroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+          <div id="bedMap"></div>
+        </div>
         <div id="bedStat" style="margin-top:10px;font-size:12px;font-weight:700;color:var(--g800)"></div>
       </div>
 
@@ -688,18 +690,18 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       <div class="fbar">
         <!-- Toggle เดือน/ปี -->
         <div style="display:flex;border:1.5px solid var(--theme-btn-outline-border);border-radius:8px;overflow:hidden;flex-shrink:0">
-          <button id="dashToggleMonth" onclick="setDashMode(&#39;month&#39;)" style="padding:6px 14px;font-size:12px;font-weight:700;background:var(--theme-btn-primary);color:var(--theme-btn-primary-text);border:none;cursor:pointer">📅 เดือน</button>
-          <button id="dashToggleYear" onclick="setDashMode(&#39;year&#39;)" style="padding:6px 14px;font-size:12px;font-weight:700;background:white;color:var(--theme-btn-outline-text);border:none;cursor:pointer">📆 ปี</button>
+          <button id="dashToggleMonth" onclick="setDashMode('month')" style="padding:6px 14px;font-size:12px;font-weight:700;background:var(--theme-btn-primary);color:var(--theme-btn-primary-text);border:none;cursor:pointer">📅 เดือน</button>
+          <button id="dashToggleYear" onclick="setDashMode('year')" style="padding:6px 14px;font-size:12px;font-weight:700;background:white;color:var(--theme-btn-outline-text);border:none;cursor:pointer">📆 ปี</button>
         </div>
         <div id="dashMonthFields" style="display:flex;align-items:center;gap:6px">
-          <label>เดือน:</label><select id="dMonth" onchange="loadDash()"><option value="1">มกราคม</option><option value="2">กุมภาพันธ์</option><option value="3">มีนาคม</option><option value="4">เมษายน</option><option value="5">พฤษภาคม</option><option value="6">มิถุนายน</option><option value="7">กรกฎาคม</option><option value="8">สิงหาคม</option><option value="9">กันยายน</option><option value="10">ตุลาคม</option><option value="11">พฤศจิกายน</option><option value="12">ธันวาคม</option></select>
-          <label>ปี:</label><select id="dYear" onchange="loadDash()"><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option></select>
+          <label>เดือน:</label><select id="dMonth" onchange="loadDash()"></select>
+          <label>ปี:</label><select id="dYear" onchange="loadDash()"></select>
         </div>
         <div id="dashYearFields" style="display:none;align-items:center;gap:6px">
-          <label>ปี:</label><select id="dYearOnly" onchange="loadDash()"><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option></select>
+          <label>ปี:</label><select id="dYearOnly" onchange="loadDash()"></select>
         </div>
         <button class="btn btn-primary" onclick="loadDash()">📊 แสดงข้อมูล</button>
-        <button class="btn btn-outline" id="editPageBtn" style="display:none;margin-left:auto" onclick="toggleEditMode(&#39;dashboard&#39;)">🎨 แก้ไขหน้านี้</button>
+        <button class="btn btn-outline" id="editPageBtn" style="display:none;margin-left:auto" onclick="toggleEditMode('dashboard')">🎨 แก้ไขหน้านี้</button>
       </div>
       <div class="top-row">
         <div class="dash-card" data-ed-id="top5-card" style="display:flex;flex-direction:column;overflow:hidden;min-height:0">
@@ -711,22 +713,22 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
               <!-- Slide 1 -->
               <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
                 <div class="top5-slide-hd" style="font-size:10.5px;font-weight:700;color:#2e7d32;margin-bottom:6px;display:flex;align-items:center;gap:4px">📋 โรคที่ Admit บ่อย</div>
-                <table class="top5-tbl" id="top5TblDash" style="flex:1"><tbody><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></tbody></table>
+                <table class="top5-tbl" id="top5TblDash" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
               </div>
               <!-- Slide 2 -->
               <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
                 <div class="top5-slide-hd" style="font-size:10.5px;font-weight:700;color:#c62828;margin-bottom:6px;display:flex;align-items:center;gap:4px">💀 โรคที่เสียชีวิตบ่อย</div>
-                <table class="top5-tbl" id="top5TblDead" style="flex:1"><tbody><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></tbody></table>
+                <table class="top5-tbl" id="top5TblDead" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
               </div>
               <!-- Slide 3 -->
               <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
                 <div class="top5-slide-hd" style="font-size:10.5px;font-weight:700;color:#1565c0;margin-bottom:6px;display:flex;align-items:center;gap:4px">🚑 โรคที่ส่งต่อบ่อย</div>
-                <table class="top5-tbl" id="top5TblRefer" style="flex:1"><tbody><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></tbody></table>
+                <table class="top5-tbl" id="top5TblRefer" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
               </div>
               <!-- Slide 4 -->
               <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
                 <div class="top5-slide-hd" style="font-size:10.5px;font-weight:700;color:#6a1b9a;margin-bottom:6px;display:flex;align-items:center;gap:4px">🏥 รพ.ที่ส่งต่อบ่อย</div>
-                <table class="top5-tbl" id="top5TblHosp" style="flex:1"><tbody><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></tbody></table>
+                <table class="top5-tbl" id="top5TblHosp" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
               </div>
             </div>
           </div>
@@ -750,7 +752,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <div class="dash-card" data-ed-id="dischargereason-card"><div class="dash-card-title" data-ed-id="dischargereason-title">🚪 เหตุผลการจำหน่าย</div><div class="chart-container"><canvas id="dischargeReasonChart"></canvas></div></div>
       </div>
       <div class="dash-grid">
-        <div class="dash-card" data-ed-id="occupancy-card"><div class="dash-card-title" data-ed-id="occupancy-title">🛏️ อัตราครองเตียง &amp; LOS</div><div class="chart-container"><canvas id="occupancyChart"></canvas></div></div>
+        <div class="dash-card" data-ed-id="occupancy-card"><div class="dash-card-title" data-ed-id="occupancy-title">🛏️ อัตราครองเตียง & LOS</div><div class="chart-container"><canvas id="occupancyChart"></canvas></div></div>
         <div class="dash-card" data-ed-id="pattype-card"><div class="dash-card-title" data-ed-id="pattype-title">🏷️ ประเภทผู้ป่วย</div><div class="chart-container"><canvas id="patTypeChart"></canvas></div></div>
       </div>
       <div class="dash-grid">
@@ -783,8 +785,8 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     <!-- IC -->
     <div class="sec" id="sec-ic">
       <div class="fbar">
-        <label>เดือน:</label><select id="icMonth"><option value="1">มกราคม</option><option value="2">กุมภาพันธ์</option><option value="3">มีนาคม</option><option value="4">เมษายน</option><option value="5">พฤษภาคม</option><option value="6">มิถุนายน</option><option value="7">กรกฎาคม</option><option value="8">สิงหาคม</option><option value="9">กันยายน</option><option value="10">ตุลาคม</option><option value="11">พฤศจิกายน</option><option value="12">ธันวาคม</option></select>
-        <label>ปี:</label><select id="icYear"><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option></select>
+        <label>เดือน:</label><select id="icMonth"></select>
+        <label>ปี:</label><select id="icYear"></select>
         <button class="btn btn-primary" onclick="loadIC()">แสดงข้อมูล</button>
       </div>
       <div class="ic-grid" id="icCards" style="margin-bottom:12px"></div>
@@ -809,8 +811,8 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     <!-- MONTHLY -->
     <div class="sec" id="sec-monthly">
       <div class="fbar">
-        <label>เดือน:</label><select id="mMonth"><option value="1">มกราคม</option><option value="2">กุมภาพันธ์</option><option value="3">มีนาคม</option><option value="4">เมษายน</option><option value="5">พฤษภาคม</option><option value="6">มิถุนายน</option><option value="7">กรกฎาคม</option><option value="8">สิงหาคม</option><option value="9">กันยายน</option><option value="10">ตุลาคม</option><option value="11">พฤศจิกายน</option><option value="12">ธันวาคม</option></select>
-        <label>ปี:</label><select id="mYear"><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option></select>
+        <label>เดือน:</label><select id="mMonth"></select>
+        <label>ปี:</label><select id="mYear"></select>
         <button class="btn btn-primary" onclick="loadMonthly()">แสดงข้อมูล</button>
       </div>
       <div id="mContent" class="dash-card"></div>
@@ -819,7 +821,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     <!-- YEARLY -->
     <div class="sec" id="sec-yearly">
       <div class="fbar">
-        <label>ปี:</label><select id="yYear"><option value="2023">ปีงบ 2023 (ต.ค.2022-ก.ย.2023)</option><option value="2024">ปีงบ 2024 (ต.ค.2023-ก.ย.2024)</option><option value="2025">ปีงบ 2025 (ต.ค.2024-ก.ย.2025)</option><option value="2026">ปีงบ 2026 (ต.ค.2025-ก.ย.2026)</option><option value="2027">ปีงบ 2027 (ต.ค.2026-ก.ย.2027)</option></select>
+        <label>ปี:</label><select id="yYear"></select>
         <button class="btn btn-primary" onclick="loadYearly()">แสดงข้อมูล</button>
       </div>
       <div id="yContent" class="dash-card"></div>
@@ -852,7 +854,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
             <label>ความเร็วเลื่อน Slide</label>
             <select id="nbSpeed">
               <option value="4000">เร็ว (4 วิ)</option>
-              <option value="6000" selected="">ปกติ (6 วิ)</option>
+              <option value="6000" selected>ปกติ (6 วิ)</option>
               <option value="10000">ช้า (10 วิ)</option>
               <option value="15000">ช้ามาก (15 วิ)</option>
             </select>
@@ -958,7 +960,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
             <select id="marqueeSpeed">
               <option value="40s">ช้ามาก</option>
               <option value="25s">ช้า</option>
-              <option value="15s" selected="">ปกติ</option>
+              <option value="15s" selected>ปกติ</option>
               <option value="8s">เร็ว</option>
               <option value="4s">เร็วมาก</option>
             </select>
@@ -967,7 +969,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
             <label>ขนาดตัวอักษร</label>
             <select id="marqueeFontSize">
               <option value="11px">เล็ก</option>
-              <option value="13px" selected="">ปกติ</option>
+              <option value="13px" selected>ปกติ</option>
               <option value="15px">ใหญ่</option>
               <option value="18px">ใหญ่มาก</option>
             </select>
@@ -1014,9 +1016,9 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       </div>
 
       <div class="modal-tabs" style="border-radius:9px 9px 0 0;overflow:hidden;margin-bottom:0">
-        <div class="modal-tab active" data-theme-tab="global" onclick="switchThemeTab(&#39;global&#39;)">🌐 ทั่วไป (Global)</div>
-        <div class="modal-tab" data-theme-tab="dashboard" onclick="switchThemeTab(&#39;dashboard&#39;)">📊 Dashboard</div>
-        <div class="modal-tab" data-theme-tab="patients" onclick="switchThemeTab(&#39;patients&#39;)">📋 รายชื่อผู้ป่วย</div>
+        <div class="modal-tab active" data-theme-tab="global" onclick="switchThemeTab('global')">🌐 ทั่วไป (Global)</div>
+        <div class="modal-tab" data-theme-tab="dashboard" onclick="switchThemeTab('dashboard')">📊 Dashboard</div>
+        <div class="modal-tab" data-theme-tab="patients" onclick="switchThemeTab('patients')">📋 รายชื่อผู้ป่วย</div>
       </div>
 
       <!-- ============ GLOBAL TAB ============ -->
@@ -1107,9 +1109,9 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
           <div style="margin-top:12px">
             <div class="opt-note" style="margin-bottom:6px">ตัวอย่าง:</div>
             <table class="sum-tbl" style="border:1px solid var(--g100);border-radius:6px;overflow:hidden">
-              <tbody><tr class="sec-head" id="themePreviewRow"><td colspan="2">ตัวอย่างหัวข้อตาราง</td></tr>
+              <tr class="sec-head" id="themePreviewRow"><td colspan="2">ตัวอย่างหัวข้อตาราง</td></tr>
               <tr><td>รายการตัวอย่าง</td><td>10 ราย</td></tr>
-            </tbody></table>
+            </table>
           </div>
         </div>
       </div>
@@ -1129,10 +1131,10 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
           </div>
           <div style="margin-top:10px">
             <table class="sum-tbl" style="border:1px solid var(--g100);border-radius:6px;overflow:hidden">
-              <tbody><tr><td>แถวที่ 1</td><td>5 ราย</td></tr>
+              <tr><td>แถวที่ 1</td><td>5 ราย</td></tr>
               <tr><td>แถวที่ 2</td><td>8 ราย</td></tr>
               <tr><td>แถวที่ 3</td><td>3 ราย</td></tr>
-            </tbody></table>
+            </table>
           </div>
         </div>
 
@@ -1166,7 +1168,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
           <div class="fg"><label>สี 5</label><input type="color" id="themeChart5" value="#9c27b0" onchange="previewTheme()" style="height:40px;cursor:pointer"></div>
           <div class="fg"><label>สี 6</label><input type="color" id="themeChart6" value="#00bcd4" onchange="previewTheme()" style="height:40px;cursor:pointer"></div>
         </div>
-        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap" id="chartColorSwatches"><div style="width:36px;height:36px;border-radius:6px;background:#2e7d32;border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.3)">1</div><div style="width:36px;height:36px;border-radius:6px;background:#42a5f5;border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.3)">2</div><div style="width:36px;height:36px;border-radius:6px;background:#ffca28;border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.3)">3</div><div style="width:36px;height:36px;border-radius:6px;background:#ef4444;border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.3)">4</div><div style="width:36px;height:36px;border-radius:6px;background:#9c27b0;border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.3)">5</div><div style="width:36px;height:36px;border-radius:6px;background:#00bcd4;border:1px solid var(--g200);display:flex;align-items:center;justify-content:center;font-size:9px;color:white;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.3)">6</div></div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap" id="chartColorSwatches"></div>
       </div>
 
       <div class="dash-grid">
@@ -1224,11 +1226,11 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       <div class="dash-card">
         <div class="dash-card-title">🖍️ พรีเซ็ตสีสำเร็จรูป</div>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn btn-outline" onclick="applyPreset(&#39;green&#39;)">🟢 เขียว (ค่าเริ่มต้น)</button>
-          <button class="btn btn-outline" onclick="applyPreset(&#39;blue&#39;)">🔵 ฟ้า</button>
-          <button class="btn btn-outline" onclick="applyPreset(&#39;purple&#39;)">🟣 ม่วง</button>
-          <button class="btn btn-outline" onclick="applyPreset(&#39;teal&#39;)">🩵 เขียวน้ำทะเล</button>
-          <button class="btn btn-outline" onclick="applyPreset(&#39;dark&#39;)">⚫ เข้ม/Navy</button>
+          <button class="btn btn-outline" onclick="applyPreset('green')">🟢 เขียว (ค่าเริ่มต้น)</button>
+          <button class="btn btn-outline" onclick="applyPreset('blue')">🔵 ฟ้า</button>
+          <button class="btn btn-outline" onclick="applyPreset('purple')">🟣 ม่วง</button>
+          <button class="btn btn-outline" onclick="applyPreset('teal')">🩵 เขียวน้ำทะเล</button>
+          <button class="btn btn-outline" onclick="applyPreset('dark')">⚫ เข้ม/Navy</button>
         </div>
       </div>
       </div>
@@ -1237,7 +1239,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       <div class="theme-tab-panel" id="themeTab-dashboard" style="padding-top:14px;display:none">
         <div style="background:#fff3e0;border-radius:8px;padding:8px 12px;font-size:11px;color:#e65100;margin-bottom:12px">
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600">
-            <input type="checkbox" id="dashboardOverride" onchange="toggleScopeOverride(&#39;dashboard&#39;)" style="width:16px;height:16px">
+            <input type="checkbox" id="dashboardOverride" onchange="toggleScopeOverride('dashboard')" style="width:16px;height:16px">
             เปิดใช้สีแยกเฉพาะหน้า Dashboard (ถ้าปิด จะใช้สีทั่วไป)
           </label>
         </div>
@@ -1246,28 +1248,28 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
             <div class="dash-card">
               <div class="dash-card-title">🎨 สีหลัก (การ์ด, ตัวเลข KPI, เส้นใต้หัวข้อ)</div>
               <div class="fgrid">
-                <div class="fg"><label>สีหลัก (Primary)</label><input type="color" id="dashboardPrimary" value="#2e7d32" onchange="previewScopeTheme(&#39;dashboard&#39;)" style="height:44px;cursor:pointer"></div>
-                <div class="fg"><label>สีหลักเข้ม</label><input type="color" id="dashboardPrimaryDark" value="#1b5e20" onchange="previewScopeTheme(&#39;dashboard&#39;)" style="height:44px;cursor:pointer"></div>
-                <div class="fg"><label>สีอ่อน (พื้นรอง/แถบสลับสี)</label><input type="color" id="dashboardLight" value="#f1f8e9" onchange="previewScopeTheme(&#39;dashboard&#39;)" style="height:44px;cursor:pointer"></div>
-                <div class="fg"><label>สีพื้นการ์ด</label><input type="color" id="dashboardCardBg" value="#ffffff" onchange="previewScopeTheme(&#39;dashboard&#39;)" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีหลัก (Primary)</label><input type="color" id="dashboardPrimary" value="#2e7d32" onchange="previewScopeTheme('dashboard')" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีหลักเข้ม</label><input type="color" id="dashboardPrimaryDark" value="#1b5e20" onchange="previewScopeTheme('dashboard')" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีอ่อน (พื้นรอง/แถบสลับสี)</label><input type="color" id="dashboardLight" value="#f1f8e9" onchange="previewScopeTheme('dashboard')" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีพื้นการ์ด</label><input type="color" id="dashboardCardBg" value="#ffffff" onchange="previewScopeTheme('dashboard')" style="height:44px;cursor:pointer"></div>
               </div>
             </div>
             <div class="dash-card">
               <div class="dash-card-title">📊 สีหัวข้อตาราง (ตารางสรุปสถิติ)</div>
               <div class="fgrid">
-                <div class="fg"><label>สีพื้นหัวข้อ</label><input type="color" id="dashboardSecHead" value="#1b3a2f" onchange="previewScopeTheme(&#39;dashboard&#39;)" style="height:44px;cursor:pointer"></div>
-                <div class="fg"><label>สีตัวอักษรหัวข้อ</label><input type="color" id="dashboardSecHeadText" value="#ffffff" onchange="previewScopeTheme(&#39;dashboard&#39;)" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีพื้นหัวข้อ</label><input type="color" id="dashboardSecHead" value="#1b3a2f" onchange="previewScopeTheme('dashboard')" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีตัวอักษรหัวข้อ</label><input type="color" id="dashboardSecHeadText" value="#ffffff" onchange="previewScopeTheme('dashboard')" style="height:44px;cursor:pointer"></div>
               </div>
             </div>
           </div>
           <div class="dash-card">
             <div class="dash-card-title">🖍️ พรีเซ็ตสำหรับ Dashboard</div>
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;dashboard&#39;,&#39;green&#39;)">🟢 เขียว</button>
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;dashboard&#39;,&#39;blue&#39;)">🔵 ฟ้า</button>
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;dashboard&#39;,&#39;purple&#39;)">🟣 ม่วง</button>
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;dashboard&#39;,&#39;teal&#39;)">🩵 เขียวน้ำทะเล</button>
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;dashboard&#39;,&#39;orange&#39;)">🟠 ส้ม</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('dashboard','green')">🟢 เขียว</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('dashboard','blue')">🔵 ฟ้า</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('dashboard','purple')">🟣 ม่วง</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('dashboard','teal')">🩵 เขียวน้ำทะเล</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('dashboard','orange')">🟠 ส้ม</button>
             </div>
           </div>
         </div>
@@ -1277,7 +1279,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       <div class="theme-tab-panel" id="themeTab-patients" style="padding-top:14px;display:none">
         <div style="background:#fff3e0;border-radius:8px;padding:8px 12px;font-size:11px;color:#e65100;margin-bottom:12px">
           <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600">
-            <input type="checkbox" id="patientsOverride" onchange="toggleScopeOverride(&#39;patients&#39;)" style="width:16px;height:16px">
+            <input type="checkbox" id="patientsOverride" onchange="toggleScopeOverride('patients')" style="width:16px;height:16px">
             เปิดใช้สีแยกเฉพาะหน้ารายชื่อผู้ป่วย (ถ้าปิด จะใช้สีทั่วไป)
           </label>
         </div>
@@ -1286,21 +1288,21 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
             <div class="dash-card">
               <div class="dash-card-title">🎨 สีหลัก (หัวตาราง, การ์ด, กรอบค้นหา)</div>
               <div class="fgrid">
-                <div class="fg"><label>สีหลัก (Primary)</label><input type="color" id="patientsPrimary" value="#2e7d32" onchange="previewScopeTheme(&#39;patients&#39;)" style="height:44px;cursor:pointer"></div>
-                <div class="fg"><label>สีหลักเข้ม</label><input type="color" id="patientsPrimaryDark" value="#1b5e20" onchange="previewScopeTheme(&#39;patients&#39;)" style="height:44px;cursor:pointer"></div>
-                <div class="fg"><label>สีอ่อน (พื้นรอง)</label><input type="color" id="patientsLight" value="#f1f8e9" onchange="previewScopeTheme(&#39;patients&#39;)" style="height:44px;cursor:pointer"></div>
-                <div class="fg"><label>สีพื้นการ์ด</label><input type="color" id="patientsCardBg" value="#ffffff" onchange="previewScopeTheme(&#39;patients&#39;)" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีหลัก (Primary)</label><input type="color" id="patientsPrimary" value="#2e7d32" onchange="previewScopeTheme('patients')" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีหลักเข้ม</label><input type="color" id="patientsPrimaryDark" value="#1b5e20" onchange="previewScopeTheme('patients')" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีอ่อน (พื้นรอง)</label><input type="color" id="patientsLight" value="#f1f8e9" onchange="previewScopeTheme('patients')" style="height:44px;cursor:pointer"></div>
+                <div class="fg"><label>สีพื้นการ์ด</label><input type="color" id="patientsCardBg" value="#ffffff" onchange="previewScopeTheme('patients')" style="height:44px;cursor:pointer"></div>
               </div>
             </div>
           </div>
           <div class="dash-card">
             <div class="dash-card-title">🖍️ พรีเซ็ตสำหรับรายชื่อผู้ป่วย</div>
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;patients&#39;,&#39;green&#39;)">🟢 เขียว</button>
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;patients&#39;,&#39;blue&#39;)">🔵 ฟ้า</button>
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;patients&#39;,&#39;purple&#39;)">🟣 ม่วง</button>
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;patients&#39;,&#39;teal&#39;)">🩵 เขียวน้ำทะเล</button>
-              <button type="button" class="btn btn-outline" onclick="applyScopePreset(&#39;patients&#39;,&#39;orange&#39;)">🟠 ส้ม</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('patients','green')">🟢 เขียว</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('patients','blue')">🔵 ฟ้า</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('patients','purple')">🟣 ม่วง</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('patients','teal')">🩵 เขียวน้ำทะเล</button>
+              <button type="button" class="btn btn-outline" onclick="applyScopePreset('patients','orange')">🟠 ส้ม</button>
             </div>
           </div>
         </div>
@@ -1314,7 +1316,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
   <div class="modal" style="max-width:360px">
     <div class="modal-hd" style="background:linear-gradient(135deg,#1565c0,#1e88e5)">
       <h2 style="color:white">🔐 เข้าสู่ระบบ In Charge</h2>
-      <button class="modal-x" style="color:white" onclick="document.getElementById(&#39;icLoginModal&#39;).style.display=&#39;none&#39;">✕</button>
+      <button class="modal-x" style="color:white" onclick="document.getElementById('icLoginModal').style.display='none'">✕</button>
     </div>
     <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
       <div style="text-align:center;font-size:12px;color:var(--gray500);margin-bottom:4px">กรุณาเข้าสู่ระบบเพื่อยืนยันตัวตนก่อนบันทึกเวร In Charge</div>
@@ -1325,9 +1327,9 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       <div class="fg">
         <label>รหัสผ่าน</label>
         <div style="position:relative">
-          <input type="password" id="icLoginPass" placeholder="password" autocomplete="current-password" style="width:100%;padding-right:42px" onkeydown="if(event.key===&#39;Enter&#39;)doIcLogin()">
-          <button type="button" onclick="togglePw(&#39;icLoginPass&#39;,this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ca3af;font-size:18px;padding:0;line-height:1">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          <input type="password" id="icLoginPass" placeholder="password" autocomplete="current-password" style="width:100%;padding-right:42px" onkeydown="if(event.key==='Enter')doIcLogin()">
+          <button type="button" onclick="togglePw('icLoginPass',this)" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9ca3af;font-size:18px;padding:0;line-height:1">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
       </div>
@@ -1384,10 +1386,10 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
   <div class="modal" style="max-width:480px">
     <div class="modal-hd">
       <h2>📲 ข้อความที่จะส่ง LINE</h2>
-      <button class="modal-x" onclick="document.getElementById(&#39;icPreviewModal&#39;).style.display=&#39;none&#39;">✕</button>
+      <button class="modal-x" onclick="document.getElementById('icPreviewModal').style.display='none'">✕</button>
     </div>
     <div style="padding:16px 20px">
-      <pre id="icMsgPreview" style="white-space:pre-wrap;font-size:12px;background:#f9fafb;padding:12px;border-radius:8px;border:1px solid var(--g100);max-height:400px;overflow-y:auto;font-family:&#39;Sarabun&#39;,sans-serif;line-height:1.7"></pre>
+      <pre id="icMsgPreview" style="white-space:pre-wrap;font-size:12px;background:#f9fafb;padding:12px;border-radius:8px;border:1px solid var(--g100);max-height:400px;overflow-y:auto;font-family:'Sarabun',sans-serif;line-height:1.7"></pre>
       <div style="margin-top:12px;display:flex;gap:8px">
         <button class="btn btn-primary" onclick="icSendLine()">📲 ส่ง Telegram</button>
         <button class="btn btn-outline" onclick="icCopyMsg()">📋 คัดลอก</button>
@@ -1434,7 +1436,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
 
       <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
         <button class="btn btn-outline" onclick="previewCarryOver()">🔍 ตรวจสอบ</button>
-        <button class="btn btn-primary" id="coConfirmBtn" onclick="doCarryOver()" disabled="">✅ ยืนยันยกยอด</button>
+        <button class="btn btn-primary" id="coConfirmBtn" onclick="doCarryOver()" disabled>✅ ยืนยันยกยอด</button>
         <button class="btn btn-outline" onclick="closeCarryOverModal()">ยกเลิก</button>
       </div>
     </div>
@@ -1484,23 +1486,23 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
 
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <button class="bn-item active" id="bn-patients" onclick="showSec(&#39;patients&#39;,document.getElementById(&#39;nav-patients&#39;));setActiveBN(&#39;patients&#39;)">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>
+  <button class="bn-item active" id="bn-patients" onclick="showSec('patients',document.getElementById('nav-patients'));setActiveBN('patients')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
     <span>รายชื่อ</span></button>
-  <button class="bn-item" id="bn-dashboard" onclick="showSec(&#39;dashboard&#39;,document.getElementById(&#39;nav-dashboard&#39;));setActiveBN(&#39;dashboard&#39;)">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path></svg>
+  <button class="bn-item" id="bn-dashboard" onclick="showSec('dashboard',document.getElementById('nav-dashboard'));setActiveBN('dashboard')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
     <span>Dashboard</span></button>
-  <button class="bn-item" id="bn-bedmap" onclick="showSec(&#39;bedmap&#39;,document.getElementById(&#39;nav-bedmap&#39;));setActiveBN(&#39;bedmap&#39;)">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z"></path></svg>
+  <button class="bn-item" id="bn-bedmap" onclick="showSec('bedmap',document.getElementById('nav-bedmap'));setActiveBN('bedmap')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z"/></svg>
     <span>เตียง</span></button>
-  <button class="bn-item" id="bn-ic" onclick="showSec(&#39;ic&#39;,document.getElementById(&#39;nav-ic&#39;));setActiveBN(&#39;ic&#39;)">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"></path></svg>
+  <button class="bn-item" id="bn-ic" onclick="showSec('ic',document.getElementById('nav-ic'));setActiveBN('ic')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
     <span>IC</span></button>
-  <button class="bn-item" id="bn-monthly" onclick="showSec(&#39;monthly&#39;,document.getElementById(&#39;nav-monthly&#39;));setActiveBN(&#39;monthly&#39;)">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"></path></svg>
+  <button class="bn-item" id="bn-monthly" onclick="showSec('monthly',document.getElementById('nav-monthly'));setActiveBN('monthly')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
     <span>รายเดือน</span></button>
-  <button class="bn-item" id="bn-yearly" onclick="showSec(&#39;yearly&#39;,document.getElementById(&#39;nav-yearly&#39;));setActiveBN(&#39;yearly&#39;)">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"></path></svg>
+  <button class="bn-item" id="bn-yearly" onclick="showSec('yearly',document.getElementById('nav-yearly'));setActiveBN('yearly')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
     <span>รายปี</span></button>
 </nav>
 
@@ -4140,6 +4142,5 @@ function closeSidebar(){document.getElementById('sidebar').classList.remove('ope
 window.addEventListener('resize',()=>{if(!isMobile()){document.getElementById('sidebar').classList.remove('open');document.getElementById('sidebarOverlay').classList.remove('open');if(!document.getElementById('sidebar').classList.contains('collapsed'))document.querySelector('.main').classList.remove('full-width');}});
 function toast(msg,isErr=false){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(isErr?' err':'');setTimeout(()=>t.classList.add('show'),10);setTimeout(()=>t.classList.remove('show'),3500);}
 </script>
-
-
-</body></html>
+</body>
+</html>
