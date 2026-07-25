@@ -3775,7 +3775,7 @@ function renderBedMap(pts){
     const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
     return `<td style="background:${bg};border:${bdr};border-radius:8px;padding:6px 3px;text-align:center;font-size:11px;font-weight:700;color:${col};min-width:54px">ICU9<br><small style="font-weight:400;font-size:9px">ห้องแยก</small>${type?`<br><small style="font-size:9px">(${type})</small>`:''}</td>`;
   };
-  const e=`<td style="background:transparent;border:none;min-width:10px"></td>`;
+  const e=`<td style="background:transparent;border:none;padding:0;width:4px"></td>`;
   const ns=`<td style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;font-size:9px;color:#1565c0;padding:4px;min-width:54px">🏥<br>เคาน์เตอร์</td>`;
   const nsw=`<td colspan="3" style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;font-size:10px;color:#1565c0;padding:6px">🏥 เคาน์เตอร์พยาบาล</td>`;
   const door=`<td style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;text-align:center;font-size:9px;color:#f57f17;padding:4px;min-width:44px">🚪<br>ประตู</td>`;
