@@ -660,8 +660,8 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <button class="btn btn-outline" onclick="loadBedMap()">↻ รีเฟรช</button>
       </div>
       <div class="dash-card" style="margin-bottom:12px">
-        <div id="bedMapScroll" style="width:100%;overflow:hidden">
-          <div id="bedMap" style="transform-origin:top left"></div>
+        <div id="bedMapScroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%">
+          <div id="bedMap" style="min-width:600px"></div>
         </div>
         <div id="bedStat" style="margin-top:10px;font-size:12px;font-weight:700;color:var(--g800)"></div>
       </div>
@@ -3794,8 +3794,8 @@ function renderBedMap(pts){
     _e,_e,_e,_e,_e,_e,_e,_e,_e, _bc(11),
     _bc(8),_bc(7), _nsw, _ns, _bc(14),_bc(13), _e, _bc(12),
   ].join('');
-  setTimeout(scaleBedMap, 50);
-  window.addEventListener('resize', scaleBedMap);
+  // scroll แนวนอนแทน scale
+  window.addEventListener('resize', ()=>{});
   if(bedStatEl && bedStatEl.id==='bedStat' && !bedMapEl.contains(bedStatEl)){
     bedStatEl.textContent=`ใช้งาน ${admittedBeds.length} / ${TOTAL_BEDS} เตียง  •  ว่าง ${Math.max(0,TOTAL_BEDS-admittedBeds.length)} เตียง`;
   }
