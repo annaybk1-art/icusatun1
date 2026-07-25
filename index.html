@@ -3736,16 +3736,19 @@ function scaleBedMap(){
   const wrap=document.getElementById('bedMapScroll');
   const map=document.getElementById('bedMap');
   if(!wrap||!map) return;
-  map.style.transform='scale(1)';
-  const mapW=map.scrollWidth;
+  // reset ก่อน
+  map.style.transform='none';
+  map.style.transformOrigin='top left';
+  wrap.style.height='';
+  // วัด natural size
+  const mapW=map.offsetWidth;
   const wrapW=wrap.offsetWidth;
-  if(mapW>wrapW){
+  if(mapW>0 && wrapW>0 && wrapW<mapW){
     const scale=wrapW/mapW;
     map.style.transform=`scale(${scale})`;
     map.style.transformOrigin='top left';
-    wrap.style.height=(map.scrollHeight*scale)+'px';
-  } else {
-    wrap.style.height='';
+    // ปรับความสูง wrapper ตาม scale
+    wrap.style.height=(map.offsetHeight*scale)+'px';
   }
 }
 
