@@ -3755,50 +3755,39 @@ function scaleBedMap(){
 function renderBedMap(pts){
   const admittedBeds=pts.filter(p=>p['สถานะ']!=='จำหน่ายแล้ว'&&p['สถานะ']!=='ค้างเดือน');
   const bedMapEl=document.getElementById('bedMap');
-  const bedStatEl=document.getElementById('bedStat');
   if(!bedMapEl) return;
 
-  const _mkTip=(n,pt)=>{
-    const type=normalizePatType(pt['ประเภทผู้ป่วย']||'');
-    const dx=(pt['Diagnosis แรกรับ']||'').split(',').map(d=>d.trim()).filter(Boolean).join(', ');
-    return `<div class="bed-tip"><div class="bed-tip-bed">ICU${n}</div>${type?`<span class="bed-tip-type">${type}</span>`:''}${dx?`<div class="bed-tip-dx">${dx}</div>`:''}</div>`;
+  const pt=(n)=>admittedBeds.find(r=>(r['เตียง']||'').trim()==='ICU'+n);
+  const td=(n)=>{
+    const p=pt(n);
+    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
+    const bg=p?'#ffcdd2':'#f1f8e9';
+    const bdr=p?'2px solid #ef9a9a':'2px solid #c8e6c9';
+    const col=p?'#c62828':'#2e7d32';
+    const tip=p?`title="${(p['ชื่อ-สกุล']||'').replace(/"/g,'')} | ${(p['Diagnosis แรกรับ']||'').replace(/"/g,'')}"`:'' ;
+    return `<td ${tip} style="background:${bg};border:${bdr};border-radius:8px;padding:6px 3px;text-align:center;font-size:11px;font-weight:700;color:${col};min-width:54px">ICU${n}${type?`<br><small style="font-weight:400;font-size:9px">(${type})</small>`:''}</td>`;
   };
-  const _bc=(n)=>{
-    const pt=admittedBeds.find(r=>(r['เตียง']||'').trim()==='ICU'+n);
-    if(!pt) return `<div class="bed-c bed-free"><span>ICU${n}</span></div>`;
-    const type=normalizePatType(pt['ประเภทผู้ป่วย']||'');
-    return `<div class="bed-c bed-used"><span>ICU${n}</span>${type?`<small>(${type})</small>`:''} ${_mkTip(n,pt)}</div>`;
+  const td9=()=>{
+    const p=pt(9);
+    const bg=p?'#ffcdd2':'#f1f8e9';
+    const bdr=p?'2px solid #ef9a9a':'2px solid #c8e6c9';
+    const col=p?'#c62828':'#2e7d32';
+    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
+    return `<td style="background:${bg};border:${bdr};border-radius:8px;padding:6px 3px;text-align:center;font-size:11px;font-weight:700;color:${col};min-width:54px">ICU9<br><small style="font-weight:400;font-size:9px">ห้องแยก</small>${type?`<br><small style="font-size:9px">(${type})</small>`:''}</td>`;
   };
-  const _bc9=()=>{
-    const pt=admittedBeds.find(r=>(r['เตียง']||'').trim()==='ICU9');
-    if(!pt) return `<div class="bed-iso bed-free"><span>ICU9</span><small>ห้องแยก</small></div>`;
-    const type=normalizePatType(pt['ประเภทผู้ป่วย']||'');
-    return `<div class="bed-iso bed-used"><span>ICU9</span><small>ห้องแยก</small>${type?`<small>(${type})</small>`:''} ${_mkTip(9,pt)}</div>`;
-  };
-  const _e=`<div class="bed-empty"></div>`;
-  const _door=`<div class="bed-door"><span>🚪</span><small>ประตู</small></div>`;
-  const _ns=`<div class="bed-nurse"><span>🏥</span><small>เคาน์เตอร์</small></div>`;
-  const _nsw=`<div class="bed-nurse-wide"><span>🏥</span>เคาน์เตอร์พยาบาล</div>`;
-  const _stat=()=>`<div style="grid-column:span 6;display:flex;flex-direction:column;justify-content:center;padding:8px 12px;background:var(--g50);border-radius:8px;border:1px solid var(--g100)">
-    <div id="bedStat" style="font-size:13px;font-weight:700;color:var(--g800)">ใช้งาน ${admittedBeds.length} / ${TOTAL_BEDS} เตียง  •  ว่าง ${Math.max(0,TOTAL_BEDS-admittedBeds.length)} เตียง</div>
-    <div style="display:flex;gap:10px;margin-top:5px;flex-wrap:wrap">
-      <span style="display:flex;align-items:center;gap:4px;font-size:10.5px"><span style="width:11px;height:11px;border-radius:2px;background:var(--g100);border:2px solid var(--g200);display:inline-block"></span>ว่าง</span>
-      <span style="display:flex;align-items:center;gap:4px;font-size:10.5px"><span style="width:11px;height:11px;border-radius:2px;background:#ffcdd2;border:2px solid #ef9a9a;display:inline-block"></span>ใช้งาน</span>
-      <span style="display:flex;align-items:center;gap:4px;font-size:10.5px"><span style="width:11px;height:11px;border-radius:2px;background:#e3f2fd;border:2px dashed #64b5f6;display:inline-block"></span>เคาน์เตอร์</span>
-    </div>
-  </div>`;
+  const e=`<td style="background:transparent;border:none;min-width:10px"></td>`;
+  const ns=`<td style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;font-size:9px;color:#1565c0;padding:4px;min-width:54px">🏥<br>เคาน์เตอร์</td>`;
+  const nsw=`<td colspan="3" style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;font-size:10px;color:#1565c0;padding:6px">🏥 เคาน์เตอร์พยาบาล</td>`;
+  const door=`<td style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;text-align:center;font-size:9px;color:#f57f17;padding:4px;min-width:44px">🚪<br>ประตู</td>`;
+  const n=admittedBeds.length;
+  const stat=`<td colspan="6" style="background:#f9fff9;border:1px solid #c8e6c9;border-radius:8px;padding:8px 10px;font-size:11px"><b>ใช้งาน ${n} / ${TOTAL_BEDS} เตียง &nbsp;•&nbsp; ว่าง ${Math.max(0,TOTAL_BEDS-n)} เตียง</b><br><span style="font-size:9px"><span style="color:#2e7d32">■</span> ว่าง &nbsp;<span style="color:#ef9a9a">■</span> ใช้งาน &nbsp;<span style="color:#64b5f6">■</span> เคาน์เตอร์</span></td>`;
 
-  bedMapEl.innerHTML=[
-    _stat(), _bc9(), _e,_e,_e,
-    _bc(6),_bc(5),_bc(4),_bc(3),_bc(2),_bc(1), _e, _door, _ns, _bc(10),
-    _e,_e,_e,_e,_e,_e,_e,_e,_e, _bc(11),
-    _bc(8),_bc(7), _nsw, _ns, _bc(14),_bc(13), _e, _bc(12),
-  ].join('');
-  // scroll แนวนอนแทน scale
-  window.addEventListener('resize', ()=>{});
-  if(bedStatEl && bedStatEl.id==='bedStat' && !bedMapEl.contains(bedStatEl)){
-    bedStatEl.textContent=`ใช้งาน ${admittedBeds.length} / ${TOTAL_BEDS} เตียง  •  ว่าง ${Math.max(0,TOTAL_BEDS-admittedBeds.length)} เตียง`;
-  }
+  bedMapEl.innerHTML=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="border-collapse:separate;border-spacing:4px;width:100%;min-width:580px">
+    <tr>${stat}${td9()}${e}${e}${e}</tr>
+    <tr>${td(6)}${td(5)}${td(4)}${td(3)}${td(2)}${td(1)}${e}${door}${ns}${td(10)}</tr>
+    <tr>${e}${e}${e}${e}${e}${e}${e}${e}${e}${td(11)}</tr>
+    <tr>${td(8)}${td(7)}${nsw}${ns}${td(14)}${td(13)}${e}${td(12)}</tr>
+  </table></div>`;
   applyWidgetVisibility();
 }
 
