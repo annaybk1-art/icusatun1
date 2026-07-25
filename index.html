@@ -660,8 +660,8 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <button class="btn btn-outline" onclick="loadBedMap()">↻ รีเฟรช</button>
       </div>
       <div class="dash-card" style="margin-bottom:12px">
-        <div id="bedMapScroll" style="overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%">
-          <div id="bedMap" style="min-width:600px"></div>
+        <div id="bedMapScroll" style="width:100%;overflow:hidden">
+          <div id="bedMap"></div>
         </div>
         <div id="bedStat" style="margin-top:10px;font-size:12px;font-weight:700;color:var(--g800)"></div>
       </div>
@@ -3782,12 +3782,26 @@ function renderBedMap(pts){
   const n=admittedBeds.length;
   const stat=`<td colspan="6" style="background:#f9fff9;border:1px solid #c8e6c9;border-radius:8px;padding:8px 10px;font-size:11px"><b>ใช้งาน ${n} / ${TOTAL_BEDS} เตียง &nbsp;•&nbsp; ว่าง ${Math.max(0,TOTAL_BEDS-n)} เตียง</b><br><span style="font-size:9px"><span style="color:#2e7d32">■</span> ว่าง &nbsp;<span style="color:#ef9a9a">■</span> ใช้งาน &nbsp;<span style="color:#64b5f6">■</span> เคาน์เตอร์</span></td>`;
 
-  bedMapEl.innerHTML=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="border-collapse:separate;border-spacing:4px;width:100%;min-width:580px">
+  bedMapEl.innerHTML=`<table id="bedMapTable" style="border-collapse:separate;border-spacing:4px;width:100%;min-width:580px">
     <tr>${stat}${td9()}${e}${e}${e}</tr>
     <tr>${td(6)}${td(5)}${td(4)}${td(3)}${td(2)}${td(1)}${e}${door}${ns}${td(10)}</tr>
     <tr>${e}${e}${e}${e}${e}${e}${e}${e}${e}${td(11)}</tr>
     <tr>${td(8)}${td(7)}${nsw}${ns}${td(14)}${td(13)}${e}${td(12)}</tr>
-  </table></div>`;
+  </table>`;
+
+  // ย่อให้พอดีจอ
+  setTimeout(()=>{
+    const wrap=document.getElementById('bedMapScroll');
+    const tbl=document.getElementById('bedMapTable');
+    if(!wrap||!tbl) return;
+    const scale=wrap.offsetWidth/tbl.offsetWidth;
+    if(scale<1){
+      tbl.style.transformOrigin='top left';
+      tbl.style.transform=`scale(${scale})`;
+      wrap.style.height=(tbl.offsetHeight*scale)+'px';
+    }
+  },100);
+
   applyWidgetVisibility();
 }
 
