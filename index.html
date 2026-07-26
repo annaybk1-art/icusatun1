@@ -3740,7 +3740,7 @@ async function fetchMonthPts(m,y){
 }
 
 function getStats(pts){
-  const total=pts.length,admitted=pts.filter(p=>p['สถานะ']!=='จำหน่ายแล้ว').length,discharged=pts.filter(p=>p['สถานะ']==='จำหน่ายแล้ว').length;
+  const total=pts.length,admitted=pts.filter(p=>p['สถานะ']!=='จำหน่ายแล้ว').length,discharged=pts.filter(p=>p['สถานะ']==='จำหน่ายแล้ว'&&!dcMatch(p['เหตุผลจำหน่าย'],'carryover')).length;
   const deadCount=pts.filter(p=>dcMatch(p['เหตุผลจำหน่าย'],'dead')).length,referCount=pts.filter(p=>dcMatch(p['เหตุผลจำหน่าย'],'refer')).length;
   const moveWell=pts.filter(p=>dcMatch(p['เหตุผลจำหน่าย'],'movewell')).length,moveBed=pts.filter(p=>dcMatch(p['เหตุผลจำหน่าย'],'movebed')).length;
   const palliativeDC=pts.filter(p=>dcMatch(p['เหตุผลจำหน่าย'],'palliative')).length,noConsent=pts.filter(p=>dcMatch(p['เหตุผลจำหน่าย'],'noconsent')).length;
