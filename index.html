@@ -619,9 +619,9 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
           <label style="font-size:10px">ปี:</label>
           <select id="fYear" onchange="loadPatients();updateMonthNavBtns()" style="font-size:10px;width:70px"></select>
         </div>
-        <!-- แถว 2: สถานะ + ปุ่ม -->
+        <!-- แถว 2: ปุ่ม -->
         <div style="display:flex;align-items:center;gap:4px;flex-wrap:nowrap">
-          <select id="fStatus" onchange="applyFilter()" style="font-size:10px;width:auto">
+          <select id="fStatus" onchange="applyFilter()" style="display:none">
             <option value="">ทั้งหมด</option>
             <option value="admit">กำลัง Admit</option>
             <option value="dc">จำหน่ายแล้ว</option>
@@ -631,7 +631,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
             <option value="female">เพศหญิง</option>
           </select>
           <button class="btn btn-outline" onclick="loadPatients(true)" style="font-size:10px;padding:4px 8px;flex-shrink:0">↻ รีเฟรช</button>
-          <button class="btn btn-primary" onclick="openAdd()" style="font-size:10px;padding:4px 8px;flex:1">＋ เพิ่มผู้ป่วย</button>
+          <button class="btn btn-primary" onclick="openAdd()" style="font-size:10px;padding:4px 8px;flex:1;justify-content:center;text-align:center">＋ เพิ่มผู้ป่วย</button>
         </div>
       </div>
       <div class="legend" style="flex-wrap:nowrap;overflow-x:auto;gap:8px;padding:5px 10px">
