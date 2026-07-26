@@ -705,21 +705,21 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
 
     <!-- DASHBOARD -->
     <div class="sec" id="sec-dashboard">
-      <div class="fbar">
+      <div class="fbar" style="flex-wrap:nowrap;gap:4px;padding:6px 10px">
         <!-- Toggle เดือน/ปี -->
         <div style="display:flex;border:1.5px solid var(--theme-btn-outline-border);border-radius:8px;overflow:hidden;flex-shrink:0">
-          <button id="dashToggleMonth" onclick="setDashMode('month')" style="padding:6px 14px;font-size:12px;font-weight:700;background:var(--theme-btn-primary);color:var(--theme-btn-primary-text);border:none;cursor:pointer">📅 เดือน</button>
-          <button id="dashToggleYear" onclick="setDashMode('year')" style="padding:6px 14px;font-size:12px;font-weight:700;background:white;color:var(--theme-btn-outline-text);border:none;cursor:pointer">📆 ปี</button>
+          <button id="dashToggleMonth" onclick="setDashMode('month')" style="padding:4px 8px;font-size:10px;font-weight:700;background:var(--theme-btn-primary);color:var(--theme-btn-primary-text);border:none;cursor:pointer">📅 เดือน</button>
+          <button id="dashToggleYear" onclick="setDashMode('year')" style="padding:4px 8px;font-size:10px;font-weight:700;background:white;color:var(--theme-btn-outline-text);border:none;cursor:pointer">📆 ปี</button>
         </div>
-        <div id="dashMonthFields" style="display:flex;align-items:center;gap:6px">
-          <label>เดือน:</label><select id="dMonth" onchange="loadDash()"></select>
-          <label>ปี:</label><select id="dYear" onchange="loadDash()"></select>
+        <div id="dashMonthFields" style="display:flex;align-items:center;gap:4px">
+          <select id="dMonth" onchange="loadDash()" style="font-size:10px"></select>
+          <select id="dYear" onchange="loadDash()" style="font-size:10px;width:70px"></select>
         </div>
-        <div id="dashYearFields" style="display:none;align-items:center;gap:6px">
-          <label>ปี:</label><select id="dYearOnly" onchange="loadDash()"></select>
+        <div id="dashYearFields" style="display:none;align-items:center;gap:4px">
+          <select id="dYearOnly" onchange="loadDash()" style="font-size:10px;width:70px"></select>
         </div>
-        <button class="btn btn-primary" onclick="loadDash()">📊 แสดงข้อมูล</button>
-        <button class="btn btn-outline" id="editPageBtn" style="display:none;margin-left:auto" onclick="toggleEditMode('dashboard')">🎨 แก้ไขหน้านี้</button>
+        <button class="btn btn-primary" onclick="loadDash()" style="font-size:10px;padding:4px 8px;flex-shrink:0">📊 แสดง</button>
+        <button class="btn btn-outline" id="editPageBtn" style="display:none;font-size:10px;padding:4px 8px;flex-shrink:0" onclick="toggleEditMode('dashboard')">🎨</button>
       </div>
       <div class="top-row">
         <div class="dash-card" data-ed-id="top5-card" style="display:flex;flex-direction:column;overflow:hidden;min-height:0">
