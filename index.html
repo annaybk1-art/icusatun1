@@ -367,8 +367,9 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
   .top-row{grid-template-columns:1fr}
   .dash-grid{grid-template-columns:1fr}
   .kpi-grid{grid-template-columns:repeat(2,1fr)}
-  .stats-grid{grid-template-columns:repeat(4,1fr);gap:6px}
-  .stats-grid #newsBoard{grid-column:1/-1;min-height:140px}
+  .stats-grid{grid-template-columns:repeat(4,1fr);gap:6px;display:grid}
+  .stats-grid #newsBoard{grid-column:1/-1;min-height:140px;order:-1;grid-row:1}
+  .stats-grid .stat-card:not(#newsBoard){grid-row:2}
   .stat-half{padding:5px 6px;min-height:36px}
   .stat-val{font-size:16px}
   .stat-lbl{font-size:8px}
@@ -619,7 +620,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
           <option value="female">เพศหญิง</option>
         </select>
         <button class="btn btn-outline" onclick="loadPatients(true)">↻ รีเฟรช</button>
-        <button class="btn btn-primary" onclick="openAdd()">＋ เพิ่มผู้ป่วย</button>
+        <button class="btn btn-primary" onclick="openAdd()" style="margin-left:auto">＋ เพิ่มผู้ป่วย</button>
       </div>
       <div class="legend" style="flex-wrap:nowrap;overflow-x:auto;gap:8px;padding:5px 10px">
         <strong style="font-size:9px;color:var(--gray600);margin-right:2px;flex-shrink:0">สี:</strong>
