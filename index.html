@@ -2706,8 +2706,14 @@ function buildForm(p){
         ${fg('แพทย์เจ้าของไข้',sel('แพทย์เจ้าของไข้',o('doctors'),p['แพทย์เจ้าของไข้'],'doctors'),'','',true)}
         ${fg('ประเภทผู้ป่วย',sel('ประเภทผู้ป่วย',o('patientType'),p['ประเภทผู้ป่วย'],'patientType'),'','',true)}
       </div></div>
-      <div class="fsec"><div class="fsec-title">Diagnosis แรกรับ <span class="req">*</span> <span style="font-size:10px;color:var(--gray400);font-weight:400">เลือกได้หลายตัว</span></div>
+      <div class="fsec"><div class="fsec-title">Dx <span class="req">*</span> <span style="font-size:10px;color:var(--gray400);font-weight:400">เลือกได้หลายตัว (อัปเดตได้ทุกเวร)</span></div>
         ${multiSel('Diagnosis แรกรับ',o('diagnosis'),p['Diagnosis แรกรับ'],'diagnosis')}
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:11px;font-weight:600;color:var(--gray600)">ประเภทพิเศษ:</span>
+          ${['Stroke','TBI','Trauma','ไม่มี'].map(v=>`<label style="display:flex;align-items:center;gap:4px;font-size:11.5px;cursor:pointer">
+            <input type="radio" name="dxSpecialType" value="${v}" ${(p['dxSpecialType']||'ไม่มี')===v?'checked':''}> ${v}
+          </label>`).join('')}
+        </div>
       </div>
       <div class="fsec"><div class="fsec-title">โรคประจำตัว (U/D) <span class="req">*</span> <span style="font-size:10px;color:var(--gray400);font-weight:400">เลือกได้หลายตัว (ถ้าไม่มีให้เลือก "ไม่มี")</span></div>
         ${multiSel('U/D',o('udOptions'),p['U/D'],'udOptions')}
@@ -2736,10 +2742,7 @@ function buildForm(p){
         ${fg('CPR',sel('CPR',['Yes','No'],p['CPR']),'','จำเป็นเมื่อ D/C',true)}
         ${fg('Palliative',sel('Palliative',['Yes','No'],p['Palliative']),'','จำเป็นเมื่อ D/C',true)}
         ${fg('หมายเหตุ',`<textarea name="หมายเหตุ">${p['หมายเหตุ']||''}</textarea>`,true)}
-      </div></div>
-      <div class="fsec"><div class="fsec-title">Diag สุดท้าย <span style="font-size:10px;color:var(--gray400);font-weight:400">เลือกได้หลายตัว</span></div>
-        ${multiSel('Diag สุดท้าย',o('diagnosis'),p['Diag สุดท้าย'],'diagnosis')}
-      </div>`,
+      </div></div>`,
     'tab-ic':`
       <div class="fsec"><div class="fsec-title">💊 ยา High Alert Drug <span style="font-size:10px;color:var(--gray400);font-weight:400">เลือกได้หลายตัว</span></div>
         ${multiSel('ยา HD',o('haOptions'),p['ยา HD'],'haOptions')}
