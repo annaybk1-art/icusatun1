@@ -620,14 +620,12 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         </div>
       </div>
       <div class="fbar" style="flex-wrap:nowrap;gap:6px">
-        <button class="btn btn-outline btn-sm" id="btnPrevMonth" onclick="navMonth(-1)">←</button>
         <select id="fMonth" onchange="loadPatients();updateMonthNavBtns()">
           <option value="1">ม.ค.</option><option value="2">ก.พ.</option><option value="3">มี.ค.</option>
           <option value="4">เม.ย.</option><option value="5">พ.ค.</option><option value="6">มิ.ย.</option>
           <option value="7">ก.ค.</option><option value="8">ส.ค.</option><option value="9">ก.ย.</option>
           <option value="10">ต.ค.</option><option value="11">พ.ย.</option><option value="12">ธ.ค.</option>
         </select>
-        <button class="btn btn-outline btn-sm" id="btnNextMonth" onclick="navMonth(1)">→</button>
         <select id="fYear" onchange="loadPatients();updateMonthNavBtns()"></select>
         <select id="fStatus" onchange="applyFilter()" style="display:none">
           <option value="">ทั้งหมด</option>
