@@ -368,7 +368,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
   .dash-grid{grid-template-columns:1fr}
   .kpi-grid{grid-template-columns:repeat(2,1fr)}
   .stats-grid{grid-template-columns:repeat(4,1fr);gap:6px}
-  .stats-grid #newsBoard{grid-column:1/-1;min-height:90px}
+  .stats-grid #newsBoard{grid-column:1/-1;min-height:140px}
   .stat-half{padding:5px 6px;min-height:36px}
   .stat-val{font-size:16px}
   .stat-lbl{font-size:8px}
@@ -621,14 +621,14 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <button class="btn btn-outline" onclick="loadPatients(true)">↻ รีเฟรช</button>
         <button class="btn btn-primary" onclick="openAdd()">＋ เพิ่มผู้ป่วย</button>
       </div>
-      <div class="legend">
-        <strong style="font-size:10.5px;color:var(--gray600);margin-right:4px">สีแถว:</strong>
-        <span style="display:flex;align-items:center;gap:3px"><span class="leg-dot" style="background:#fff9c4;border:1px solid #f9a825"></span>กำลัง Admit</span>
-        <span style="display:flex;align-items:center;gap:3px"><span class="leg-dot" style="background:#ffcdd2;border:1px solid #ef9a9a"></span>Dead</span>
-        <span style="display:flex;align-items:center;gap:3px"><span class="leg-dot" style="background:#bbdefb;border:1px solid #90caf9"></span>Refer</span>
-        <span style="display:flex;align-items:center;gap:3px"><span class="leg-dot" style="background:#d7ccc8;border:1px solid #8d6e63"></span>ย้ายต้องการเตียง</span>
-        <span style="display:flex;align-items:center;gap:3px"><span class="leg-dot" style="background:#e0e0e0;border:1px solid #bdbdbd"></span>Palliative</span>
-        <span style="display:flex;align-items:center;gap:3px"><span class="leg-dot" style="background:#e1bee7;border:1px solid #ce93d8"></span>ไม่สมัครใจอยู่</span>
+      <div class="legend" style="flex-wrap:nowrap;overflow-x:auto;gap:8px;padding:5px 10px">
+        <strong style="font-size:9px;color:var(--gray600);margin-right:2px;flex-shrink:0">สี:</strong>
+        <span style="display:flex;align-items:center;gap:2px;flex-shrink:0;font-size:9px"><span class="leg-dot" style="background:#fff9c4;border:1px solid #f9a825"></span>Admit</span>
+        <span style="display:flex;align-items:center;gap:2px;flex-shrink:0;font-size:9px"><span class="leg-dot" style="background:#ffcdd2;border:1px solid #ef9a9a"></span>Dead</span>
+        <span style="display:flex;align-items:center;gap:2px;flex-shrink:0;font-size:9px"><span class="leg-dot" style="background:#bbdefb;border:1px solid #90caf9"></span>Refer</span>
+        <span style="display:flex;align-items:center;gap:2px;flex-shrink:0;font-size:9px"><span class="leg-dot" style="background:#d7ccc8;border:1px solid #8d6e63"></span>ย้ายเตียง</span>
+        <span style="display:flex;align-items:center;gap:2px;flex-shrink:0;font-size:9px"><span class="leg-dot" style="background:#e0e0e0;border:1px solid #bdbdbd"></span>Palliat</span>
+        <span style="display:flex;align-items:center;gap:2px;flex-shrink:0;font-size:9px"><span class="leg-dot" style="background:#e1bee7;border:1px solid #ce93d8"></span>ไม่สมัครใจ</span>
       </div>
       <div class="tbl-wrap">
         <div class="tbl-head">
