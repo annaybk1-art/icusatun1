@@ -132,7 +132,8 @@ body.has-marquee .edit-sidebar{top:calc(var(--topbar-h) + 28px)}
 .bn-item svg{width:18px;height:18px}
 .bn-item.active{color:var(--g700)}
 /* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 2fr;gap:10px;margin-bottom:12px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.stats-grid #newsBoard{grid-column:1/-1;min-height:120px}
 .stats-cards{display:contents}
 .stats-nb{display:contents}
 .stat-card{border-radius:11px;border:2px solid transparent;box-shadow:0 3px 8px rgba(0,0,0,.08);overflow:hidden;display:flex;flex-direction:column;min-width:0}
@@ -1824,6 +1825,7 @@ function showApp(user){
   document.getElementById('uName').textContent=user.fullname;
   document.getElementById('uRole').textContent=user.role==='admin'?'👑 ผู้ดูแลระบบ':'👩‍⚕️ พยาบาล';
   if(user.role==='admin'){document.getElementById('adminNav').style.display='';document.getElementById('nav-users').style.display='';document.getElementById('nav-opts').style.display='';document.getElementById('nav-theme').style.display='';document.getElementById('nav-carryover').style.display='';}
+  showEditButtonIfAdmin();
   if(user.viewAccess==='dashboard_only'){
     applyDashboardOnlyRestriction();
     document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
@@ -3997,7 +3999,7 @@ async function drawChartsForYear(year,selMonth,selPts,selStats){
   const allM=await Promise.all(Array.from({length:12},(_,i)=>fetchMonthPts(i+1,year)));
   const na=[],ta=[],dc2=[],tot=[],oc=[],ls=[],up=[],ra=[];
   allM.forEach((mp,i)=>{const st=getStats(mp);na.push(mp.filter(p=>p['การรับ']==='รับใหม่').length);ta.push(mp.filter(p=>p['การรับ']==='รับย้าย').length);dc2.push(st.discharged);tot.push(st.total);oc.push(parseFloat(st.occupancyRate));ls.push(parseFloat(st.avgDaysPerPt));up.push(st.unplannedCount);ra.push(st.readmitCount);});
-  destroyChart('admitDC');const _cc1=getChartColors();dashCharts.admitDC=new Chart(document.getElementById('admitDCChart'),{type:'bar',data:{labels:MONTHS_TH,datasets:[{label:'รับใหม่',data:na,backgroundColor:_cc1.c3,borderRadius:3},{label:'รับย้าย',data:ta,backgroundColor:_cc1.c2,borderRadius:3},{label:'D/C',data:dc2,backgroundColor:_cc1.c6,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},usePointStyle:true}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}}},x:{ticks:{font:{size:9}}}}}});
+  destroyChart('admitDC');const _cc1=getChartColors();dashCharts.admitDC=new Chart(document.getElementById('admitDCChart'),{type:'bar',data:{labels:MONTHS_TH,datasets:[{label:'ทั้งหมด',data:tot,backgroundColor:_cc1.c1+'99',borderRadius:3},{label:'รับใหม่',data:na,backgroundColor:_cc1.c3,borderRadius:3},{label:'รับย้าย',data:ta,backgroundColor:_cc1.c2,borderRadius:3},{label:'D/C',data:dc2,backgroundColor:_cc1.c6,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},usePointStyle:true}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}}},x:{ticks:{font:{size:9}}}}}});
   destroyChart('dischargeReason');const _cc2=getChartColors();dashCharts.dischargeReason=new Chart(document.getElementById('dischargeReasonChart'),{type:'doughnut',data:{labels:['Dead','Refer','ย้ายทุเลา','ย้ายต้องการเตียง','ไม่สมัครใจ','Palliative'],datasets:[{data:[selStats.deadCount,selStats.referCount,selStats.moveWell,selStats.moveBed,selStats.noConsent,selStats.palliativeDC],backgroundColor:[_cc2.c4,_cc2.c2,_cc2.c1,'#8d6e63',_cc2.c5,'#9e9e9e'],borderColor:'white',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'right',labels:{font:{size:10},padding:8}}}}});
   destroyChart('occupancy');const _cc3=getChartColors();dashCharts.occupancy=new Chart(document.getElementById('occupancyChart'),{type:'line',data:{labels:MONTHS_TH,datasets:[{label:'Occupancy (%)',data:oc,borderColor:_cc3.c1,backgroundColor:_cc3.c1+'1a',tension:0.4,fill:true,pointRadius:3,yAxisID:'y'},{label:'Avg LOS',data:ls,borderColor:_cc3.c3,tension:0.4,fill:false,pointRadius:3,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{font:{size:10},usePointStyle:true}}},scales:{y:{beginAtZero:true,max:100,ticks:{font:{size:9}}},y1:{beginAtZero:true,position:'right',ticks:{font:{size:9}},grid:{drawOnChartArea:false}},x:{ticks:{font:{size:9}}}}}});
   // ใช้ key จาก typeCount จริงๆ ไม่ hardcode
