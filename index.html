@@ -132,8 +132,7 @@ body.has-marquee .edit-sidebar{top:calc(var(--topbar-h) + 28px)}
 .bn-item svg{width:18px;height:18px}
 .bn-item.active{color:var(--g700)}
 /* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
-.stats-grid #newsBoard{grid-column:1/-1;min-height:120px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 2fr;gap:10px;margin-bottom:12px}
 .stats-cards{display:contents}
 .stats-nb{display:contents}
 .stat-card{border-radius:11px;border:2px solid transparent;box-shadow:0 3px 8px rgba(0,0,0,.08);overflow:hidden;display:flex;flex-direction:column;min-width:0}
@@ -774,6 +773,10 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         </div>
       </div>
       <div class="kpi-grid" id="dashKpi" data-ed-id="dashKpi-section"></div>
+      <div class="dash-card" id="dashNewsBoard" style="margin-bottom:12px;overflow:hidden;position:relative;min-height:100px">
+        <div id="newsBoardTrackDash" style="display:flex;height:100%;width:100%;transition:transform .5s ease;position:absolute;inset:0"></div>
+        <div id="nbDotsDash" style="position:absolute;bottom:4px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:2"></div>
+      </div>
       <div class="dash-grid">
         <div class="dash-card" data-ed-id="admitdc-card"><div class="dash-card-title" data-ed-id="admitdc-title">📊 ยอดผู้ป่วย รับ/DC (รายปี)</div><div class="chart-container"><canvas id="admitDCChart"></canvas></div></div>
         <div class="dash-card" data-ed-id="dischargereason-card"><div class="dash-card-title" data-ed-id="dischargereason-title">🚪 เหตุผลการจำหน่าย</div><div class="chart-container"><canvas id="dischargeReasonChart"></canvas></div></div>
@@ -2484,16 +2487,29 @@ function nbGo(i){
 }
 
 function nbRenderCurrent(){
-  const track=document.getElementById('newsBoardTrack'); if(!track) return;
   const n=_nbSlides.length||1;
-  // track width = n*100% ของ container ดังนั้นแต่ละ slide = 100/n % ของ track
-  // ต้องเลื่อน = idx * (100/n)% ของ track = idx*(100/n)/100 * track.offsetWidth
-  track.style.transform=`translateX(-${(_nbIdx*(100/n)).toFixed(4)}%)`;
-  document.querySelectorAll('.nb-dot').forEach((d,i)=>d.classList.toggle('active',i===_nbIdx));
+  const pct=(_nbIdx*(100/n)).toFixed(4)+'%';
+  ['newsBoardTrack','newsBoardTrackDash'].forEach(id=>{
+    const t=document.getElementById(id);
+    if(t) t.style.transform=`translateX(-${pct})`;
+  });
+  document.querySelectorAll('.nb-dot').forEach((d,i)=>d.classList.toggle('active',i%_nbSlides.length===_nbIdx));
+}
+
+function nbGoAll(i){
+  _nbIdx=(i+_nbSlides.length)%_nbSlides.length;
+  clearInterval(_nbTimer);
+  _nbTimer=setInterval(()=>{ _nbIdx=(_nbIdx+1)%_nbSlides.length; nbRenderCurrent(); },_nbSpeed);
+  nbRenderCurrent();
 }
 
 function updateNewsBoard(pts, admitted, dc, male){
-  const track=document.getElementById('newsBoardTrack'); if(!track) return;
+  _renderNewsBoard('newsBoardTrack','nbDots', pts, admitted, dc, male);
+  _renderNewsBoard('newsBoardTrackDash','nbDotsDash', pts, admitted, dc, male);
+}
+
+function _renderNewsBoard(trackId, dotsId, pts, admitted, dc, male){
+  const track=document.getElementById(trackId); if(!track) return;
   const n=_nbSlides.length;
   track.style.width=(n*100)+'%';
   track.innerHTML=_nbSlides.map(sl=>{
@@ -2501,10 +2517,10 @@ function updateNewsBoard(pts, admitted, dc, male){
     const inner=_buildNbSlide(sl,pts,admitted,dc,male);
     return `<div style="width:${pct};flex-shrink:0;padding:8px 10px 18px;overflow:hidden;box-sizing:border-box">${inner}</div>`;
   }).join('');
-  const dots=document.getElementById('nbDots'); if(dots){
-    dots.innerHTML=_nbSlides.map((_,i)=>`<span class="nb-dot${i===_nbIdx?' active':''}" onclick="nbGo(${i})"></span>`).join('');
+  const dots=document.getElementById(dotsId); if(dots){
+    dots.innerHTML=_nbSlides.map((_,i)=>`<span class="nb-dot${i===_nbIdx?' active':''}" onclick="nbGoAll(${i})"></span>`).join('');
   }
-  nbRenderCurrent();
+  track.style.transform=`translateX(-${(_nbIdx*(100/n)).toFixed(4)}%)`;
 }
 
 function _buildNbSlide(sl,pts,admitted,dc,male){
