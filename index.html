@@ -2240,7 +2240,9 @@ function renderIcBedList(){
     const patName=pt['ชื่อ-สกุล']||'-';
 
     const selHA=(haD||'').split(',').map(v=>v.trim()).filter(Boolean);
-    const haChecks=haList.map(h=>`<label style="display:flex;align-items:center;gap:3px;font-size:10px;padding:2px 0"><input type="checkbox" ${selHA.includes(h)?'checked':''} onchange="icUpdateHA('${bedId}',this)"><span>${h}</span></label>`).join('');
+    const msdId='icmsd_'+bedId;
+    const haOpts=haList.map(h=>`<label class="msd-item"><input type="checkbox" value="${h}" ${selHA.includes(h)?'checked':''} onchange="icMsdChange('${msdId}','${bedId}')"><span>${h}</span></label>`).join('');
+    const haDisplay=selHA.length?selHA.join(', '):'-- เลือกยา HD --';
 
     const icRows=icItems.map(ic=>{
       const started=bd[ic.key+'_start']!==undefined?bd[ic.key+'_start']:(pt[ic.startF]?di(pt[ic.startF]):'');
@@ -2283,8 +2285,20 @@ function renderIcBedList(){
         </div>
         <div class="fg" style="grid-column:1/-1">
           <label style="font-size:10px">💊 ยา HD (เลือกได้หลายตัว)</label>
-          <div style="display:flex;flex-wrap:wrap;gap:4px 12px;padding:8px;background:#fff9c4;border-radius:6px;border:1px solid #f9a825" id="icHA_${bedId}">
-            ${haChecks}
+          <div class="msd-wrap" id="${msdId}">
+            <div class="msd-btn" onclick="msdToggle('${msdId}')">
+              <span class="msd-display" id="${msdId}-display">${haDisplay}</span>
+              <span class="msd-arrow">▾</span>
+            </div>
+            <div class="msd-list" id="${msdId}-list">
+              <div class="msd-search"><input type="text" placeholder="🔍 ค้นหายา..." oninput="msdFilter('${msdId}',this.value)" onclick="event.stopPropagation()"></div>
+              <div class="msd-items" id="${msdId}-items">${haOpts}</div>
+              <div class="msd-footer">
+                <button type="button" class="btn btn-outline btn-sm" onclick="icMsdClear('${msdId}','${bedId}');event.stopPropagation()">ล้าง</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="msdClose('${msdId}');event.stopPropagation()">ตกลง</button>
+              </div>
+            </div>
+            <input type="hidden" id="${msdId}-hidden" value="${esc(haD)}">
           </div>
         </div>
         <div class="fg" style="grid-column:1/-1">
@@ -2304,10 +2318,19 @@ function icSet(bedId,key,val){
   if(!_icBedData[bedId]) _icBedData[bedId]={};
   _icBedData[bedId][key]=val;
 }
-function icUpdateHA(bedId,cb){
-  const checks=document.querySelectorAll(`#icHA_${bedId} input[type=checkbox]`);
-  const selected=[...checks].filter(c=>c.checked).map(c=>c.nextElementSibling.textContent.trim());
-  icSet(bedId,'hadrugsList',selected.join(', '));
+function icMsdChange(msdId,bedId){
+  const items=document.querySelectorAll(`#${msdId}-items input[type=checkbox]`);
+  const selected=[...items].filter(c=>c.checked).map(c=>c.value);
+  const val=selected.join(', ');
+  const disp=document.getElementById(msdId+'-display');
+  const hidden=document.getElementById(msdId+'-hidden');
+  if(disp) disp.textContent=selected.length?val:'-- เลือกยา HD --';
+  if(hidden) hidden.value=val;
+  icSet(bedId,'hadrugsList',val);
+}
+function icMsdClear(msdId,bedId){
+  document.querySelectorAll(`#${msdId}-items input[type=checkbox]`).forEach(c=>c.checked=false);
+  icMsdChange(msdId,bedId);
 }
 function icUpdateType(bedId,sos){
   const el=document.getElementById(`icType_${bedId}`);
