@@ -3796,27 +3796,24 @@ function scaleBedMap(){
   const wrap=document.getElementById('bedMapScroll');
   const map=document.getElementById('bedMapTable');
   if(!wrap||!map) return;
+
+  // reset ก่อน
   map.style.transform='none';
   map.style.transformOrigin='top left';
+  map.style.width='';
   wrap.style.height='';
 
-  // มือถือเท่านั้นที่ scale
-  if(window.innerWidth>=768){
-    // คอม — ขยายเต็มจอ
-    map.style.width='100%';
-  } else {
-    // มือถือ — scale ให้พอดีจอ
-    requestAnimationFrame(()=>{
-      const mapW=map.offsetWidth;
-      const wrapW=wrap.offsetWidth;
-      if(mapW>0&&wrapW>0&&wrapW<mapW){
-        const scale=wrapW/mapW;
-        map.style.transformOrigin='top left';
-        map.style.transform=`scale(${scale})`;
-        wrap.style.height=(map.offsetHeight*scale)+'px';
-      }
-    });
-  }
+  requestAnimationFrame(()=>{
+    const mapW=map.offsetWidth;
+    const wrapW=wrap.offsetWidth;
+    if(mapW<=0||wrapW<=0) return;
+    const scale=wrapW/mapW;
+    if(scale!==1){
+      map.style.transformOrigin='top left';
+      map.style.transform=`scale(${scale})`;
+      wrap.style.height=(map.offsetHeight*scale)+'px';
+    }
+  });
 }
 
 function renderBedMap(pts){
@@ -3849,7 +3846,7 @@ function renderBedMap(pts){
   const n=admittedBeds.length;
   const stat=`<td colspan="6" style="background:#f9fff9;border:1px solid #c8e6c9;border-radius:8px;padding:8px 10px;font-size:11px"><b>ใช้งาน ${n} / ${TOTAL_BEDS} เตียง &nbsp;•&nbsp; ว่าง ${Math.max(0,TOTAL_BEDS-n)} เตียง</b><br><span style="font-size:9px"><span style="color:#2e7d32">■</span> ว่าง &nbsp;<span style="color:#ef9a9a">■</span> ใช้งาน &nbsp;<span style="color:#64b5f6">■</span> เคาน์เตอร์</span></td>`;
 
-  bedMapEl.innerHTML=`<table id="bedMapTable" style="border-collapse:separate;border-spacing:4px;width:100%;min-width:580px;table-layout:fixed">
+  bedMapEl.innerHTML=`<table id="bedMapTable" style="border-collapse:separate;border-spacing:4px;min-width:580px">
     <tr>${stat}${td9()}${e}${e}${e}</tr>
     <tr>${td(6)}${td(5)}${td(4)}${td(3)}${td(2)}${td(1)}${e}${door}${ns}${td(10)}</tr>
     <tr>${e}${e}${e}${e}${e}${e}${e}${e}${e}${td(11)}</tr>
