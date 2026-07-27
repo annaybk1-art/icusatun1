@@ -1411,6 +1411,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     </div>
 
     <div style="padding:14px 20px;border-top:1px solid var(--g100);display:flex;gap:8px;flex-wrap:wrap;flex-shrink:0">
+      <button class="btn btn-outline" style="background:#e8f5e9;color:#2e7d32;border-color:#2e7d32" onclick="saveInChargeToPatients()">💾 บันทึก</button>
       <button class="btn btn-outline" onclick="icPreviewMsg()">👁️ ดูข้อความก่อนส่ง</button>
       <button class="btn btn-primary" onclick="icSendLine()">📲 ส่ง Telegram</button>
       <button class="btn btn-outline" onclick="closeInCharge()" style="margin-left:auto">ปิด</button>
@@ -2211,29 +2212,45 @@ function renderIcBedList(){
   const container=document.getElementById('icBedList');
   if(!container) return;
   const BED_NUMS=[1,2,3,4,5,6,7,8,9,10,11,12,13,14];
-  const haList=_opts['haOptions']||['Adrenaline','Dopamine','Dobutamine','NorE (Norepinephrine)','Fentanyl','Morphine','Midazolam'];
+  const haList=['Adrenaline','Adenosine','Dopamine','Dobutamine','NorE (Norepinephrine)','Amiodarone','Chloral hydrate syrup','Digoxin','Esmolol','Magnesium sulfate','Midazolam','Fentanyl','Morphine','Pethidine','Phenytoin inj (Dilantin)','KCL/K2HPO4','Warfarin tab','Alteplase inj','SK inj (Streptokinase)','Nicardipine','Nitroglycerine','Regular insulin','NPH insulin','Insulin glargine','3% NaCl inj.','10% MgSO4 inj.','Clozapine tablet'];
+  const patTypes=['4a (ICU)','3b (CI)','2b (SI)','1a (MI)','1b (MI)','1c (CL)','1d (CL)'];
+  const icItems=[
+    {key:'vent',label:'🫁 Ventilator',startF:'Ventilator (Start)',endF:'Ventilator (End)'},
+    {key:'aline',label:'💉 A-Line',startF:'A-Line (Start)',endF:'A-Line (End)'},
+    {key:'cline',label:'🔗 C-Line',startF:'C-Line (Start)',endF:'C-Line (End.)'},
+    {key:'iv',label:'🩸 IV',startF:'IV (Start)',endF:'IV (End)'},
+    {key:'fc',label:'🪠 F/C',startF:'F/C (Start)',endF:'F/C (END)'},
+    {key:'icd',label:'🩺 ICD',startF:'ICD (Start)',endF:'ICD (End)'},
+  ];
+  const today=new Date().toISOString().split('T')[0];
 
   container.innerHTML=BED_NUMS.map(n=>{
     const bedId='ICU'+n;
     const pt=_icAdmittedPts.find(p=>(p['เตียง']||'').trim()===bedId);
     const bd=_icBedData[bedId]||{};
-
-    if(!pt) return `<div class="ic-bed-card" style="opacity:.45">
-      <div class="ic-bed-hd"><span class="bed-badge">${bedId}</span><span style="color:var(--gray400);font-size:12px">ว่าง</span></div>
-    </div>`;
+    if(!pt) return `<div class="ic-bed-card" style="opacity:.45"><div class="ic-bed-hd"><span class="bed-badge">${bedId}</span><span style="color:var(--gray400);font-size:12px">ว่าง</span></div></div>`;
 
     const dx=bd.dx!==undefined?bd.dx:(pt['Diagnosis แรกรับ']||'');
     const haD=bd.hadrugsList!==undefined?bd.hadrugsList:(pt['ยา HD']||'');
     const doc=bd.doctor!==undefined?bd.doctor:(pt['แพทย์เจ้าของไข้']||'');
     const sos=bd.sos!==undefined?bd.sos:(pt['SOS Score']||'');
+    const patType=bd.patType!==undefined?bd.patType:(pt['ประเภทผู้ป่วย ICU']||'');
     const note=bd.note||'';
-    const dept=normalizePatType(bd.dept||pt['ประเภทผู้ป่วย']||'');
+    const dept=normalizePatType(pt['ประเภทผู้ป่วย']||'');
     const patName=pt['ชื่อ-สกุล']||'-';
-    const sosType=sosToType(sos);
 
-    // สร้าง ยา HD checkboxes
     const selHA=(haD||'').split(',').map(v=>v.trim()).filter(Boolean);
-    const haChecks=haList.map(h=>`<label style="display:flex;align-items:center;gap:4px;font-size:10px;white-space:nowrap"><input type="checkbox" ${selHA.includes(h)?'checked':''} onchange="icUpdateHA('${bedId}',this)"><span>${h}</span></label>`).join('');
+    const haChecks=haList.map(h=>`<label style="display:flex;align-items:center;gap:3px;font-size:10px;padding:2px 0"><input type="checkbox" ${selHA.includes(h)?'checked':''} onchange="icUpdateHA('${bedId}',this)"><span>${h}</span></label>`).join('');
+
+    const icRows=icItems.map(ic=>{
+      const started=bd[ic.key+'_start']!==undefined?bd[ic.key+'_start']:(pt[ic.startF]?di(pt[ic.startF]):'');
+      const stopped=bd[ic.key+'_stop']!==undefined?bd[ic.key+'_stop']:(pt[ic.endF]?di(pt[ic.endF]):'');
+      return `<div style="display:grid;grid-template-columns:90px 1fr 1fr;gap:4px;align-items:center;padding:4px 0;border-bottom:1px solid var(--g100)">
+        <span style="font-size:10px;font-weight:600">${ic.label}</span>
+        <label style="font-size:9px;color:var(--gray500)">เริ่ม<input type="date" value="${started||''}" onchange="icSet('${bedId}','${ic.key}_start',this.value)" style="width:100%;font-size:10px;display:block;margin-top:2px"></label>
+        <label style="font-size:9px;color:var(--gray500)">หยุด<input type="date" value="${stopped||''}" onchange="icSet('${bedId}','${ic.key}_stop',this.value)" style="width:100%;font-size:10px;display:block;margin-top:2px"></label>
+      </div>`;
+    }).join('');
 
     return `<div class="ic-bed-card ic-used">
       <div class="ic-bed-hd">
@@ -2247,12 +2264,15 @@ function renderIcBedList(){
           <input type="text" value="${esc(dx)}" placeholder="Diagnosis..." oninput="icSet('${bedId}','dx',this.value)" style="width:100%">
         </div>
         <div class="fg">
-          <label style="font-size:10px">SOS Score (0-16)</label>
-          <input type="number" min="0" max="16" value="${esc(sos)}" placeholder="คะแนน" oninput="icSet('${bedId}','sos',this.value);icUpdateType('${bedId}',this.value)" style="width:100%">
+          <label style="font-size:10px">SOS Score</label>
+          <input type="number" min="0" max="16" value="${esc(sos)}" placeholder="0-16" oninput="icSet('${bedId}','sos',this.value)" style="width:100%">
         </div>
         <div class="fg">
-          <label style="font-size:10px">ประเภทผู้ป่วย</label>
-          <div id="icType_${bedId}" style="padding:6px 10px;border-radius:6px;font-weight:700;border:1.5px solid var(--g200);font-size:13px;color:${sosType.color}">${sosType.label!=='-'?`${sosType.label} ${sosType.desc}`:'-'}</div>
+          <label style="font-size:10px">ประเภทผู้ป่วย ICU</label>
+          <select onchange="icSet('${bedId}','patType',this.value)" style="width:100%">
+            <option value="">-- เลือก --</option>
+            ${patTypes.map(t=>`<option value="${t}" ${patType===t?'selected':''}>${t}</option>`).join('')}
+          </select>
         </div>
         <div class="fg" style="grid-column:1/-1">
           <label style="font-size:10px">แพทย์เจ้าของไข้</label>
@@ -2263,9 +2283,13 @@ function renderIcBedList(){
         </div>
         <div class="fg" style="grid-column:1/-1">
           <label style="font-size:10px">💊 ยา HD (เลือกได้หลายตัว)</label>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;padding:6px;background:#fff9c4;border-radius:6px;border:1px solid #f9a825" id="icHA_${bedId}">
+          <div style="display:flex;flex-wrap:wrap;gap:4px 12px;padding:8px;background:#fff9c4;border-radius:6px;border:1px solid #f9a825" id="icHA_${bedId}">
             ${haChecks}
           </div>
+        </div>
+        <div class="fg" style="grid-column:1/-1">
+          <label style="font-size:10px">🩺 IC (เริ่ม / หยุด)</label>
+          <div style="background:#f9fafb;border-radius:6px;padding:8px;border:1px solid var(--g100)">${icRows}</div>
         </div>
         <div class="fg" style="grid-column:1/-1">
           <label style="font-size:10px">หมายเหตุ</label>
@@ -2282,7 +2306,7 @@ function icSet(bedId,key,val){
 }
 function icUpdateHA(bedId,cb){
   const checks=document.querySelectorAll(`#icHA_${bedId} input[type=checkbox]`);
-  const selected=[...checks].filter(c=>c.checked).map(c=>c.nextElementSibling.textContent);
+  const selected=[...checks].filter(c=>c.checked).map(c=>c.nextElementSibling.textContent.trim());
   icSet(bedId,'hadrugsList',selected.join(', '));
 }
 function icUpdateType(bedId,sos){
@@ -2405,7 +2429,14 @@ async function saveInChargeToPatients(){
     if(bd.hadrugsList!==undefined) updated['ยา HD']=bd.hadrugsList;
     if(bd.doctor!==undefined) updated['แพทย์เจ้าของไข้']=bd.doctor;
     if(bd.sos!==undefined) updated['SOS Score']=bd.sos;
+    if(bd.patType!==undefined) updated['ประเภทผู้ป่วย ICU']=bd.patType;
     if(bd.note!==undefined) updated['หมายเหตุ']=bd.note;
+    // IC start/stop
+    const icMap={vent:['Ventilator (Start)','Ventilator (End)'],aline:['A-Line (Start)','A-Line (End)'],cline:['C-Line (Start)','C-Line (End.)'],iv:['IV (Start)','IV (End)'],fc:['F/C (Start)','F/C (END)'],icd:['ICD (Start)','ICD (End)']};
+    Object.entries(icMap).forEach(([k,[s,e]])=>{
+      if(bd[k+'_start']!==undefined) updated[s]=bd[k+'_start'];
+      if(bd[k+'_stop']!==undefined) updated[e]=bd[k+'_stop'];
+    });
 
     updates.push({id:pt['id'],month:m,year:y,data:updated});
   }
