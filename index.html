@@ -707,7 +707,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         </div>
         <!-- ตัวเลือกคอลัมน์ -->
         <div id="bedTblColPanel" style="display:none;padding:8px 12px;background:#f9fafb;border-bottom:1px solid var(--g100);flex-wrap:wrap;gap:8px">
-          ${['SOS','ยา HD','การหายใจ','A-Line','C-Line','F/C','ICD','พยาบาล'].map(c=>`<label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" checked onchange="setBedCol('${c}',this.checked)"> ${c}</label>`).join('')}
+          ${['SOS','ประเภท','ยา HD','การหายใจ','A-Line','C-Line','IV','F/C','ICD','หมอ','พยาบาล'].map(c=>`<label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer"><input type="checkbox" checked onchange="setBedCol('${c}',this.checked)"> ${c}</label>`).join('')}
         </div>
         <div style="overflow-x:auto">
           <table id="bedAdmitTbl">
@@ -715,12 +715,15 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
               <th>เตียง</th><th>Admit</th><th>เพศ</th><th>อายุ</th><th>แผนก</th>
               <th>Dx</th><th>U/D</th>
               <th class="bc-SOS">SOS</th>
+              <th class="bc-ประเภท">ประเภท</th>
               <th class="bc-ยา HD">💊 ยา HD</th>
               <th class="bc-การหายใจ">🌬️ การหายใจ</th>
               <th class="bc-A-Line">💉 A-Line</th>
               <th class="bc-C-Line">🔗 C-Line</th>
+              <th class="bc-IV">🩸 IV</th>
               <th class="bc-F/C">🪠 F/C</th>
               <th class="bc-ICD">🩺 ICD</th>
+              <th class="bc-หมอ">👨‍⚕️ แพทย์</th>
               <th class="bc-พยาบาล">👩‍⚕️ พยาบาล</th>
             </tr></thead>
             <tbody id="bedAdmitBody"><tr><td colspan="15" class="loading-msg">กำลังโหลด...</td></tr></tbody>
@@ -2806,10 +2809,21 @@ function buildForm(p){
       </div></div>`,
     'tab-assess':`
       <div class="fsec"><div class="fsec-title">การประเมินความเสี่ยง</div><div class="fgrid">
+        ${fg('SOS Score',`<input type="number" name="SOS Score" value="${p['SOS Score']||''}" min="0" max="16" oninput="updateSOSType(this.value)">`,'','',true)}
+        ${fg('ประเภทผู้ป่วย ICU',`<div id="sosTypeDisplay" style="padding:8px 12px;border-radius:8px;font-weight:700;font-size:13px;border:2px solid var(--g200);background:#f9fafb">${(()=>{const t=sosToType(p['SOS Score']||'');return t.label!=='-'?`<span style="color:${t.color}">${t.label} — ${t.desc}</span>`:'กรอก SOS Score';})()}</div>`,'','')}
         ${fg('Falling score',inp('Falling','number',p['Falling']),'','',true)}
         ${fg('APACHE II score',inp('APACHE II','number',p['APACHE II']))}
         ${fg('Pain score',inp('Pain score','number',p['Pain score']))}
-      </div></div>`,
+      </div></div>
+      <div class="fsec" style="background:#f9fafb;border-radius:8px;padding:10px;font-size:11px">
+        <div style="font-weight:700;margin-bottom:6px;color:var(--gray600)">📋 เกณฑ์ประเภทผู้ป่วย ICU</div>
+        <table style="width:100%;border-collapse:collapse;font-size:10.5px">
+          <tr style="background:#ffcdd2"><td style="padding:3px 6px;font-weight:700">13-16</td><td style="padding:3px 6px;font-weight:700;color:#c62828">4a ICU</td><td style="padding:3px 6px">หนักมาก ดูแลใกล้ชิดตลอดเวลา</td></tr>
+          <tr style="background:#ffe0b2"><td style="padding:3px 6px;font-weight:700">9-12</td><td style="padding:3px 6px;font-weight:700;color:#e65100">3b CI</td><td style="padding:3px 6px">หนัก ต้องการการดูแลมาก</td></tr>
+          <tr style="background:#fff9c4"><td style="padding:3px 6px;font-weight:700">5-8</td><td style="padding:3px 6px;font-weight:700;color:#f57f17">2b SI</td><td style="padding:3px 6px">หนักปานกลาง ต้องการการดูแลมาก</td></tr>
+          <tr style="background:#e8f5e9"><td style="padding:3px 6px;font-weight:700">4</td><td style="padding:3px 6px;font-weight:700;color:#2e7d32">1a-1d MI/CL</td><td style="padding:3px 6px">เจ็บป่วยเล็กน้อย/พักฟื้น</td></tr>
+        </table>
+      </div>`,
     'tab-infection':`
       <div class="fsec"><div class="fsec-title">ข้อมูลการติดเชื้อ (HAI)</div><div class="fgrid">
         ${fg('VAP',sel('VAP',['ใช่','ไม่ใช่'],p['VAP']))}
@@ -3872,6 +3886,22 @@ function renderBedMap(pts){
   applyWidgetVisibility();
 }
 
+function sosToType(sos){
+  const s=parseInt(sos)||0;
+  if(s>=13) return {label:'4a',color:'#c62828',desc:'ICU'};
+  if(s>=9)  return {label:'3b',color:'#e65100',desc:'CI'};
+  if(s>=5)  return {label:'2b',color:'#f57f17',desc:'SI'};
+  if(s>=4)  return {label:'1a',color:'#2e7d32',desc:'MI/CL'};
+  return {label:'-',color:'#9e9e9e',desc:''};
+}
+
+function updateSOSType(val){
+  const el=document.getElementById('sosTypeDisplay');
+  if(!el) return;
+  const t=sosToType(val);
+  el.innerHTML=t.label!=='-'?`<span style="color:${t.color}">${t.label} — ${t.desc}</span>`:'กรอก SOS Score';
+}
+
 function highlightBedRow(bedNo){
   // ลบ highlight เดิม
   document.querySelectorAll('#bedAdmitBody tr').forEach(r=>r.style.background='');
@@ -3998,12 +4028,15 @@ function renderBedAdmitTable(pts){
       <td style="font-size:10px;max-width:150px;white-space:normal">${p['Diagnosis แรกรับ']||'-'}</td>
       <td style="font-size:10px;max-width:100px;white-space:normal">${p['U/D']||'-'}</td>
       <td class="bc-SOS" style="text-align:center;font-weight:700;color:#c62828">${p['SOS Score']||p['Falling']||'-'}</td>
+      <td class="bc-ประเภท" style="text-align:center">${(()=>{const t=sosToType(p['SOS Score']||p['Falling']);return t.label!=='-'?`<span style="font-weight:700;color:${t.color}">${t.label}</span><br><span style="font-size:9px">${t.desc}</span>`:'-';})()}</td>
       <td class="bc-ยา HD" style="font-size:10px;max-width:120px;white-space:normal">${p['ยา HD']?`<span style="color:#c62828">${p['ยา HD']}</span>`:'-'}</td>
       <td class="bc-การหายใจ" style="text-align:center;font-size:11px"><span style="color:${breathActive?'#2e7d32':'#9e9e9e'}">${breath||'-'}</span></td>
       <td class="bc-A-Line" style="text-align:center">${ic(p,'A-Line (Start)','A-Line (End)','A-Line (day)')}</td>
       <td class="bc-C-Line" style="text-align:center">${ic(p,'C-Line (Start)','C-Line (End.)','C-Line (day)')}</td>
+      <td class="bc-IV" style="text-align:center">${ic(p,'IV (Start)','IV (End)','IV (day)')}</td>
       <td class="bc-F/C" style="text-align:center">${ic(p,'F/C (Start)','F/C (END)','F/C (day)')}</td>
       <td class="bc-ICD" style="text-align:center">${ic(p,'ICD (Start)','ICD (End)','ICD (day)')}</td>
+      <td class="bc-หมอ" style="font-size:10px">${p['แพทย์เจ้าของไข้']||'-'}</td>
       <td class="bc-พยาบาล" style="font-size:10px">${p['nurseInCharge']||'-'}</td>
     </tr>`;
   }).join('');
