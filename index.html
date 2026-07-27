@@ -2211,6 +2211,7 @@ function renderIcBedList(){
   const container=document.getElementById('icBedList');
   if(!container) return;
   const BED_NUMS=[1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+  const haList=_opts['haOptions']||['Adrenaline','Dopamine','Dobutamine','NorE (Norepinephrine)','Fentanyl','Morphine','Midazolam'];
 
   container.innerHTML=BED_NUMS.map(n=>{
     const bedId='ICU'+n;
@@ -2221,14 +2222,18 @@ function renderIcBedList(){
       <div class="ic-bed-hd"><span class="bed-badge">${bedId}</span><span style="color:var(--gray400);font-size:12px">ว่าง</span></div>
     </div>`;
 
-    const dx=bd.dx||pt['Diagnosis แรกรับ']||'';
-    const haD=bd.hadrugsList||pt['ยา HD']||'';
-    const doc=bd.doctor||pt['แพทย์เจ้าของไข้']||'';
-    const level=bd.level||'';
-    const gcs=bd.gcs||'';
+    const dx=bd.dx!==undefined?bd.dx:(pt['Diagnosis แรกรับ']||'');
+    const haD=bd.hadrugsList!==undefined?bd.hadrugsList:(pt['ยา HD']||'');
+    const doc=bd.doctor!==undefined?bd.doctor:(pt['แพทย์เจ้าของไข้']||'');
+    const sos=bd.sos!==undefined?bd.sos:(pt['SOS Score']||'');
     const note=bd.note||'';
+    const dept=normalizePatType(bd.dept||pt['ประเภทผู้ป่วย']||'');
     const patName=pt['ชื่อ-สกุล']||'-';
-    const dept=normalizePatType(pt['ประเภทผู้ป่วย']||'');
+    const sosType=sosToType(sos);
+
+    // สร้าง ยา HD checkboxes
+    const selHA=(haD||'').split(',').map(v=>v.trim()).filter(Boolean);
+    const haChecks=haList.map(h=>`<label style="display:flex;align-items:center;gap:4px;font-size:10px;white-space:nowrap"><input type="checkbox" ${selHA.includes(h)?'checked':''} onchange="icUpdateHA('${bedId}',this)"><span>${h}</span></label>`).join('');
 
     return `<div class="ic-bed-card ic-used">
       <div class="ic-bed-hd">
@@ -2239,39 +2244,53 @@ function renderIcBedList(){
       <div class="ic-bed-grid">
         <div class="fg" style="grid-column:1/-1">
           <label style="font-size:10px">Dx (อัปเดต)</label>
-          <input type="text" value="${esc(dx)}" placeholder="Diagnosis..." oninput="_icBedData['${bedId}']=_icBedData['${bedId}']||{};_icBedData['${bedId}'].dx=this.value" style="width:100%">
+          <input type="text" value="${esc(dx)}" placeholder="Diagnosis..." oninput="icSet('${bedId}','dx',this.value)" style="width:100%">
         </div>
         <div class="fg">
-          <label style="font-size:10px">ระดับ (3a/4a/Watch)</label>
-          <select onchange="_icBedData['${bedId}']=_icBedData['${bedId}']||{};_icBedData['${bedId}'].level=this.value" style="width:100%">
-            <option value="" ${!level?'selected':''}>-- ระบุ --</option>
-            <option value="4a" ${level==='4a'?'selected':''}>🔴 4a วิกฤต</option>
-            <option value="3a" ${level==='3a'?'selected':''}>🟡 3a เฝ้าระวัง</option>
-            <option value="watch" ${level==='watch'?'selected':''}>🟢 Watch</option>
-          </select>
+          <label style="font-size:10px">SOS Score (0-16)</label>
+          <input type="number" min="0" max="16" value="${esc(sos)}" placeholder="คะแนน" oninput="icSet('${bedId}','sos',this.value);icUpdateType('${bedId}',this.value)" style="width:100%">
         </div>
         <div class="fg">
-          <label style="font-size:10px">GCS</label>
-          <input type="number" min="3" max="15" value="${esc(gcs)}" placeholder="3-15" oninput="_icBedData['${bedId}']=_icBedData['${bedId}']||{};_icBedData['${bedId}'].gcs=this.value" style="width:100%">
-        </div>
-        <div class="fg" style="grid-column:1/-1">
-          <label style="font-size:10px">ยา HD ที่ on (อัปเดต)</label>
-          <input type="text" value="${esc(haD)}" placeholder="NE, Dopa, Fentanyl..." oninput="_icBedData['${bedId}']=_icBedData['${bedId}']||{};_icBedData['${bedId}'].hadrugsList=this.value" style="width:100%">
+          <label style="font-size:10px">ประเภทผู้ป่วย</label>
+          <div id="icType_${bedId}" style="padding:6px 10px;border-radius:6px;font-weight:700;border:1.5px solid var(--g200);font-size:13px;color:${sosType.color}">${sosType.label!=='-'?`${sosType.label} ${sosType.desc}`:'-'}</div>
         </div>
         <div class="fg" style="grid-column:1/-1">
           <label style="font-size:10px">แพทย์เจ้าของไข้</label>
-          <select onchange="_icBedData['${bedId}']=_icBedData['${bedId}']||{};_icBedData['${bedId}'].doctor=this.value" style="width:100%">
+          <select onchange="icSet('${bedId}','doctor',this.value)" style="width:100%">
             <option value="${esc(doc)}" selected>${doc||'-- เลือก --'}</option>
             ${(_opts['doctors']||[]).filter(d=>d!==doc).map(d=>`<option value="${esc(d)}">${d}</option>`).join('')}
           </select>
         </div>
         <div class="fg" style="grid-column:1/-1">
-          <label style="font-size:10px">หมายเหตุ In Charge</label>
-          <input type="text" value="${esc(note)}" placeholder="หมายเหตุ..." oninput="_icBedData['${bedId}']=_icBedData['${bedId}']||{};_icBedData['${bedId}'].note=this.value" style="width:100%">
+          <label style="font-size:10px">💊 ยา HD (เลือกได้หลายตัว)</label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;padding:6px;background:#fff9c4;border-radius:6px;border:1px solid #f9a825" id="icHA_${bedId}">
+            ${haChecks}
+          </div>
+        </div>
+        <div class="fg" style="grid-column:1/-1">
+          <label style="font-size:10px">หมายเหตุ</label>
+          <input type="text" value="${esc(note)}" placeholder="หมายเหตุ..." oninput="icSet('${bedId}','note',this.value)" style="width:100%">
         </div>
       </div>
     </div>`;
   }).join('');
+}
+
+function icSet(bedId,key,val){
+  if(!_icBedData[bedId]) _icBedData[bedId]={};
+  _icBedData[bedId][key]=val;
+}
+function icUpdateHA(bedId,cb){
+  const checks=document.querySelectorAll(`#icHA_${bedId} input[type=checkbox]`);
+  const selected=[...checks].filter(c=>c.checked).map(c=>c.nextElementSibling.textContent);
+  icSet(bedId,'hadrugsList',selected.join(', '));
+}
+function icUpdateType(bedId,sos){
+  const el=document.getElementById(`icType_${bedId}`);
+  if(!el) return;
+  const t=sosToType(sos);
+  el.style.color=t.color;
+  el.textContent=t.label!=='-'?`${t.label} ${t.desc}`:'-';
 }
 
 function buildIcMessage(){
@@ -2292,12 +2311,17 @@ function buildIcMessage(){
   const transfer=allPts.filter(p=>p['การรับ']==='รับย้าย').length;
   const dc=allPts.filter(p=>p['สถานะ']==='จำหน่ายแล้ว'&&!dcMatch(p['เหตุผลจำหน่าย'],'carryover')).length;
 
-  // 4a / 3a จาก icBedData
-  let count4a=0,count3a=0,countWatch=0;
-  Object.values(_icBedData).forEach(bd=>{
-    if(bd.level==='4a') count4a++;
-    else if(bd.level==='3a') count3a++;
-    else if(bd.level==='watch') countWatch++;
+  // ประเภทผู้ป่วย จาก SOS
+  let count4a=0,count3b=0,count2b=0,count1=0;
+  _icAdmittedPts.forEach(pt=>{
+    const bedId=(pt['เตียง']||'').trim();
+    const bd=_icBedData[bedId]||{};
+    const sos=bd.sos||pt['SOS Score']||'';
+    const t=sosToType(sos);
+    if(t.label==='4a') count4a++;
+    else if(t.label==='3b') count3b++;
+    else if(t.label==='2b') count2b++;
+    else if(t.label==='1a') count1++;
   });
 
   // แผนก
@@ -2338,9 +2362,10 @@ ${'─'.repeat(30)}
 📥 รับใหม่: ${newAdmit}  รับย้าย: ${transfer}
 📤 จำหน่าย/ย้ายแผนก: ${dc} ราย
 ${'─'.repeat(30)}
-🔴 วิกฤต (4a): ${count4a} ราย
-🟡 เฝ้าระวัง (3a): ${count3a} ราย
-🟢 Watch: ${countWatch} ราย
+🔴 4a (ICU): ${count4a} ราย
+🟠 3b (CI): ${count3b} ราย
+🟡 2b (SI): ${count2b} ราย
+🟢 1a-1d (MI/CL): ${count1} ราย
 ${'─'.repeat(30)}
 🏷️ แผนก: ${deptStr}
 ${'─'.repeat(30)}
@@ -2364,8 +2389,47 @@ function icCopyMsg(){
   navigator.clipboard.writeText(msg).then(()=>toast('คัดลอกแล้ว ✓')).catch(()=>toast('คัดลอกไม่ได้',true));
 }
 
+async function saveInChargeToPatients(){
+  // อัปเดตข้อมูลผู้ป่วยทุกเตียงที่มีการแก้ไข
+  const m=parseInt(document.getElementById('fMonth')?.value||new Date().getMonth()+1);
+  const y=parseInt(document.getElementById('fYear')?.value||new Date().getFullYear());
+  const updates=[];
+
+  for(const pt of _icAdmittedPts){
+    const bedId=(pt['เตียง']||'').trim();
+    const bd=_icBedData[bedId];
+    if(!bd||Object.keys(bd).length===0) continue;
+
+    const updated={...pt};
+    if(bd.dx!==undefined) updated['Diagnosis แรกรับ']=bd.dx;
+    if(bd.hadrugsList!==undefined) updated['ยา HD']=bd.hadrugsList;
+    if(bd.doctor!==undefined) updated['แพทย์เจ้าของไข้']=bd.doctor;
+    if(bd.sos!==undefined) updated['SOS Score']=bd.sos;
+    if(bd.note!==undefined) updated['หมายเหตุ']=bd.note;
+
+    updates.push({id:pt['id'],month:m,year:y,data:updated});
+  }
+
+  if(updates.length===0) return;
+
+  showLoad(`กำลังอัปเดต ${updates.length} เตียง...`);
+  try{
+    for(const u of updates){
+      await api('savePatient',{},{id:u.id,month:u.month,year:u.year,data:u.data});
+    }
+    // reload ข้อมูล
+    _pts=await api('getPatients',{month:m,year:y});
+    applyFilter(); updateStats(); startNewsBoard();
+    toast(`✅ อัปเดตข้อมูล ${updates.length} เตียงสำเร็จ`);
+  }catch(e){
+    toast('⚠️ อัปเดตไม่สำเร็จ: '+e.message,true);
+  }finally{ hideLoad(); }
+}
+
 async function icSendLine(){
   if(!icValidateNurse()) return;
+  // บันทึกข้อมูลผู้ป่วยก่อนส่ง
+  await saveInChargeToPatients();
   const token=_icSettings.telegramToken;
   const chatId=_icSettings.telegramChatId;
   if(!token||!chatId){
