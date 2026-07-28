@@ -2474,6 +2474,12 @@ async function saveInChargeToPatients(){
     // reload ข้อมูล
     _pts=await api('getPatients',{month:m,year:y});
     applyFilter(); updateStats(); startNewsBoard();
+    // อัปเดต _icAdmittedPts ด้วย
+    _icAdmittedPts=_pts.filter(p=>p['สถานะ']==='กำลัง admit');
+    // re-render แผนผังเตียง + ตารางใต้แผนผัง
+    renderBedMap(_pts);
+    renderBedAdmitTable(_pts);
+    renderBedSummaryCards(_pts);
     toast(`✅ อัปเดตข้อมูล ${updates.length} เตียงสำเร็จ`);
   }catch(e){
     toast('⚠️ อัปเดตไม่สำเร็จ: '+e.message,true);
