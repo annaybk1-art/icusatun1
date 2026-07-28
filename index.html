@@ -3954,97 +3954,53 @@ function renderBedMap(pts){
   if(!bedMapEl) return;
 
   const pt=(n)=>admittedBeds.find(r=>(r['เตียง']||'').trim()==='ICU'+n);
-  const bStyle=(p)=>p?'background:#ffcdd2;border:2px solid #ef9a9a;':'background:#f1f8e9;border:2px solid #c8e6c9;';
-  const bCol=(p)=>p?'#c62828':'#2e7d32';
-  const td=(n)=>{
+
+  // helper สร้าง cell เตียง
+  const cell=(n,iso=false)=>{
     const p=pt(n);
     const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
-    return `<td onclick="highlightBedRow('ICU${n}')" style="${bStyle(p)}border-radius:10px;padding:clamp(6px,1.5vw,18px) clamp(4px,1vw,12px);text-align:center;font-size:clamp(11px,1.4vw,18px);font-weight:700;color:${bCol(p)};cursor:pointer">ICU${n}${type?`<br><small style="font-weight:400;font-size:clamp(9px,1vw,13px)">(${type})</small>`:''}</td>`;
+    const bg=p?'#ffcdd2':'#f1f8e9';
+    const bdr=p?'#ef9a9a':'#c8e6c9';
+    const col=p?'#c62828':'#2e7d32';
+    const label=iso?`ICU${n}<br><small style="font-weight:400">ห้องแยก</small>`:`ICU${n}`;
+    const sub=type?`<br><small style="font-weight:400;font-size:85%">(${type})</small>`:'';
+    return `<td onclick="highlightBedRow('ICU${n}')" style="background:${bg};border:2px solid ${bdr};border-radius:8px;color:${col};font-weight:700;text-align:center;cursor:pointer;vertical-align:middle;white-space:nowrap;padding:0 4px">${label}${sub}</td>`;
   };
-  const td9=()=>{
-    const p=pt(9);
-    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
-    return `<td onclick="highlightBedRow('ICU9')" style="${bStyle(p)}border-radius:10px;padding:clamp(6px,1.5vw,18px) clamp(4px,1vw,12px);text-align:center;font-size:clamp(11px,1.4vw,18px);font-weight:700;color:${bCol(p)};cursor:pointer">ICU9<br><small style="font-weight:400;font-size:clamp(9px,1vw,13px)">ห้องแยก</small>${type?`<br><small style="font-size:clamp(9px,1vw,13px)">(${type})</small>`:''}</td>`;
-  };
-  const e=`<td style="background:transparent;border:none;padding:0;width:1%"></td>`;
-  const ns=`<td style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:10px;text-align:center;font-size:clamp(9px,1.1vw,14px);color:#1565c0;padding:clamp(6px,1.5vw,18px) 4px">🏥<br>เคาน์เตอร์</td>`;
-  const nsw=`<td colspan="3" style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:10px;text-align:center;font-size:clamp(10px,1.2vw,15px);color:#1565c0;padding:clamp(6px,1.5vw,18px)">🏥 เคาน์เตอร์พยาบาล</td>`;
-  const door=`<td style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;text-align:center;font-size:clamp(9px,1.1vw,14px);color:#f57f17;padding:clamp(6px,1.5vw,18px) 4px">🚪<br>ประตู</td>`;
-  const sterile=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:10px;text-align:center;font-size:clamp(9px,1.1vw,14px);color:#6a1b9a;padding:clamp(6px,1.5vw,18px) 4px">🧼<br>Sterile</td>`;
-  const n=admittedBeds.length;
+  const E=`<td style="border:none;background:transparent"></td>`;
+  const NS=`<td style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;color:#1565c0;vertical-align:middle;white-space:nowrap">🏥<br><small>เคาน์เตอร์</small></td>`;
+  const NSW=`<td colspan="3" style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;color:#1565c0;vertical-align:middle">🏥 เคาน์เตอร์พยาบาล</td>`;
+  const DOOR=`<td style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;text-align:center;color:#f57f17;vertical-align:middle;white-space:nowrap">🚪<br><small>ประตู</small></td>`;
+  const STR=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;text-align:center;color:#6a1b9a;vertical-align:middle;white-space:nowrap">🧼<br><small>Sterile</small></td>`;
 
-  // ใช้ CSS Grid แทน Table — ยืดตามกรอบ
-  const G=(content,col='',row='',extra='')=>`<div style="grid-column:${col||'auto'};grid-row:${row||'auto'};${extra}">${content}</div>`;
-  const bedStyle=(p,click='')=>`border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 2px;text-align:center;font-weight:700;cursor:pointer;${p?'background:#ffcdd2;border:2px solid #ef9a9a;color:#c62828;':'background:#f1f8e9;border:2px solid #c8e6c9;color:#2e7d32;'}`;
-  const tdG=(n)=>{
-    const p=pt(n);
-    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
-    return `<div onclick="highlightBedRow('ICU${n}')" style="${bedStyle(p)}">
-      <span style="font-size:clamp(9px,1.8vw,15px);line-height:1.2">ICU${n}</span>
-      ${type?`<span style="font-size:clamp(7px,1.2vw,11px);font-weight:400;opacity:.8">(${type})</span>`:''}
-    </div>`;
-  };
-  const td9G=()=>{
-    const p=pt(9);
-    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
-    return `<div onclick="highlightBedRow('ICU9')" style="${bedStyle(p)}">
-      <span style="font-size:clamp(9px,1.8vw,15px);line-height:1.2">ICU9</span>
-      <span style="font-size:clamp(6px,1vw,10px);font-weight:400;opacity:.8">ห้องแยก</span>
-      ${type?`<span style="font-size:clamp(6px,1vw,10px);font-weight:400;opacity:.8">(${type})</span>`:''}
-    </div>`;
-  };
-  const nsG=`<div style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#1565c0">🏥<span>เคาน์เตอร์</span></div>`;
-  const nswG=`<div style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#1565c0;height:100%">🏥 เคาน์เตอร์พยาบาล</div>`;
-  const doorG=`<div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#f57f17">🚪<span>ประตู</span></div>`;
-  const sterileG=`<div style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#6a1b9a">🧼<span>Sterile</span></div>`;
-  const emptyG=`<div style="background:transparent;border:none"></div>`;
-
-  // ── Desktop: HTML Table (เหมือนรูป) ──────────────────────
-  const tbl=(content,style='')=>`<td style="border-radius:8px;padding:6px 4px;text-align:center;${style}">${content}</td>`;
-  const tdT=(n)=>{
-    const p=pt(n);
-    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
-    const bg=p?'background:#ffcdd2;border:2px solid #ef9a9a;color:#c62828;':'background:#f1f8e9;border:2px solid #c8e6c9;color:#2e7d32;';
-    return `<td onclick="highlightBedRow('ICU${n}')" style="${bg}border-radius:8px;padding:8px 4px;text-align:center;font-weight:700;font-size:clamp(11px,1.1vw,15px);cursor:pointer">ICU${n}${type?`<br><small style="font-weight:400;font-size:clamp(9px,0.85vw,12px)">(${type})</small>`:''}</td>`;
-  };
-  const td9T=()=>{
-    const p=pt(9);
-    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
-    const bg=p?'background:#ffcdd2;border:2px solid #ef9a9a;color:#c62828;':'background:#f1f8e9;border:2px solid #c8e6c9;color:#2e7d32;';
-    return `<td onclick="highlightBedRow('ICU9')" style="${bg}border-radius:8px;padding:8px 4px;text-align:center;font-weight:700;font-size:clamp(11px,1.1vw,15px);cursor:pointer">ICU9<br><small style="font-weight:400;font-size:clamp(9px,0.85vw,12px)">ห้องแยก</small>${type?`<br><small style="font-size:clamp(9px,0.85vw,12px)">(${type})</small>`:''}</td>`;
-  };
-  const eT=`<td style="border:none;background:transparent;padding:0"></td>`;
-  const nsT=`<td style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;font-size:clamp(9px,0.9vw,12px);color:#1565c0;padding:4px">🏥<br>เคาน์เตอร์</td>`;
-  const nswT=`<td colspan="3" style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;font-size:clamp(9px,0.9vw,12px);color:#1565c0;padding:6px">🏥 เคาน์เตอร์พยาบาล</td>`;
-  const doorT=`<td style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;text-align:center;font-size:clamp(9px,0.9vw,12px);color:#f57f17;padding:4px">🚪<br>ประตู</td>`;
-  const sterileT=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;text-align:center;font-size:clamp(9px,0.9vw,12px);color:#6a1b9a;padding:4px">🧼<br>Sterile</td>`;
-
-  const desktopTable=`<table style="border-collapse:separate;border-spacing:clamp(3px,0.5vw,7px);width:100%;table-layout:fixed">
+  const tableHTML=`
+  <table style="border-collapse:separate;border-spacing:5px;width:100%;table-layout:fixed;font-size:12px">
     <colgroup>${Array(11).fill('<col>').join('')}</colgroup>
-    <tr>${eT}${eT}${eT}${eT}${eT}${eT}${eT}${td9T()}${eT}${eT}${eT}</tr>
-    <tr>${tdT(6)}${tdT(5)}${tdT(4)}${tdT(3)}${tdT(2)}${tdT(1)}${sterileT}${eT}${doorT}${nsT}${tdT(10)}</tr>
-    <tr>${eT}${eT}${eT}${eT}${eT}${eT}${eT}${eT}${eT}${eT}${tdT(11)}</tr>
-    <tr>${tdT(8)}${tdT(7)}${nswT}${eT}${nsT}${tdT(14)}${tdT(13)}${eT}${tdT(12)}</tr>
+    <tr style="height:60px">${E}${E}${E}${E}${E}${E}${E}${cell(9,true)}${E}${E}${E}</tr>
+    <tr style="height:60px">${cell(6)}${cell(5)}${cell(4)}${cell(3)}${cell(2)}${cell(1)}${STR}${E}${DOOR}${NS}${cell(10)}</tr>
+    <tr style="height:60px">${E}${E}${E}${E}${E}${E}${E}${E}${E}${E}${cell(11)}</tr>
+    <tr style="height:60px">${cell(8)}${cell(7)}${NSW}${E}${NS}${cell(14)}${cell(13)}${E}${cell(12)}</tr>
   </table>`;
 
-  // ── Mobile: Grid เลื่อนซ้าย-ขวา ──────────────────────────
-  const mobileGrid=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-    <div style="display:grid;grid-template-columns:repeat(11,minmax(54px,1fr));grid-template-rows:repeat(4,60px);gap:4px;min-width:600px">
-      ${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${td9G()}${emptyG}${emptyG}${emptyG}
-      ${tdG(6)}${tdG(5)}${tdG(4)}${tdG(3)}${tdG(2)}${tdG(1)}${sterileG}${emptyG}${doorG}${nsG}${tdG(10)}
-      ${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${tdG(11)}
-      ${tdG(8)}${tdG(7)}${nswG}${emptyG}${nsG}${tdG(14)}${tdG(13)}${emptyG}${tdG(12)}
-    </div>
-  </div>`;
-
-  const isMobile=window.innerWidth<768;
-  bedMapEl.innerHTML=`<div id="bedMapTable">${isMobile?mobileGrid:desktopTable}</div>`;
-
-  // ย่อให้พอดีจอ
-  // CSS Grid ไม่ต้อง scale
-
-  applyWidgetVisibility();
+  if(window.innerWidth>=768){
+    // คอม — Table เต็มจอ
+    bedMapEl.innerHTML=tableHTML;
+  } else {
+    // มือถือ — ใส่ใน div แล้ว scale ให้พอดีจอ
+    bedMapEl.innerHTML=`<div id="bedMapInner" style="display:inline-block;min-width:580px">${tableHTML}</div>`;
+    requestAnimationFrame(()=>{
+      const inner=document.getElementById('bedMapInner');
+      const wrap=bedMapEl;
+      if(!inner||!wrap) return;
+      const scale=wrap.offsetWidth/inner.offsetWidth;
+      if(scale<1){
+        inner.style.transformOrigin='top left';
+        inner.style.transform=`scale(${scale})`;
+        wrap.style.height=(inner.offsetHeight*scale)+'px';
+      }
+    });
+  }
 }
+
 
 function sosToType(sos){
   const s=parseInt(sos)||0;
