@@ -3959,21 +3959,21 @@ function renderBedMap(pts){
   const td=(n)=>{
     const p=pt(n);
     const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
-    return `<td onclick="highlightBedRow('ICU${n}')" style="${bStyle(p)}border-radius:8px;padding:6px 3px;text-align:center;font-size:11px;font-weight:700;color:${bCol(p)};cursor:pointer">ICU${n}${type?`<br><small style="font-weight:400;font-size:9px">(${type})</small>`:''}</td>`;
+    return `<td onclick="highlightBedRow('ICU${n}')" style="${bStyle(p)}border-radius:10px;padding:clamp(6px,1.5vw,18px) clamp(4px,1vw,12px);text-align:center;font-size:clamp(11px,1.4vw,18px);font-weight:700;color:${bCol(p)};cursor:pointer">ICU${n}${type?`<br><small style="font-weight:400;font-size:clamp(9px,1vw,13px)">(${type})</small>`:''}</td>`;
   };
   const td9=()=>{
     const p=pt(9);
     const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
-    return `<td onclick="highlightBedRow('ICU9')" style="${bStyle(p)}border-radius:8px;padding:6px 3px;text-align:center;font-size:11px;font-weight:700;color:${bCol(p)};cursor:pointer">ICU9<br><small style="font-weight:400;font-size:9px">ห้องแยก</small>${type?`<br><small style="font-size:9px">(${type})</small>`:''}</td>`;
+    return `<td onclick="highlightBedRow('ICU9')" style="${bStyle(p)}border-radius:10px;padding:clamp(6px,1.5vw,18px) clamp(4px,1vw,12px);text-align:center;font-size:clamp(11px,1.4vw,18px);font-weight:700;color:${bCol(p)};cursor:pointer">ICU9<br><small style="font-weight:400;font-size:clamp(9px,1vw,13px)">ห้องแยก</small>${type?`<br><small style="font-size:clamp(9px,1vw,13px)">(${type})</small>`:''}</td>`;
   };
-  const e=`<td style="background:transparent;border:none;padding:0"></td>`;
-  const ns=`<td style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;font-size:9px;color:#1565c0;padding:4px">🏥<br>เคาน์เตอร์</td>`;
-  const nsw=`<td colspan="3" style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;font-size:10px;color:#1565c0;padding:6px">🏥 เคาน์เตอร์พยาบาล</td>`;
-  const door=`<td style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;text-align:center;font-size:9px;color:#f57f17;padding:4px">🚪<br>ประตู</td>`;
-  const sterile=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;text-align:center;font-size:9px;color:#6a1b9a;padding:4px">🧼<br>Sterile</td>`;
+  const e=`<td style="background:transparent;border:none;padding:0;width:1%"></td>`;
+  const ns=`<td style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:10px;text-align:center;font-size:clamp(9px,1.1vw,14px);color:#1565c0;padding:clamp(6px,1.5vw,18px) 4px">🏥<br>เคาน์เตอร์</td>`;
+  const nsw=`<td colspan="3" style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:10px;text-align:center;font-size:clamp(10px,1.2vw,15px);color:#1565c0;padding:clamp(6px,1.5vw,18px)">🏥 เคาน์เตอร์พยาบาล</td>`;
+  const door=`<td style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;text-align:center;font-size:clamp(9px,1.1vw,14px);color:#f57f17;padding:clamp(6px,1.5vw,18px) 4px">🚪<br>ประตู</td>`;
+  const sterile=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:10px;text-align:center;font-size:clamp(9px,1.1vw,14px);color:#6a1b9a;padding:clamp(6px,1.5vw,18px) 4px">🧼<br>Sterile</td>`;
   const n=admittedBeds.length;
 
-  bedMapEl.innerHTML=`<table id="bedMapTable" style="border-collapse:separate;border-spacing:4px;width:100%">
+  bedMapEl.innerHTML=`<table id="bedMapTable" style="border-collapse:separate;border-spacing:clamp(2px,0.5vw,8px);width:100%;table-layout:fixed">
     <tr>
       ${e}${e}${e}${e}${e}${e}${e}${td9()}${e}${e}${e}
     </tr>
