@@ -3973,7 +3973,7 @@ function renderBedMap(pts){
   const sterile=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:10px;text-align:center;font-size:clamp(9px,1.1vw,14px);color:#6a1b9a;padding:clamp(6px,1.5vw,18px) 4px">🧼<br>Sterile</td>`;
   const n=admittedBeds.length;
 
-  const E=`<td style="border:none;background:transparent;padding:clamp(3px,0.5vw,8px)"></td>`;
+  const E=`<td style="border:none;background:transparent;padding:0"></td>`;
   bedMapEl.innerHTML=`<table id="bedMapTable" style="border-collapse:separate;border-spacing:clamp(3px,0.5vw,8px);width:100%;table-layout:fixed">
     <colgroup><col><col><col><col><col><col><col><col><col><col><col></colgroup>
     <tr>${E}${E}${E}${E}${E}${E}${E}${td9()}${E}${E}${E}</tr>
@@ -3983,17 +3983,26 @@ function renderBedMap(pts){
   </table>`;
 
   // ย่อให้พอดีจอ
-  setTimeout(()=>{
-    const wrap=document.getElementById('bedMapScroll');
-    const tbl=document.getElementById('bedMapTable');
-    if(!wrap||!tbl) return;
-    const scale=wrap.offsetWidth/tbl.offsetWidth;
-    if(scale<1){
-      tbl.style.transformOrigin='top left';
-      tbl.style.transform=`scale(${scale})`;
-      wrap.style.height=(tbl.offsetHeight*scale)+'px';
-    }
-  },100);
+  // scale บนมือถือ
+  if(window.innerWidth<768){
+    const doScale=()=>{
+      const wrap=document.getElementById('bedMapScroll');
+      const tbl=document.getElementById('bedMapTable');
+      if(!wrap||!tbl) return;
+      tbl.style.transform='none';
+      wrap.style.height='';
+      const wrapW=wrap.offsetWidth;
+      const tblW=tbl.offsetWidth;
+      if(wrapW>0&&tblW>wrapW){
+        const scale=wrapW/tblW;
+        tbl.style.transformOrigin='top left';
+        tbl.style.transform=`scale(${scale})`;
+        wrap.style.height=(tbl.offsetHeight*scale)+'px';
+      }
+    };
+    setTimeout(doScale,100);
+    setTimeout(doScale,500);
+  }
 
   applyWidgetVisibility();
 }
