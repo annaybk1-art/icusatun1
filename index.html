@@ -687,7 +687,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <button class="btn btn-outline" onclick="loadBedMap()">↻ รีเฟรช</button>
       </div>
       <div class="dash-card" style="margin-bottom:12px">
-        <div id="bedMapScroll" style="width:100%;overflow:hidden">
+        <div id="bedMapScroll" style="width:100%">
           <div id="bedMap"></div>
         </div>
         <div id="bedStat" style="margin-top:10px;font-size:12px;font-weight:700;color:var(--g800)"></div>
@@ -3973,36 +3973,41 @@ function renderBedMap(pts){
   const sterile=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:10px;text-align:center;font-size:clamp(9px,1.1vw,14px);color:#6a1b9a;padding:clamp(6px,1.5vw,18px) 4px">🧼<br>Sterile</td>`;
   const n=admittedBeds.length;
 
-  const E=`<td style="border:none;background:transparent;padding:0"></td>`;
-  bedMapEl.innerHTML=`<table id="bedMapTable" style="border-collapse:separate;border-spacing:clamp(3px,0.5vw,8px);width:100%;table-layout:fixed">
-    <colgroup><col><col><col><col><col><col><col><col><col><col><col></colgroup>
-    <tr>${E}${E}${E}${E}${E}${E}${E}${td9()}${E}${E}${E}</tr>
-    <tr>${td(6)}${td(5)}${td(4)}${td(3)}${td(2)}${td(1)}${sterile}${E}${door}${ns}${td(10)}</tr>
-    <tr>${E}${E}${E}${E}${E}${E}${E}${E}${E}${E}${td(11)}</tr>
-    <tr>${td(8)}${td(7)}${nsw}${E}${ns}${td(14)}${td(13)}${E}${td(12)}</tr>
-  </table>`;
+  // ใช้ CSS Grid แทน Table — ยืดตามกรอบ
+  const G=(content,col='',row='',extra='')=>`<div style="grid-column:${col||'auto'};grid-row:${row||'auto'};${extra}">${content}</div>`;
+  const bedStyle=(p,click='')=>`border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 2px;text-align:center;font-weight:700;cursor:pointer;${p?'background:#ffcdd2;border:2px solid #ef9a9a;color:#c62828;':'background:#f1f8e9;border:2px solid #c8e6c9;color:#2e7d32;'}`;
+  const tdG=(n)=>{
+    const p=pt(n);
+    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
+    return `<div onclick="highlightBedRow('ICU${n}')" style="${bedStyle(p)}">
+      <span style="font-size:clamp(9px,1.8vw,15px);line-height:1.2">ICU${n}</span>
+      ${type?`<span style="font-size:clamp(7px,1.2vw,11px);font-weight:400;opacity:.8">(${type})</span>`:''}
+    </div>`;
+  };
+  const td9G=()=>{
+    const p=pt(9);
+    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
+    return `<div onclick="highlightBedRow('ICU9')" style="${bedStyle(p)}">
+      <span style="font-size:clamp(9px,1.8vw,15px);line-height:1.2">ICU9</span>
+      <span style="font-size:clamp(6px,1vw,10px);font-weight:400;opacity:.8">ห้องแยก</span>
+      ${type?`<span style="font-size:clamp(6px,1vw,10px);font-weight:400;opacity:.8">(${type})</span>`:''}
+    </div>`;
+  };
+  const nsG=`<div style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#1565c0">🏥<span>เคาน์เตอร์</span></div>`;
+  const nswG=`<div style="grid-column:span 3;background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#1565c0">🏥 เคาน์เตอร์พยาบาล</div>`;
+  const doorG=`<div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#f57f17">🚪<span>ประตู</span></div>`;
+  const sterileG=`<div style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#6a1b9a">🧼<span>Sterile</span></div>`;
+  const emptyG=`<div style="background:transparent;border:none"></div>`;
+
+  bedMapEl.innerHTML=`<div id="bedMapTable" style="display:grid;grid-template-columns:repeat(11,1fr);grid-template-rows:repeat(4,1fr);gap:clamp(3px,0.6vw,8px);width:100%;aspect-ratio:11/4">
+    ${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${td9G()}${emptyG}${emptyG}${emptyG}
+    ${tdG(6)}${tdG(5)}${tdG(4)}${tdG(3)}${tdG(2)}${tdG(1)}${sterileG}${emptyG}${doorG}${nsG}${tdG(10)}
+    ${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${tdG(11)}
+    ${tdG(8)}${tdG(7)}${nswG}${emptyG}${nsG}${tdG(14)}${tdG(13)}${emptyG}${tdG(12)}
+  </div>`;
 
   // ย่อให้พอดีจอ
-  // scale บนมือถือ
-  if(window.innerWidth<768){
-    const doScale=()=>{
-      const wrap=document.getElementById('bedMapScroll');
-      const tbl=document.getElementById('bedMapTable');
-      if(!wrap||!tbl) return;
-      tbl.style.transform='none';
-      wrap.style.height='';
-      const wrapW=wrap.offsetWidth;
-      const tblW=tbl.offsetWidth;
-      if(wrapW>0&&tblW>wrapW){
-        const scale=wrapW/tblW;
-        tbl.style.transformOrigin='top left';
-        tbl.style.transform=`scale(${scale})`;
-        wrap.style.height=(tbl.offsetHeight*scale)+'px';
-      }
-    };
-    setTimeout(doScale,100);
-    setTimeout(doScale,500);
-  }
+  // CSS Grid ไม่ต้อง scale
 
   applyWidgetVisibility();
 }
