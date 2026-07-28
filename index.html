@@ -3999,9 +3999,9 @@ function renderBedMap(pts){
   const sterileG=`<div style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#6a1b9a">🧼<span>Sterile</span></div>`;
   const emptyG=`<div style="background:transparent;border:none"></div>`;
 
-  const pos=(col,row,content)=>`<div style="grid-column:${col};grid-row:${row}">${content}</div>`;
+  const pos=(col,row,content,extra='')=>`<div style="grid-column:${col};grid-row:${row};${extra}">${content}</div>`;
 
-  bedMapEl.innerHTML=`<div id="bedMapTable" style="display:grid;grid-template-columns:repeat(11,1fr);grid-template-rows:repeat(4,1fr);gap:clamp(2px,0.5vw,6px);width:100%;aspect-ratio:11/4">
+  bedMapEl.innerHTML=`<div id="bedMapTable" style="display:grid;grid-template-columns:repeat(11,1fr);grid-template-rows:repeat(4,1fr);gap:clamp(2px,0.5vw,6px);width:100%;height:clamp(160px,22vw,320px)">
     ${pos(8,1,td9G())}
     ${pos(1,2,tdG(6))}${pos(2,2,tdG(5))}${pos(3,2,tdG(4))}${pos(4,2,tdG(3))}${pos(5,2,tdG(2))}${pos(6,2,tdG(1))}${pos(7,2,sterileG)}${pos(9,2,doorG)}${pos(10,2,nsG)}${pos(11,2,tdG(10))}
     ${pos(11,3,tdG(11))}
