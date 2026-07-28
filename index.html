@@ -3994,16 +3994,18 @@ function renderBedMap(pts){
     </div>`;
   };
   const nsG=`<div style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#1565c0">🏥<span>เคาน์เตอร์</span></div>`;
-  const nswG=`<div style="grid-column:span 3;background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#1565c0">🏥 เคาน์เตอร์พยาบาล</div>`;
+  const nswG=`<div style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#1565c0;height:100%">🏥 เคาน์เตอร์พยาบาล</div>`;
   const doorG=`<div style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#f57f17">🚪<span>ประตู</span></div>`;
   const sterileG=`<div style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:clamp(7px,1.2vw,11px);color:#6a1b9a">🧼<span>Sterile</span></div>`;
   const emptyG=`<div style="background:transparent;border:none"></div>`;
 
-  bedMapEl.innerHTML=`<div id="bedMapTable" style="display:grid;grid-template-columns:repeat(11,1fr);gap:clamp(3px,0.6vw,8px);width:100%">
-    ${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${td9G()}${emptyG}${emptyG}${emptyG}
-    ${tdG(6)}${tdG(5)}${tdG(4)}${tdG(3)}${tdG(2)}${tdG(1)}${sterileG}${emptyG}${doorG}${nsG}${tdG(10)}
-    ${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${emptyG}${tdG(11)}
-    ${tdG(8)}${tdG(7)}${nswG}${emptyG}${nsG}${tdG(14)}${tdG(13)}${emptyG}${tdG(12)}
+  const pos=(col,row,content)=>`<div style="grid-column:${col};grid-row:${row}">${content}</div>`;
+
+  bedMapEl.innerHTML=`<div id="bedMapTable" style="display:grid;grid-template-columns:repeat(11,1fr);grid-template-rows:repeat(4,1fr);gap:clamp(2px,0.5vw,6px);width:100%;aspect-ratio:11/4">
+    ${pos(8,1,td9G())}
+    ${pos(1,2,tdG(6))}${pos(2,2,tdG(5))}${pos(3,2,tdG(4))}${pos(4,2,tdG(3))}${pos(5,2,tdG(2))}${pos(6,2,tdG(1))}${pos(7,2,sterileG)}${pos(9,2,doorG)}${pos(10,2,nsG)}${pos(11,2,tdG(10))}
+    ${pos(11,3,tdG(11))}
+    ${pos(1,4,tdG(8))}${pos(2,4,tdG(7))}${pos('3/6',4,nswG)}${pos(7,4,nsG)}${pos(8,4,tdG(14))}${pos(9,4,tdG(13))}${pos(11,4,tdG(12))}
   </div>`;
 
   // ย่อให้พอดีจอ
