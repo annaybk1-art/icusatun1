@@ -2437,15 +2437,14 @@ function icCopyMsg(){
 }
 
 async function saveInChargeToPatients(){
-  // อัปเดตข้อมูลผู้ป่วยทุกเตียงที่มีการแก้ไข
   const m=parseInt(document.getElementById('fMonth')?.value||new Date().getMonth()+1);
   const y=parseInt(document.getElementById('fYear')?.value||new Date().getFullYear());
   const updates=[];
 
   for(const pt of _icAdmittedPts){
     const bedId=(pt['เตียง']||'').trim();
-    const bd=_icBedData[bedId];
-    if(!bd||Object.keys(bd).length===0) continue;
+    const bd=_icBedData[bedId]||{};
+    if(Object.keys(bd).length===0) continue;
 
     const updated={...pt};
     if(bd.dx!==undefined) updated['Diagnosis แรกรับ']=bd.dx;
@@ -2454,37 +2453,33 @@ async function saveInChargeToPatients(){
     if(bd.sos!==undefined) updated['SOS Score']=bd.sos;
     if(bd.patType!==undefined) updated['ประเภทผู้ป่วย ICU']=bd.patType;
     if(bd.note!==undefined) updated['หมายเหตุ']=bd.note;
-    // IC start/stop
     const icMap={vent:['Ventilator (Start)','Ventilator (End)'],aline:['A-Line (Start)','A-Line (End)'],cline:['C-Line (Start)','C-Line (End.)'],iv:['IV (Start)','IV (End)'],fc:['F/C (Start)','F/C (END)'],icd:['ICD (Start)','ICD (End)']};
     Object.entries(icMap).forEach(([k,[s,e]])=>{
       if(bd[k+'_start']!==undefined) updated[s]=bd[k+'_start'];
       if(bd[k+'_stop']!==undefined) updated[e]=bd[k+'_stop'];
     });
-
     updates.push({id:pt['id'],month:m,year:y,data:updated});
   }
 
-  if(updates.length===0) return;
+  if(updates.length===0){toast('ℹ️ ยังไม่มีข้อมูลที่แก้ไข');return;}
 
   showLoad(`กำลังอัปเดต ${updates.length} เตียง...`);
   try{
     for(const u of updates){
       await api('savePatient',{},{id:u.id,month:u.month,year:u.year,data:u.data});
     }
-    // reload ข้อมูล
     _pts=await api('getPatients',{month:m,year:y});
     applyFilter(); updateStats(); startNewsBoard();
-    // อัปเดต _icAdmittedPts ด้วย
     _icAdmittedPts=_pts.filter(p=>p['สถานะ']==='กำลัง admit');
-    // re-render แผนผังเตียง + ตารางใต้แผนผัง
     renderBedMap(_pts);
     renderBedAdmitTable(_pts);
     renderBedSummaryCards(_pts);
-    toast(`✅ อัปเดตข้อมูล ${updates.length} เตียงสำเร็จ`);
+    toast(`✅ อัปเดต ${updates.length} เตียงสำเร็จ`);
   }catch(e){
-    toast('⚠️ อัปเดตไม่สำเร็จ: '+e.message,true);
-  }finally{ hideLoad(); }
+    toast('⚠️ ไม่สำเร็จ: '+e.message,true);
+  }finally{hideLoad();}
 }
+
 
 async function icSendLine(){
   if(!icValidateNurse()) return;
