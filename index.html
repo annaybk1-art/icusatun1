@@ -3973,20 +3973,13 @@ function renderBedMap(pts){
   const sterile=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:10px;text-align:center;font-size:clamp(9px,1.1vw,14px);color:#6a1b9a;padding:clamp(6px,1.5vw,18px) 4px">🧼<br>Sterile</td>`;
   const n=admittedBeds.length;
 
+  const E=`<td style="border:none;background:transparent;padding:clamp(3px,0.5vw,8px)"></td>`;
   bedMapEl.innerHTML=`<table id="bedMapTable" style="border-collapse:separate;border-spacing:clamp(3px,0.5vw,8px);width:100%;table-layout:fixed">
-    <colgroup>${Array(11).fill(0).map((_,i)=>'<col>').join('')}</colgroup>
-    <tr>
-      <td colspan="7" style="border:none;background:transparent;padding:0"></td>${td9()}<td colspan="3" style="border:none;background:transparent;padding:0"></td>
-    </tr>
-    <tr>
-      ${td(6)}${td(5)}${td(4)}${td(3)}${td(2)}${td(1)}${sterile}<td style="border:none;background:transparent;padding:0"></td>${door}${ns}${td(10)}
-    </tr>
-    <tr>
-      <td colspan="10" style="border:none;background:transparent;padding:0"></td>${td(11)}
-    </tr>
-    <tr>
-      ${td(8)}${td(7)}${nsw}<td style="border:none;background:transparent;padding:0"></td>${ns}${td(14)}${td(13)}<td style="border:none;background:transparent;padding:0"></td>${td(12)}
-    </tr>
+    <colgroup><col><col><col><col><col><col><col><col><col><col><col></colgroup>
+    <tr>${E}${E}${E}${E}${E}${E}${E}${td9()}${E}${E}${E}</tr>
+    <tr>${td(6)}${td(5)}${td(4)}${td(3)}${td(2)}${td(1)}${sterile}${E}${door}${ns}${td(10)}</tr>
+    <tr>${E}${E}${E}${E}${E}${E}${E}${E}${E}${E}${td(11)}</tr>
+    <tr>${td(8)}${td(7)}${nsw}${E}${ns}${td(14)}${td(13)}${E}${td(12)}</tr>
   </table>`;
 
   // ย่อให้พอดีจอ
