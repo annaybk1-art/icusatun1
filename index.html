@@ -3986,49 +3986,124 @@ function scaleBedMap(){
 }
 
 function renderBedMap(pts){
-  const admittedBeds=pts.filter(p=>p['สถานะ']!=='จำหน่ายแล้ว'&&p['สถานะ']!=='ค้างเดือน');
-  const bedMapEl=document.getElementById('bedMap');
-  if(!bedMapEl) return;
+  const admitted=pts.filter(p=>p['สถานะ']!=='จำหน่ายแล้ว'&&p['สถานะ']!=='ค้างเดือน');
+  const el=document.getElementById('bedMap');
+  if(!el) return;
 
-  const pt=(n)=>admittedBeds.find(r=>(r['เตียง']||'').trim()==='ICU'+n);
+  const get=(n)=>admitted.find(r=>(r['เตียง']||'').trim()==='ICU'+n);
 
-  const cell=(n,iso=false)=>{
-    const p=pt(n);
+  const bed=(n,label)=>{
+    const p=get(n);
+    const used=!!p;
     const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
-    const bg=p?'#ffcdd2':'#f1f8e9';
-    const bdr=p?'#ef9a9a':'#c8e6c9';
-    const col=p?'#c62828':'#2e7d32';
-    const label=iso?`ICU${n}<br><small style="font-weight:400">ห้องแยก</small>`:`ICU${n}`;
-    const sub=type?`<br><small style="font-weight:400;font-size:85%">(${type})</small>`:'';
-    return `<td onclick="highlightBedRow('ICU${n}')" style="background:${bg};border:2px solid ${bdr};border-radius:8px;color:${col};font-weight:700;text-align:center;cursor:pointer;vertical-align:middle;white-space:nowrap;padding:0 4px">${label}${sub}</td>`;
+    const name=p?(p['ชื่อ-สกุล']||''):'';
+    const dx=p?(p['Diagnosis แรกรับ']||'').split(',')[0].trim():'';
+    const tip=used?`title="${name} | ${dx}"`:'';
+    const bg=used?'#ffcdd2':'#f1f8e9';
+    const bdr=used?'#ef9a9a':'#a5d6a7';
+    const col=used?'#b71c1c':'#1b5e20';
+    return `<div onclick="highlightBedRow('ICU${n}')" ${tip}
+      style="background:${bg};border:2px solid ${bdr};border-radius:10px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      cursor:pointer;padding:4px 2px;overflow:hidden;height:100%">
+      <span style="font-weight:700;font-size:clamp(10px,1.3vw,16px);color:${col};line-height:1.2">${label||'ICU'+n}</span>
+      ${type?`<span style="font-size:clamp(8px,0.95vw,12px);color:${col};opacity:.85">(${type})</span>`:''}
+    </div>`;
   };
-  const E=`<td style="border:none;background:transparent;padding:0">&nbsp;</td>`;
-  const NS=`<td style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;color:#1565c0;vertical-align:middle;white-space:nowrap;padding:4px">🏥<br><small>เคาน์เตอร์</small></td>`;
-  const NSW=`<td colspan="3" style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:8px;text-align:center;color:#1565c0;vertical-align:middle;padding:4px">🏥 เคาน์เตอร์พยาบาล</td>`;
-  const DOOR=`<td style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;text-align:center;color:#f57f17;vertical-align:middle;white-space:nowrap;padding:4px">🚪<br><small>ประตู</small></td>`;
-  const STR=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;text-align:center;color:#6a1b9a;vertical-align:middle;white-space:nowrap;padding:4px">🧼<br><small>Sterile</small></td>`;
 
-  const isMob=window.innerWidth<768;
-  const RH=`height:clamp(60px,10vw,110px)`;
-  const tableInner=`<table style="border-collapse:separate;border-spacing:clamp(3px,0.5vw,7px);width:100%;table-layout:fixed;font-size:clamp(11px,1.3vw,15px)">
-    <colgroup>
-      <col style="width:9.09%"><col style="width:9.09%"><col style="width:9.09%">
-      <col style="width:9.09%"><col style="width:9.09%"><col style="width:9.09%">
-      <col style="width:9.09%"><col style="width:9.09%"><col style="width:9.09%">
-      <col style="width:9.09%"><col style="width:9.10%">
-    </colgroup>
-    <tr style="${RH}">${E}${E}${E}${E}${E}${E}${E}${cell(9,true)}${E}${E}${E}</tr>
-    <tr style="${RH}">${cell(6)}${cell(5)}${cell(4)}${cell(3)}${cell(2)}${cell(1)}${STR}${E}${DOOR}${NS}${cell(10)}</tr>
-    <tr style="${RH}">${E}${E}${E}${E}${E}${E}${E}${E}${E}${E}${cell(11)}</tr>
-    <tr style="${RH}">${cell(8)}${cell(7)}${NSW}${E}${NS}${cell(14)}${cell(13)}${E}${cell(12)}</tr>
-  </table>`;
+  const iso=(n)=>{
+    const p=get(n);
+    const used=!!p;
+    const type=p?normalizePatType(p['ประเภทผู้ป่วย']||''):'';
+    const bg=used?'#ffcdd2':'#f1f8e9';
+    const bdr=used?'#ef9a9a':'#a5d6a7';
+    const col=used?'#b71c1c':'#1b5e20';
+    return `<div onclick="highlightBedRow('ICU${n}')"
+      style="background:${bg};border:2px solid ${bdr};border-radius:10px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      cursor:pointer;padding:4px 2px;height:100%">
+      <span style="font-weight:700;font-size:clamp(10px,1.3vw,16px);color:${col}">ICU${n}</span>
+      <span style="font-size:clamp(7px,0.85vw,11px);color:${col};opacity:.7">ห้องแยก</span>
+      ${type?`<span style="font-size:clamp(7px,0.85vw,11px);color:${col};opacity:.85">(${type})</span>`:''}
+    </div>`;
+  };
 
-  if(isMob){
-    bedMapEl.innerHTML=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><div style="min-width:600px">${tableInner}</div></div>`;
-  } else {
-    bedMapEl.style.width='100%';
-    bedMapEl.innerHTML=tableInner;
-  }
+  const ns=`<div style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:10px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%">
+    <span style="font-size:18px">🏥</span>
+    <span style="font-size:clamp(7px,0.85vw,11px);color:#1565c0">เคาน์เตอร์</span>
+  </div>`;
+
+  const nsw=`<div style="background:#e3f2fd;border:2px dashed #64b5f6;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;gap:6px;height:100%">
+    <span style="font-size:18px">🏥</span>
+    <span style="font-size:clamp(8px,1vw,13px);color:#1565c0;font-weight:600">เคาน์เตอร์พยาบาล</span>
+  </div>`;
+
+  const door=`<div style="background:#fff8e1;border:1px solid #ffe082;border-radius:10px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%">
+    <span style="font-size:18px">🚪</span>
+    <span style="font-size:clamp(7px,0.85vw,11px);color:#f57f17">ประตู</span>
+  </div>`;
+
+  const sterile=`<div style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:10px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%">
+    <span style="font-size:16px">🧼</span>
+    <span style="font-size:clamp(7px,0.85vw,11px);color:#6a1b9a">Sterile</span>
+  </div>`;
+
+  const empty=`<div style="background:transparent"></div>`;
+
+  // CSS Grid 11 col x 4 row
+  // col: 1  2  3  4  5  6  7      8    9    10   11
+  // R1: [] [] [] [] [] []  []    [9]   []   []   []
+  // R2: [6][5][4][3][2][1][str]  []  [door][ns] [10]
+  // R3: [] [] [] [] [] []  []    []   []   []   [11]
+  // R4: [8][7][nsw×3]      []   [ns] [14] [13]  []  [12]
+
+  const G=(content,cs=1,rs=1,ci='auto',ri='auto')=>{
+    let s=`grid-column:${ci==='auto'?'auto':`${ci}`};grid-row:${ri==='auto'?'auto':`${ri}`};`;
+    if(cs>1) s+=`grid-column:span ${cs};`;
+    return `<div style="${s}height:clamp(55px,9vw,105px)">${content}</div>`;
+  };
+
+  el.style.width='100%';
+  el.innerHTML=`<div style="
+    display:grid;
+    grid-template-columns:repeat(11,1fr);
+    grid-template-rows:repeat(4,clamp(55px,9vw,105px));
+    gap:clamp(4px,0.6vw,8px);
+    width:100%;
+  ">
+    ${empty}${empty}${empty}${empty}${empty}${empty}${empty}
+    <div style="height:clamp(55px,9vw,105px)">${iso(9)}</div>
+    ${empty}${empty}${empty}
+
+    <div style="height:clamp(55px,9vw,105px)">${bed(6)}</div>
+    <div style="height:clamp(55px,9vw,105px)">${bed(5)}</div>
+    <div style="height:clamp(55px,9vw,105px)">${bed(4)}</div>
+    <div style="height:clamp(55px,9vw,105px)">${bed(3)}</div>
+    <div style="height:clamp(55px,9vw,105px)">${bed(2)}</div>
+    <div style="height:clamp(55px,9vw,105px)">${bed(1)}</div>
+    <div style="height:clamp(55px,9vw,105px)">${sterile}</div>
+    ${empty}
+    <div style="height:clamp(55px,9vw,105px)">${door}</div>
+    <div style="height:clamp(55px,9vw,105px)">${ns}</div>
+    <div style="height:clamp(55px,9vw,105px)">${bed(10)}</div>
+
+    ${empty}${empty}${empty}${empty}${empty}${empty}${empty}${empty}${empty}${empty}
+    <div style="height:clamp(55px,9vw,105px)">${bed(11)}</div>
+
+    <div style="height:clamp(55px,9vw,105px)">${bed(8)}</div>
+    <div style="height:clamp(55px,9vw,105px)">${bed(7)}</div>
+    <div style="grid-column:span 3;height:clamp(55px,9vw,105px)">${nsw}</div>
+    ${empty}
+    <div style="height:clamp(55px,9vw,105px)">${ns}</div>
+    <div style="height:clamp(55px,9vw,105px)">${bed(14)}</div>
+    <div style="height:clamp(55px,9vw,105px)">${bed(13)}</div>
+    ${empty}
+    <div style="height:clamp(55px,9vw,105px)">${bed(12)}</div>
+  </div>`;
 }
 
 
