@@ -2296,10 +2296,7 @@ function renderIcBedList(){
         </div>
         <div class="fg">
           <label style="font-size:10px">ประเภทผู้ป่วย ICU</label>
-          <select onchange="icSet('${bedId}','patType',this.value)" style="width:100%">
-            <option value="">-- เลือก --</option>
-            ${patTypes.map(t=>`<option value="${t}" ${patType===t?'selected':''}>${t}</option>`).join('')}
-          </select>
+          <input type="text" value="${esc(patType)}" placeholder="เช่น 4a, 3b, 2b..." oninput="icSet('${bedId}','patType',this.value)" style="width:100%">
         </div>
         <div class="fg" style="grid-column:1/-1">
           <label style="font-size:10px">แพทย์เจ้าของไข้</label>
@@ -2991,7 +2988,8 @@ function buildForm(p){
     'C-Line (End.)','C-Line (day)','F/C (Start)','F/C (END)','F/C (day)',
     'ICD (Start)','ICD (End)','ICD (day)','Falling','APACHE II','Pain score',
     'VAP','CAUTI','CLABSI','SSI','MDR','ชนิดของเชื้อที่พบ','ชนิดสิ่งส่งตรวจ',
-    'CPR','Palliative','ผ่าตัด','ชนิดการผ่าตัด','แพ้ยา','หมายเหตุ',
+    'CPR','Palliative','ผ่าตัด','ชนิดการผ่าตัด','แพ้ยา','ยา HD','SOS Score','ประเภทผู้ป่วย ICU',
+    'การหายใจ','dxSpecialType','nurseInCharge','IV (Start)','IV (End)','IV (day)','หมายเหตุ',
     'created_at','updated_at','_row',
   ]);
   const extraFields=Object.entries(p).filter(([k])=>!STANDARD_FIELDS.has(k) && !k.startsWith('_'));
