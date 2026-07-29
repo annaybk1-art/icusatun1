@@ -2339,6 +2339,8 @@ function renderIcBedList(){
 function icSet(bedId,key,val){
   if(!_icBedData[bedId]) _icBedData[bedId]={};
   _icBedData[bedId][key]=val;
+  // อัปเดตตารางใต้แผนผังทันที
+  if(document.getElementById('bedAdmitBody')) renderBedAdmitTable(_pts);
 }
 function icMsdChange(msdId,bedId){
   const items=document.querySelectorAll(`#${msdId}-items input[type=checkbox]`);
@@ -4136,7 +4138,33 @@ function renderBedAdmitTable(pts){
     body.innerHTML='<tr><td colspan="15" class="loading-msg">ไม่มีผู้ป่วยที่กำลัง Admit</td></tr>';
     return;
   }
-  admitted.sort((a,b)=>{
+  // merge ข้อมูลจาก _icBedData (ถ้ามี)
+  const mergedPts=admitted.map(p=>{
+    const bedId=(p['เตียง']||'').trim();
+    const bd=_icBedData[bedId];
+    if(!bd) return p;
+    return {
+      ...p,
+      'Diagnosis แรกรับ': bd.dx!==undefined?bd.dx:p['Diagnosis แรกรับ'],
+      'ยา HD': bd.hadrugsList!==undefined?bd.hadrugsList:p['ยา HD'],
+      'แพทย์เจ้าของไข้': bd.doctor!==undefined?bd.doctor:p['แพทย์เจ้าของไข้'],
+      'SOS Score': bd.sos!==undefined?bd.sos:p['SOS Score'],
+      'ประเภทผู้ป่วย ICU': bd.patType!==undefined?bd.patType:p['ประเภทผู้ป่วย ICU'],
+      'Ventilator (Start)': bd.vent_start||p['Ventilator (Start)'],
+      'Ventilator (End)': bd.vent_stop||p['Ventilator (End)'],
+      'A-Line (Start)': bd.aline_start||p['A-Line (Start)'],
+      'A-Line (End)': bd.aline_stop||p['A-Line (End)'],
+      'C-Line (Start)': bd.cline_start||p['C-Line (Start)'],
+      'C-Line (End.)': bd.cline_stop||p['C-Line (End.)'],
+      'IV (Start)': bd.iv_start||p['IV (Start)'],
+      'IV (End)': bd.iv_stop||p['IV (End)'],
+      'F/C (Start)': bd.fc_start||p['F/C (Start)'],
+      'F/C (END)': bd.fc_stop||p['F/C (END)'],
+      'ICD (Start)': bd.icd_start||p['ICD (Start)'],
+      'ICD (End)': bd.icd_stop||p['ICD (End)'],
+    };
+  });
+  mergedPts.sort((a,b)=>{
     const n=x=>parseInt(String(x['เตียง']||'').replace(/\D/g,''))||999;
     return n(a)-n(b);
   });
@@ -4156,7 +4184,7 @@ function renderBedAdmitTable(pts){
     if(!v) return '-';
     try{const d=new Date(v);return isNaN(d)?v:d.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit'});}catch(e){return v;}
   };
-  body.innerHTML=admitted.map(p=>{
+  body.innerHTML=mergedPts.map(p=>{
     const breath=p['การหายใจ']||(p['Ventilator (Name)']?p['Ventilator (Name)']:'');
     const breathActive=breath&&!p['Ventilator (End)'];
     return `<tr>
