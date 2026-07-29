@@ -4010,12 +4010,12 @@ function renderBedMap(pts){
   const STR=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;text-align:center;color:#6a1b9a;vertical-align:middle;white-space:nowrap">🧼<br><small>Sterile</small></td>`;
 
   const tableHTML=`
-  <table style="border-collapse:separate;border-spacing:5px;width:100%;table-layout:fixed;font-size:13px">
+  <table style="border-collapse:separate;border-spacing:5px;width:100%;table-layout:fixed;font-size:13px;height:calc(100vh - 420px);min-height:280px">
     <colgroup>${Array(11).fill('<col>').join('')}</colgroup>
-    <tr style="height:80px">${E}${E}${E}${E}${E}${E}${E}${cell(9,true)}${E}${E}${E}</tr>
-    <tr style="height:80px">${cell(6)}${cell(5)}${cell(4)}${cell(3)}${cell(2)}${cell(1)}${STR}${E}${DOOR}${NS}${cell(10)}</tr>
-    <tr style="height:80px">${E}${E}${E}${E}${E}${E}${E}${E}${E}${E}${cell(11)}</tr>
-    <tr style="height:80px">${cell(8)}${cell(7)}${NSW}${E}${NS}${cell(14)}${cell(13)}${E}${cell(12)}</tr>
+    <tr>${E}${E}${E}${E}${E}${E}${E}${cell(9,true)}${E}${E}${E}</tr>
+    <tr>${cell(6)}${cell(5)}${cell(4)}${cell(3)}${cell(2)}${cell(1)}${STR}${E}${DOOR}${NS}${cell(10)}</tr>
+    <tr>${E}${E}${E}${E}${E}${E}${E}${E}${E}${E}${cell(11)}</tr>
+    <tr>${cell(8)}${cell(7)}${NSW}${E}${NS}${cell(14)}${cell(13)}${E}${cell(12)}</tr>
   </table>`;
 
   if(window.innerWidth>=768){
