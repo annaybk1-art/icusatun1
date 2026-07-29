@@ -4011,7 +4011,12 @@ function renderBedMap(pts){
 
   const tableHTML=`
   <table style="border-collapse:separate;border-spacing:5px;width:100%;table-layout:fixed;font-size:13px;height:calc(100vh - 420px);min-height:280px">
-    <colgroup>${Array(11).fill('<col>').join('')}</colgroup>
+    <colgroup>
+      <col style="width:9.09%"><col style="width:9.09%"><col style="width:9.09%">
+      <col style="width:9.09%"><col style="width:9.09%"><col style="width:9.09%">
+      <col style="width:9.09%"><col style="width:9.09%"><col style="width:9.09%">
+      <col style="width:9.09%"><col style="width:9.10%">
+    </colgroup>
     <tr>${E}${E}${E}${E}${E}${E}${E}${cell(9,true)}${E}${E}${E}</tr>
     <tr>${cell(6)}${cell(5)}${cell(4)}${cell(3)}${cell(2)}${cell(1)}${STR}${E}${DOOR}${NS}${cell(10)}</tr>
     <tr>${E}${E}${E}${E}${E}${E}${E}${E}${E}${E}${cell(11)}</tr>
