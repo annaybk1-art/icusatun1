@@ -2187,6 +2187,31 @@ async function doIcLogin(){
     if(dtEl) dtEl.value=now.toISOString().slice(0,16);
 
     _icBedData={};
+    // pre-fill ข้อมูลเดิมจาก Sheet
+    _icAdmittedPts.forEach(pt=>{
+      const bedId=(pt['เตียง']||'').trim();
+      if(!bedId) return;
+      _icBedData[bedId]={
+        dx: pt['Diagnosis แรกรับ']||'',
+        hadrugsList: pt['ยา HD']||'',
+        doctor: pt['แพทย์เจ้าของไข้']||'',
+        sos: pt['SOS Score']||'',
+        patType: pt['ประเภทผู้ป่วย ICU']||'',
+        note: pt['หมายเหตุ']||'',
+        vent_start: pt['Ventilator (Start)']?di(pt['Ventilator (Start)']):'' ,
+        vent_stop:  pt['Ventilator (End)']?di(pt['Ventilator (End)']):'' ,
+        aline_start:pt['A-Line (Start)']?di(pt['A-Line (Start)']):'' ,
+        aline_stop: pt['A-Line (End)']?di(pt['A-Line (End)']):'' ,
+        cline_start:pt['C-Line (Start)']?di(pt['C-Line (Start)']):'' ,
+        cline_stop: pt['C-Line (End.)']?di(pt['C-Line (End.)']):'' ,
+        iv_start:   pt['IV (Start)']?di(pt['IV (Start)']):'' ,
+        iv_stop:    pt['IV (End)']?di(pt['IV (End)']):'' ,
+        fc_start:   pt['F/C (Start)']?di(pt['F/C (Start)']):'' ,
+        fc_stop:    pt['F/C (END)']?di(pt['F/C (END)']):'' ,
+        icd_start:  pt['ICD (Start)']?di(pt['ICD (Start)']):'' ,
+        icd_stop:   pt['ICD (End)']?di(pt['ICD (End)']):'' ,
+      };
+    });
     renderIcBedList();
     document.getElementById('inchargeModal').style.display='flex';
   }catch(e){
@@ -2444,7 +2469,7 @@ async function saveInChargeToPatients(){
   for(const pt of _icAdmittedPts){
     const bedId=(pt['เตียง']||'').trim();
     const bd=_icBedData[bedId]||{};
-    if(Object.keys(bd).length===0) continue;
+    // บันทึกทุกเตียงที่มีข้อมูลใน _icBedData
 
     const updated={...pt};
     if(bd.dx!==undefined) updated['Diagnosis แรกรับ']=bd.dx;
@@ -2461,7 +2486,7 @@ async function saveInChargeToPatients(){
     updates.push({id:pt['id'],month:m,year:y,data:updated});
   }
 
-  if(updates.length===0){toast('ℹ️ ยังไม่มีข้อมูลที่แก้ไข');return;}
+  if(updates.length===0){toast('ℹ️ ไม่มีผู้ป่วยที่กำลัง Admit');return;}
 
   showLoad(`กำลังอัปเดต ${updates.length} เตียง...`);
   try{
