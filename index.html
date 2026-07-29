@@ -687,7 +687,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       </div>
       <div class="dash-card" style="margin-bottom:12px">
         <div id="bedMapScroll" style="width:100%">
-          <div id="bedMap"></div>
+          <div id="bedMap" style="width:100%"></div>
         </div>
         <div id="bedStat" style="margin-top:10px;font-size:12px;font-weight:700;color:var(--g800)"></div>
       </div>
@@ -4008,20 +4008,27 @@ function renderBedMap(pts){
   const DOOR=`<td style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;text-align:center;color:#f57f17;vertical-align:middle;white-space:nowrap;padding:4px">🚪<br><small>ประตู</small></td>`;
   const STR=`<td style="background:#f3e5f5;border:2px solid #ce93d8;border-radius:8px;text-align:center;color:#6a1b9a;vertical-align:middle;white-space:nowrap;padding:4px">🧼<br><small>Sterile</small></td>`;
 
-  bedMapEl.innerHTML=`
-  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-  <table style="border-collapse:separate;border-spacing:6px;width:100%;table-layout:fixed;font-size:13px;min-width:600px">
+  const isMob=window.innerWidth<768;
+  const RH=`height:clamp(60px,10vw,110px)`;
+  const tableInner=`<table style="border-collapse:separate;border-spacing:clamp(3px,0.5vw,7px);width:100%;table-layout:fixed;font-size:clamp(11px,1.3vw,15px)">
     <colgroup>
       <col style="width:9.09%"><col style="width:9.09%"><col style="width:9.09%">
       <col style="width:9.09%"><col style="width:9.09%"><col style="width:9.09%">
       <col style="width:9.09%"><col style="width:9.09%"><col style="width:9.09%">
       <col style="width:9.09%"><col style="width:9.10%">
     </colgroup>
-    <tr style="height:25%">${E}${E}${E}${E}${E}${E}${E}${cell(9,true)}${E}${E}${E}</tr>
-    <tr style="height:25%">${cell(6)}${cell(5)}${cell(4)}${cell(3)}${cell(2)}${cell(1)}${STR}${E}${DOOR}${NS}${cell(10)}</tr>
-    <tr style="height:25%">${E}${E}${E}${E}${E}${E}${E}${E}${E}${E}${cell(11)}</tr>
-    <tr style="height:25%">${cell(8)}${cell(7)}${NSW}${E}${NS}${cell(14)}${cell(13)}${E}${cell(12)}</tr>
+    <tr style="${RH}">${E}${E}${E}${E}${E}${E}${E}${cell(9,true)}${E}${E}${E}</tr>
+    <tr style="${RH}">${cell(6)}${cell(5)}${cell(4)}${cell(3)}${cell(2)}${cell(1)}${STR}${E}${DOOR}${NS}${cell(10)}</tr>
+    <tr style="${RH}">${E}${E}${E}${E}${E}${E}${E}${E}${E}${E}${cell(11)}</tr>
+    <tr style="${RH}">${cell(8)}${cell(7)}${NSW}${E}${NS}${cell(14)}${cell(13)}${E}${cell(12)}</tr>
   </table>`;
+
+  if(isMob){
+    bedMapEl.innerHTML=`<div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><div style="min-width:600px">${tableInner}</div></div>`;
+  } else {
+    bedMapEl.style.width='100%';
+    bedMapEl.innerHTML=tableInner;
+  }
 }
 
 
