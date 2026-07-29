@@ -458,8 +458,6 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       <span style="font-size:12px;color:#558b2f">ยังไม่มีบัญชี? </span>
       <span style="font-size:12px;color:#2e7d32;cursor:pointer;text-decoration:underline;font-weight:600" onclick="showRegister()">สมัครสมาชิก</span>
     </div>
-    <div class="link-small" onclick="showConfig()">⚙️ เปลี่ยน API URL</div>
-  </div>
 </div>
 
 <!-- REGISTER PAGE -->
@@ -2016,7 +2014,9 @@ function showSec(name,el){
   if(name==='monthly') loadMonthly();
   if(name==='yearly') loadYearly();
   if(name==='users') renderUsers();
-  if(name==='opts'){ renderOpts(); loadMarqueeFromServer(); loadNewsBoardSettings(); loadInChargeSettings(); }
+  if(name==='opts'){ renderOpts(); loadMarqueeFromServer(); loadNewsBoardSettings(); loadInChargeSettings();
+    setTimeout(()=>{const el=document.getElementById('optsApiUrl');if(el)el.value=API_URL;},100);
+  }
   if(name==='theme'){ if(!requireAdmin()) return; renderThemeInputs(); }
 }
 function setActiveBN(name){document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));const el=document.getElementById('bn-'+name);if(el)el.classList.add('active');}
@@ -3771,6 +3771,16 @@ async function loadMarqueeFromServer(){
 // ============================================================
 // OPTS EDITOR
 // ============================================================
+function saveApiUrlFromOpts(){
+  const url=document.getElementById('optsApiUrl').value.trim();
+  if(!url){toast('กรุณากรอก URL',true);return;}
+  if(!url.startsWith('https://')){toast('URL ไม่ถูกต้อง',true);return;}
+  API_URL=url;
+  localStorage.setItem('icu_api_url',url);
+  toast('✅ บันทึก URL สำเร็จ กำลัง reload...');
+  setTimeout(()=>location.reload(),1500);
+}
+
 function renderOpts(){
   if(!requireAdmin())return;
   document.getElementById('optsEditor').innerHTML=Object.entries(OPTS_LABELS).map(([key,label])=>`<div class="opt-card"><div class="opt-card-title">${label}</div><textarea id="opt-${key}" placeholder="1 รายการต่อบรรทัด">${(o(key)||[]).join('\n')}</textarea><div class="opt-note">key: ${key}</div></div>`).join('');
