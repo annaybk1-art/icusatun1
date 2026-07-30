@@ -912,6 +912,25 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <div class="opt-note" style="margin-top:8px">Slide ประเภท "ประกาศ" สามารถพิมพ์ข้อความเองได้ / ลากเพื่อเรียงลำดับ (ปุ่ม ☰)</div>
       </div>
 
+      <!-- ── Telegram Admin ── -->
+      <div class="dash-card" style="margin-bottom:16px">
+        <div class="dash-card-title">🔔 Telegram แจ้งเตือน Admin</div>
+        <div class="fgrid">
+          <div class="fg full" style="grid-column:1/-1">
+            <label>Bot Token (สำหรับแจ้งเตือน Admin)</label>
+            <input type="text" id="adminTelegramToken" placeholder="Bot Token..." style="width:100%;font-family:monospace;font-size:11px">
+          </div>
+          <div class="fg full" style="grid-column:1/-1">
+            <label>Chat ID (Admin)</label>
+            <input type="text" id="adminTelegramChatId" placeholder="Chat ID ของ Admin..." style="width:100%;font-family:monospace">
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn btn-primary" onclick="saveAdminTelegram()">💾 บันทึก</button>
+        </div>
+        <div class="opt-note" style="margin-top:8px">แจ้งเตือนเมื่อ: มีสมาชิกใหม่รออนุมัติ / มี Dropdown รออนุมัติ</div>
+      </div>
+
       <!-- ── ตั้งค่า In Charge ── -->
       <div class="dash-card" style="margin-bottom:16px">
         <div class="dash-card-title">📋 ตั้งค่า In Charge</div>
@@ -2026,7 +2045,13 @@ function showSec(name,el){
   if(name==='yearly') loadYearly();
   if(name==='users') renderUsers();
   if(name==='opts'){ renderOpts(); loadMarqueeFromServer(); loadNewsBoardSettings(); loadInChargeSettings();
-    setTimeout(()=>{const el=document.getElementById('optsApiUrl');if(el)el.value=API_URL;},100);
+    setTimeout(()=>{
+      const el=document.getElementById('optsApiUrl');if(el)el.value=API_URL;
+      const t=_opts['adminTelegramToken'];const c=_opts['adminTelegramChatId'];
+      const te=document.getElementById('adminTelegramToken');const ce=document.getElementById('adminTelegramChatId');
+      if(te&&t) te.value=Array.isArray(t)?t[0]:t;
+      if(ce&&c) ce.value=Array.isArray(c)?c[0]:c;
+    },100);
   }
   if(name==='theme'){ if(!requireAdmin()) return; renderThemeInputs(); }
 }
@@ -3782,6 +3807,18 @@ async function loadMarqueeFromServer(){
 // ============================================================
 // OPTS EDITOR
 // ============================================================
+async function saveAdminTelegram(){
+  const token=document.getElementById('adminTelegramToken')?.value.trim()||'';
+  const chatId=document.getElementById('adminTelegramChatId')?.value.trim()||'';
+  showLoad('กำลังบันทึก...');
+  try{
+    await api('saveOpts',{},{key:'adminTelegramToken',values:[token]});
+    await api('saveOpts',{},{key:'adminTelegramChatId',values:[chatId]});
+    toast('✅ บันทึก Telegram Admin สำเร็จ');
+  }catch(e){toast('⚠️ '+e.message,true);}
+  finally{hideLoad();}
+}
+
 function saveApiUrlFromOpts(){
   const url=document.getElementById('optsApiUrl').value.trim();
   if(!url){toast('กรุณากรอก URL',true);return;}
