@@ -1848,8 +1848,11 @@ function showApp(user){
     document.getElementById('nav-dashboard').classList.add('active');
     loadDash();loadLog();return;
   }
-  showSec('patients',document.getElementById('nav-patients'));
-  loadPatients(true);loadLog();
+  // โหลดหน้าเดิมที่เคยอยู่
+  const lastSec=localStorage.getItem('icu_last_sec')||'patients';
+  const lastNavEl=document.getElementById('nav-'+lastSec);
+  showSec(lastSec, lastNavEl);
+  loadLog();
   loadPendingBadge();
   loadPendingOptsBadge();
 }
@@ -2004,6 +2007,8 @@ function showSec(name,el){
   if(el) el.classList.add('active');
   if(window.innerWidth<768) closeSidebar();
   setActiveBN(name);
+  // จำหน้าปัจจุบัน
+  localStorage.setItem('icu_last_sec', name);
 
   // sync เดือน/ปีระหว่างทุกหน้า
   const fM=document.getElementById('fMonth')?.value;
