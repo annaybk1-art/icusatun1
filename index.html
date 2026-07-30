@@ -8,8 +8,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ICU สตูล">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231b5e20'/><text y='.9em' font-size='75' x='12'>🏥</text></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%231b5e20'/><text y='.9em' font-size='75' x='12'>🏥</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2343a047'/><stop offset='1' stop-color='%232e7d32'/></linearGradient></defs><circle cx='50' cy='50' r='50' fill='url(%23g)'/><path fill='white' transform='translate(17,17) scale(2.7)' d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2343a047'/><stop offset='1' stop-color='%232e7d32'/></linearGradient></defs><circle cx='50' cy='50' r='50' fill='url(%23g)'/><path fill='white' transform='translate(17,17) scale(2.7)' d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 <style>
@@ -1701,7 +1701,6 @@ window.onload=async function(){
   loadMarqueeFromStorage(); // โหลดแถบข้อความจาก cache ทันที
   setTimeout(initStickyScroll, 300);
   setupYears();
-  if(!API_URL){showConfig();return;}
   const sess=JSON.parse(sessionStorage.getItem('icu_sess')||'null');
   if(sess&&sess.exp>Date.now()){currentUser=sess.user;await loadOpts();await loadThemeFromServer();await loadMarqueeFromServer();showApp(sess.user);}
   else showLogin();
@@ -1802,7 +1801,6 @@ async function doLogin(){
   const p=document.getElementById('inPass').value.trim();
   const errEl=document.getElementById('loginErr');
   if(!u||!p){errEl.textContent='กรุณากรอกชื่อผู้ใช้และรหัสผ่าน';errEl.style.display='block';return;}
-  if(!API_URL){errEl.textContent='ยังไม่ได้กรอก API URL';errEl.style.display='block';return;}
   const btn=document.getElementById('loginBtnEl');
   btn.textContent='กำลังเข้าสู่ระบบ...';btn.disabled=true;errEl.style.display='none';
   try{
