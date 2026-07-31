@@ -4193,15 +4193,18 @@ function highlightBedRow(bedNo){
 }
 
 async function loadBedMap(){
-  const m=parseInt(document.getElementById('fMonth')?.value||new Date().getMonth()+1);
-  const y=parseInt(document.getElementById('fYear')?.value||new Date().getFullYear());
+  const now=new Date();
+  const m=now.getMonth()+1;
+  const y=now.getFullYear();
   showLoad('กำลังโหลดแผนผังเตียง...');
   let pts=[];
   try{ pts=await fetchMonthPts(m,y); }catch(e){ toast(e.message,true); }
   finally{ hideLoad(); }
-  renderBedMap(pts);
-  renderBedAdmitTable(pts);
-  renderBedSummaryCards(pts);
+  // กรองเฉพาะผู้ป่วยที่กำลัง Admit อยู่
+  const admittedPts=pts.filter(p=>p['สถานะ']==='กำลัง admit');
+  renderBedMap(admittedPts);
+  renderBedAdmitTable(admittedPts);
+  renderBedSummaryCards(admittedPts);
 }
 
 function renderBedSummaryCards(pts){
