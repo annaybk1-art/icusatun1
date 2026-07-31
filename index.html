@@ -3008,21 +3008,11 @@ function buildForm(p){
       </div></div>`,
     'tab-assess':`
       <div class="fsec"><div class="fsec-title">การประเมินความเสี่ยง</div><div class="fgrid">
-        ${fg('SOS Score',`<input type="number" name="SOS Score" value="${p['SOS Score']||''}" min="0" max="16" oninput="updateSOSType(this.value)">`,'','',true)}
-        ${fg('ประเภทผู้ป่วย ICU',`<div id="sosTypeDisplay" style="padding:8px 12px;border-radius:8px;font-weight:700;font-size:13px;border:2px solid var(--g200);background:#f9fafb">${(()=>{const t=sosToType(p['SOS Score']||'');return t.label!=='-'?`<span style="color:${t.color}">${t.label} — ${t.desc}</span>`:'กรอก SOS Score';})()}</div>`,'','')}
+        ${fg('SOS Score',`<input type="number" name="SOS Score" value="${p['SOS Score']||''}" min="0" max="16">`,'','',true)}
         ${fg('Falling score',inp('Falling','number',p['Falling']),'','',true)}
         ${fg('APACHE II score',inp('APACHE II','number',p['APACHE II']))}
         ${fg('Pain score',inp('Pain score','number',p['Pain score']))}
-      </div></div>
-      <div class="fsec" style="background:#f9fafb;border-radius:8px;padding:10px;font-size:11px">
-        <div style="font-weight:700;margin-bottom:6px;color:var(--gray600)">📋 เกณฑ์ประเภทผู้ป่วย ICU</div>
-        <table style="width:100%;border-collapse:collapse;font-size:10.5px">
-          <tr style="background:#ffcdd2"><td style="padding:3px 6px;font-weight:700">13-16</td><td style="padding:3px 6px;font-weight:700;color:#c62828">4a ICU</td><td style="padding:3px 6px">หนักมาก ดูแลใกล้ชิดตลอดเวลา</td></tr>
-          <tr style="background:#ffe0b2"><td style="padding:3px 6px;font-weight:700">9-12</td><td style="padding:3px 6px;font-weight:700;color:#e65100">3b CI</td><td style="padding:3px 6px">หนัก ต้องการการดูแลมาก</td></tr>
-          <tr style="background:#fff9c4"><td style="padding:3px 6px;font-weight:700">5-8</td><td style="padding:3px 6px;font-weight:700;color:#f57f17">2b SI</td><td style="padding:3px 6px">หนักปานกลาง ต้องการการดูแลมาก</td></tr>
-          <tr style="background:#e8f5e9"><td style="padding:3px 6px;font-weight:700">4</td><td style="padding:3px 6px;font-weight:700;color:#2e7d32">1a-1d MI/CL</td><td style="padding:3px 6px">เจ็บป่วยเล็กน้อย/พักฟื้น</td></tr>
-        </table>
-      </div>`,
+      </div></div>`,
     'tab-infection':`
       <div class="fsec"><div class="fsec-title">ข้อมูลการติดเชื้อ (HAI)</div><div class="fgrid">
         ${fg('VAP',sel('VAP',['ใช่','ไม่ใช่'],p['VAP']))}
