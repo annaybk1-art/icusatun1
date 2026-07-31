@@ -4406,17 +4406,22 @@ function renderTrendChart(pts){
     type:'line',
     data:{
       labels,
-      datasets:[
-        {label:'จำนวน Admit',data:admitData,borderColor:cc.c3,backgroundColor:cc.c3+'33',fill:true,tension:.4,yAxisID:'y'},
-        {label:'ครองเตียง (%)',data:occupData,borderColor:cc.c6,backgroundColor:'transparent',borderDash:[5,3],tension:.4,yAxisID:'y2'}
-      ]
+      datasets:[{
+        label:'จำนวน Admit',
+        data:admitData,
+        borderColor:cc.c3,
+        backgroundColor:cc.c3+'33',
+        fill:true,
+        tension:.4,
+        pointRadius:3
+      }]
     },
     options:{
       responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:true,position:'top',labels:{font:{size:10},usePointStyle:true}}},
+      plugins:{legend:{display:false}},
       scales:{
-        y:{beginAtZero:true,max:TOTAL_BEDS,ticks:{font:{size:10}},title:{display:true,text:'Admit',font:{size:10}}},
-        y2:{beginAtZero:true,max:100,position:'right',ticks:{font:{size:10},callback:v=>v+'%'},grid:{drawOnChartArea:false},title:{display:true,text:'%ครองเตียง',font:{size:10}}}
+        y:{beginAtZero:true,ticks:{font:{size:10}},title:{display:true,text:'จำนวนผู้ป่วย',font:{size:10}}},
+        x:{ticks:{font:{size:9}}}
       }
     }
   });
