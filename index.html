@@ -444,7 +444,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       4. Execute as: <b>Me</b> | Who has access: <b>Anyone</b><br>
       5. Deploy → Copy URL แล้ววางด้านล่าง
     </div>
-    <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/AKfycbzzJ3kNqoF-in8WqvLDj1EdQLMHAHgK7hLBj_DSZF527YLLMpHu0NEo2NSQ8byTvlAllA/exec">
+    <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/AKfycbyy6VLFxdARc0v5weLQ7GTK4EQgVJL46W7MeVtDM2-eVGSo9Yg3zZHwBqKwdB8tndiqWg/exec">
     <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:8px" onclick="saveApiUrl()">💾 บันทึกและเริ่มใช้งาน</button>
     <button class="btn btn-outline" style="width:100%;justify-content:center;font-size:12px" onclick="testUrl()">🔗 ทดสอบการเชื่อมต่อ</button>
     <div id="testResult" style="margin-top:8px;font-size:12px;display:none;padding:8px;border-radius:6px"></div>
@@ -4364,63 +4364,40 @@ function setTrendMode(mode){
 function renderTrendChart(pts){
   if(!pts||!pts.length) return;
   _allDashPts=pts;
-  const admitted=pts.filter(p=>p['Admit (Date)']);
-  const labels=[], admitData=[], occupData=[];
+  const labels=[], admitData=[];
+  const days=_trendMode==='day'?30:84; // 30 วัน หรือ 12 สัปดาห์*7
+  const step=_trendMode==='day'?1:7;
 
-  if(_trendMode==='day'){
-    // 30 วันย้อนหลัง
-    for(let i=29;i>=0;i--){
-      const d=new Date(); d.setDate(d.getDate()-i);
-      const dStr=d.toISOString().split('T')[0];
-      const label=d.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit'});
-      // นับผู้ป่วยที่ admit อยู่ในวันนั้น
-      const count=admitted.filter(p=>{
-        const start=p['Admit (Date)']?new Date(p['Admit (Date)']):null;
-        const end=p['DC (Date)']?new Date(p['DC (Date)']):new Date();
-        return start&&start<=d&&end>=d;
-      }).length;
-      labels.push(label);
-      admitData.push(count);
-      occupData.push(Math.round(count/TOTAL_BEDS*100));
-    }
-  } else {
-    // รายสัปดาห์ 12 สัปดาห์ย้อนหลัง
-    for(let i=11;i>=0;i--){
-      const weekStart=new Date(); weekStart.setDate(weekStart.getDate()-i*7-weekStart.getDay());
-      const weekEnd=new Date(weekStart); weekEnd.setDate(weekStart.getDate()+6);
-      const label=`${weekStart.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit'})}`;
-      const count=admitted.filter(p=>{
-        const start=p['Admit (Date)']?new Date(p['Admit (Date)']):null;
-        const end=p['DC (Date)']?new Date(p['DC (Date)']):new Date();
-        return start&&start<=weekEnd&&end>=weekStart;
-      }).length;
-      labels.push(label);
-      admitData.push(count);
-      occupData.push(Math.round(count/TOTAL_BEDS*100));
-    }
+  for(let i=days-1;i>=0;i-=step){
+    const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-i);
+    const label=d.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit'});
+    const count=pts.filter(p=>{
+      if(!p['Admit (Date)']) return false;
+      const admitD=new Date(p['Admit (Date)']); admitD.setHours(0,0,0,0);
+      const dcD=p['DC (Date)']?new Date(p['DC (Date)']):null;
+      if(dcD) dcD.setHours(0,0,0,0);
+      return admitD<=d && (!dcD||dcD>=d);
+    }).length;
+    labels.push(label);
+    admitData.push(count);
   }
 
   const cc=getChartColors();
   destroyChart('trend');
   dashCharts.trend=new Chart(document.getElementById('trendChart'),{
     type:'line',
-    data:{
-      labels,
-      datasets:[{
-        label:'จำนวน Admit',
-        data:admitData,
-        borderColor:cc.c3,
-        backgroundColor:cc.c3+'33',
-        fill:true,
-        tension:.4,
-        pointRadius:3
-      }]
-    },
+    data:{labels,datasets:[{
+      label:'ยอดผู้ป่วย ICU',
+      data:admitData,
+      borderColor:cc.c3,
+      backgroundColor:cc.c3+'33',
+      fill:true,tension:.4,pointRadius:3
+    }]},
     options:{
       responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false}},
       scales:{
-        y:{beginAtZero:true,ticks:{font:{size:10}},title:{display:true,text:'จำนวนผู้ป่วย',font:{size:10}}},
+        y:{beginAtZero:true,max:TOTAL_BEDS,ticks:{font:{size:10},stepSize:1},title:{display:true,text:'จำนวนผู้ป่วย',font:{size:10}}},
         x:{ticks:{font:{size:9}}}
       }
     }
