@@ -793,7 +793,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         </div>
         <!-- Trend Chart -->
         <div class="dash-card" data-ed-id="trend-card" style="display:flex;flex-direction:column">
-          <div class="dash-card-title" data-ed-id="trend-title" style="flex-shrink:0">📈 Census รายวัน</div>
+          <div class="dash-card-title" data-ed-id="trend-title" style="flex-shrink:0">📈 ยอดผู้ป่วยรายวัน (Census)</div>
           <div class="chart-container" style="flex:1"><canvas id="trendChart"></canvas></div>
         </div>
       </div><!-- end top-row -->
@@ -4370,13 +4370,18 @@ function renderTrendChart(pts, selMonth, selYear){
     const dStart=new Date(y,m-1,day); dStart.setHours(0,0,0,0);
     const label=`${day}`;
     const count=pts.filter(p=>{
-      if(!p['Admit (Date)']) return false;
       const admitStr=String(p['Admit (Date)']||'').trim();
       if(!admitStr) return false;
       const admitD=new Date(admitStr); admitD.setHours(0,0,0,0);
-      if(isNaN(admitD)) return false;
-      // นับเฉพาะวันที่ admit เข้ามาในวันนั้น
-      return admitD.getTime()===dStart.getTime();
+      if(isNaN(admitD)||admitD>d) return false;
+      // ถ้ายัง admit อยู่ → นับ
+      if(p['สถานะ']==='กำลัง admit') return admitD<=d;
+      // ถ้า DC แล้ว → เช็ควันที่ DC
+      const dcStr=String(p['DC (Date)']||'').trim();
+      if(!dcStr) return admitD<=d;
+      const dcD=new Date(dcStr); dcD.setHours(0,0,0,0);
+      if(isNaN(dcD)) return admitD<=d;
+      return admitD<=d && dcD>=dStart;
     }).length;
     labels.push(label);
     admitData.push(count);
