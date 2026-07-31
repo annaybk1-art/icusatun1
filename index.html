@@ -549,22 +549,28 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     <div class="nav-item" id="nav-yearly" onclick="showSec('yearly',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>รายปี
     </div>
-    <div class="nav-sec" id="adminNav" style="display:none">จัดการระบบ</div>
-    <div class="nav-item" id="nav-users" onclick="showSec('users',this)" style="display:none">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-      จัดการผู้ใช้งาน
-      <span id="pendingBadge" style="display:none;margin-left:auto;background:#ef4444;color:white;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center">0</span>
+    <div class="nav-sec" id="adminNav" style="display:none;cursor:pointer;user-select:none" onclick="toggleAdminMenu()">
+      ⚙️ จัดการระบบ <span id="adminMenuArrow" style="margin-left:auto;font-size:10px">▶</span>
     </div>
-    <div class="nav-item" id="nav-carryover" onclick="openCarryOverModal()" style="display:none">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
-      ยกยอดเดือน
-    </div>
-    <div class="nav-item" id="nav-opts" onclick="showSec('opts',this)" style="display:none">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>ตั้งค่า Dropdown
-      <span id="pendingOptsBadge" style="display:none;margin-left:auto;background:#f59e0b;color:white;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center">0</span>
-    </div>
-    <div class="nav-item" id="nav-theme" onclick="showSec('theme',this)" style="display:none">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C6.49,2,2,6.49,2,12s4.49,10,10,10c1.38,0,2.5-1.12,2.5-2.5c0-0.61-0.23-1.2-0.64-1.67c-0.08-0.1-0.13-0.21-0.13-0.33c0-0.28,0.22-0.5,0.5-0.5H16c3.31,0,6-2.69,6-6C22,6.04,17.51,2,12,2z M6.5,11c-0.83,0-1.5-0.67-1.5-1.5S5.67,8,6.5,8S8,8.67,8,9.5S7.33,11,6.5,11z M9.5,7C8.67,7,8,6.33,8,5.5S8.67,4,9.5,4S11,4.67,11,5.5S10.33,7,9.5,7z M14.5,7C13.67,7,13,6.33,13,5.5S13.67,4,14.5,4S16,4.67,16,5.5S15.33,7,14.5,7z M17.5,11c-0.83,0-1.5-0.67-1.5-1.5S16.67,8,17.5,8S19,8.67,19,9.5S18.33,11,17.5,11z"/></svg>ตกแต่ง/ปรับสี
+    <div id="adminMenuItems" style="display:none">
+      <div class="nav-item" id="nav-users" onclick="showSec('users',this)" style="padding-left:28px">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        จัดการผู้ใช้งาน
+        <span id="pendingBadge" style="display:none;margin-left:auto;background:#ef4444;color:white;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center">0</span>
+      </div>
+      <div class="nav-item" id="nav-carryover" onclick="openCarryOverModal()" style="padding-left:28px">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+        ยกยอดเดือน
+      </div>
+      <div class="nav-item" id="nav-opts" onclick="showSec('opts',this)" style="padding-left:28px">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+        ตั้งค่า Dropdown
+        <span id="pendingOptsBadge" style="display:none;margin-left:auto;background:#f59e0b;color:white;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center">0</span>
+      </div>
+      <div class="nav-item" id="nav-theme" onclick="showSec('theme',this)" style="padding-left:28px">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C6.49,2,2,6.49,2,12s4.49,10,10,10c1.38,0,2.5-1.12,2.5-2.5c0-0.61-0.23-1.2-0.64-1.67c-0.08-0.1-0.13-0.21-0.13-0.33c0-0.28,0.22-0.5,0.5-0.5H16c3.31,0,6-2.69,6-6C22,6.04,17.51,2,12,2z"/></svg>
+        ตกแต่ง/ปรับสี
+      </div>
     </div>
     <div class="sidebar-spacer"></div>
     <div class="log-box">
@@ -1866,7 +1872,13 @@ function showApp(user){
   document.getElementById('uAv').textContent=init;
   document.getElementById('uName').textContent=user.fullname;
   document.getElementById('uRole').textContent=user.role==='admin'?'👑 ผู้ดูแลระบบ':'👩‍⚕️ พยาบาล';
-  if(user.role==='admin'){document.getElementById('adminNav').style.display='';document.getElementById('nav-users').style.display='';document.getElementById('nav-opts').style.display='';document.getElementById('nav-theme').style.display='';document.getElementById('nav-carryover').style.display='';}
+  if(user.role==='admin'){
+    document.getElementById('adminNav').style.display='';
+    document.getElementById('nav-users').style.display='';
+    document.getElementById('nav-opts').style.display='';
+    document.getElementById('nav-theme').style.display='';
+    document.getElementById('nav-carryover').style.display='';
+  }
   showEditButtonIfAdmin();
   if(user.viewAccess==='dashboard_only'){
     applyDashboardOnlyRestriction();
@@ -3588,6 +3600,14 @@ const DASHBOARD_WIDGETS = [
 let _editMode={active:false,page:null};
 let _dashboardWidgetVisibility={}; // { 'bedmap-card': true/false, ... } — true=แสดง (default)
 
+function toggleAdminMenu(){
+  const menu=document.getElementById('adminMenuItems');
+  const arrow=document.getElementById('adminMenuArrow');
+  const open=menu.style.display==='none'||menu.style.display==='';
+  menu.style.display=open?'block':'none';
+  if(arrow) arrow.textContent=open?'▼':'▶';
+}
+
 function showEditButtonIfAdmin(){
   const btn=document.getElementById('editPageBtn');
   if(btn) btn.style.display = isAdmin() ? 'inline-flex' : 'none';
@@ -4332,8 +4352,8 @@ function renderBedAdmitTable(pts){
       <td style="font-size:11px;font-weight:600">${normalizePatType(p['ประเภทผู้ป่วย']||'-')}</td>
       <td style="font-size:10px;max-width:150px;white-space:normal">${p['Diagnosis แรกรับ']||'-'}</td>
       <td style="font-size:10px;max-width:100px;white-space:normal">${p['U/D']||'-'}</td>
-      <td class="bc-SOS" style="text-align:center;font-weight:700;color:#c62828">${p['SOS Score']||p['Falling']||'-'}</td>
-      <td class="bc-ประเภท" style="text-align:center">${(()=>{const t=sosToType(p['SOS Score']||p['Falling']);return t.label!=='-'?`<span style="font-weight:700;color:${t.color}">${t.label}</span><br><span style="font-size:9px">${t.desc}</span>`:'-';})()}</td>
+      <td class="bc-SOS" style="text-align:center">-</td>
+      <td class="bc-ประเภท" style="text-align:center">-</td>
       <td class="bc-ยา HD" style="font-size:10px;max-width:120px;white-space:normal">${p['ยา HD']?`<span style="color:#c62828">${p['ยา HD']}</span>`:'-'}</td>
       <td class="bc-การหายใจ" style="text-align:center;font-size:11px"><span style="color:${breathActive?'#2e7d32':'#9e9e9e'}">${breath||'-'}</span></td>
       <td class="bc-A-Line" style="text-align:center">${ic(p,'A-Line (Start)','A-Line (End)','A-Line (day)')}</td>
