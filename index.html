@@ -444,7 +444,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       4. Execute as: <b>Me</b> | Who has access: <b>Anyone</b><br>
       5. Deploy → Copy URL แล้ววางด้านล่าง
     </div>
-    <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/AKfycbw84ofiIHmxZPXOfGeb2bVM_erHcEj0D10la5q0wCcveukRWe81S4Iryyq6cb3vgG9bCA/exec">
+    <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/xxxxxxx/exec">
     <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:8px" onclick="saveApiUrl()">💾 บันทึกและเริ่มใช้งาน</button>
     <button class="btn btn-outline" style="width:100%;justify-content:center;font-size:12px" onclick="testUrl()">🔗 ทดสอบการเชื่อมต่อ</button>
     <div id="testResult" style="margin-top:8px;font-size:12px;display:none;padding:8px;border-radius:6px"></div>
@@ -756,7 +756,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <button class="btn btn-primary" onclick="loadDash()" style="font-size:10px;padding:4px 8px;flex-shrink:0">📊 แสดง</button>
         <button class="btn btn-outline" id="editPageBtn" style="display:none;font-size:10px;padding:4px 8px;flex-shrink:0" onclick="toggleEditMode('dashboard')">🎨</button>
       </div>
-      <div class="dash-card" data-ed-id="top5-card" style="display:flex;flex-direction:column;overflow:hidden;margin-bottom:14px">
+      <div class="top-row">
         <div class="dash-card-title" data-ed-id="top5-title" style="flex-shrink:0">🔬 5 อันดับโรคสำคัญ</div>
         <div style="flex:1;overflow:hidden;position:relative;min-height:180px" id="top5Viewport">
           <div id="top5Track" style="display:flex;transition:transform .5s ease;height:100%;width:400%">
@@ -788,6 +788,19 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
           </div>
           <button onclick="top5Go(1)" style="background:none;border:none;cursor:pointer;color:var(--gray400);font-size:16px;padding:2px 6px">›</button>
         </div>
+      </div>
+      </div><!-- end top-row -->
+
+      <!-- Trend Chart -->
+      <div class="dash-card" style="margin-bottom:14px" data-ed-id="trend-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+          <div class="dash-card-title" data-ed-id="trend-title" style="margin:0">📈 Trend ผู้ป่วย ICU</div>
+          <div style="display:flex;border:1.5px solid var(--g200);border-radius:8px;overflow:hidden">
+            <button id="trendBtnDay" onclick="setTrendMode('day')" style="padding:4px 14px;font-size:11px;font-weight:700;background:var(--theme-btn-primary);color:var(--theme-btn-primary-text);border:none;cursor:pointer">รายวัน</button>
+            <button id="trendBtnWeek" onclick="setTrendMode('week')" style="padding:4px 14px;font-size:11px;font-weight:700;background:white;color:var(--gray600);border:none;cursor:pointer">รายสัปดาห์</button>
+          </div>
+        </div>
+        <div class="chart-container"><canvas id="trendChart"></canvas></div>
       </div>
       <div class="kpi-grid" id="dashKpi" data-ed-id="dashKpi-section"></div>
       <div class="dash-grid">
@@ -4336,6 +4349,78 @@ function renderBedAdmitTable(pts){
   }).join('');
 }
 
+let _trendMode='day';
+let _allDashPts=[];
+function setTrendMode(mode){
+  _trendMode=mode;
+  document.getElementById('trendBtnDay').style.background=mode==='day'?'var(--theme-btn-primary)':'white';
+  document.getElementById('trendBtnDay').style.color=mode==='day'?'var(--theme-btn-primary-text)':'var(--gray600)';
+  document.getElementById('trendBtnWeek').style.background=mode==='week'?'var(--theme-btn-primary)':'white';
+  document.getElementById('trendBtnWeek').style.color=mode==='week'?'var(--theme-btn-primary-text)':'var(--gray600)';
+  renderTrendChart(_allDashPts);
+}
+
+function renderTrendChart(pts){
+  if(!pts||!pts.length) return;
+  _allDashPts=pts;
+  const admitted=pts.filter(p=>p['Admit (Date)']);
+  const labels=[], admitData=[], occupData=[];
+
+  if(_trendMode==='day'){
+    // 30 วันย้อนหลัง
+    for(let i=29;i>=0;i--){
+      const d=new Date(); d.setDate(d.getDate()-i);
+      const dStr=d.toISOString().split('T')[0];
+      const label=d.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit'});
+      // นับผู้ป่วยที่ admit อยู่ในวันนั้น
+      const count=admitted.filter(p=>{
+        const start=p['Admit (Date)']?new Date(p['Admit (Date)']):null;
+        const end=p['DC (Date)']?new Date(p['DC (Date)']):new Date();
+        return start&&start<=d&&end>=d;
+      }).length;
+      labels.push(label);
+      admitData.push(count);
+      occupData.push(Math.round(count/TOTAL_BEDS*100));
+    }
+  } else {
+    // รายสัปดาห์ 12 สัปดาห์ย้อนหลัง
+    for(let i=11;i>=0;i--){
+      const weekStart=new Date(); weekStart.setDate(weekStart.getDate()-i*7-weekStart.getDay());
+      const weekEnd=new Date(weekStart); weekEnd.setDate(weekStart.getDate()+6);
+      const label=`${weekStart.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit'})}`;
+      const count=admitted.filter(p=>{
+        const start=p['Admit (Date)']?new Date(p['Admit (Date)']):null;
+        const end=p['DC (Date)']?new Date(p['DC (Date)']):new Date();
+        return start&&start<=weekEnd&&end>=weekStart;
+      }).length;
+      labels.push(label);
+      admitData.push(count);
+      occupData.push(Math.round(count/TOTAL_BEDS*100));
+    }
+  }
+
+  const cc=getChartColors();
+  destroyChart('trend');
+  dashCharts.trend=new Chart(document.getElementById('trendChart'),{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'จำนวน Admit',data:admitData,borderColor:cc.c3,backgroundColor:cc.c3+'33',fill:true,tension:.4,yAxisID:'y'},
+        {label:'ครองเตียง (%)',data:occupData,borderColor:cc.c6,backgroundColor:'transparent',borderDash:[5,3],tension:.4,yAxisID:'y2'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'top',labels:{font:{size:10},usePointStyle:true}}},
+      scales:{
+        y:{beginAtZero:true,max:TOTAL_BEDS,ticks:{font:{size:10}},title:{display:true,text:'Admit',font:{size:10}}},
+        y2:{beginAtZero:true,max:100,position:'right',ticks:{font:{size:10},callback:v=>v+'%'},grid:{drawOnChartArea:false},title:{display:true,text:'%ครองเตียง',font:{size:10}}}
+      }
+    }
+  });
+}
+
 async function loadDash(){
   const isYear = _dashMode==='year';
   const y = isYear
@@ -4429,6 +4514,7 @@ async function drawChartsForYear(year,selMonth,selPts,selStats){
   const na=[],ta=[],dc2=[],tot=[],oc=[],ls=[],up=[],ra=[];
   allM.forEach((mp,i)=>{const st=getStats(mp);na.push(mp.filter(p=>p['การรับ']==='รับใหม่').length);ta.push(mp.filter(p=>p['การรับ']==='รับย้าย').length);dc2.push(st.discharged);tot.push(st.total);oc.push(parseFloat(st.occupancyRate));ls.push(parseFloat(st.avgDaysPerPt));up.push(st.unplannedCount);ra.push(st.readmitCount);});
   destroyChart('admitDC');const _cc1=getChartColors();dashCharts.admitDC=new Chart(document.getElementById('admitDCChart'),{type:'bar',data:{labels:MONTHS_TH,datasets:[{label:'ทั้งหมด',data:tot,backgroundColor:_cc1.c1+'99',borderRadius:3},{label:'รับใหม่',data:na,backgroundColor:_cc1.c3,borderRadius:3},{label:'รับย้าย',data:ta,backgroundColor:_cc1.c2,borderRadius:3},{label:'D/C',data:dc2,backgroundColor:_cc1.c6,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{size:10},usePointStyle:true}}},scales:{y:{beginAtZero:true,ticks:{font:{size:10}}},x:{ticks:{font:{size:9}}}}}});
+  renderTrendChart(pts);
   destroyChart('dischargeReason');const _cc2=getChartColors();dashCharts.dischargeReason=new Chart(document.getElementById('dischargeReasonChart'),{type:'doughnut',data:{labels:['Dead','Refer','ย้ายทุเลา','ย้ายต้องการเตียง','ไม่สมัครใจ','Palliative'],datasets:[{data:[selStats.deadCount,selStats.referCount,selStats.moveWell,selStats.moveBed,selStats.noConsent,selStats.palliativeDC],backgroundColor:[_cc2.c4,_cc2.c2,_cc2.c1,'#8d6e63',_cc2.c5,'#9e9e9e'],borderColor:'white',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'right',labels:{font:{size:10},padding:8}}}}});
   destroyChart('occupancy');const _cc3=getChartColors();dashCharts.occupancy=new Chart(document.getElementById('occupancyChart'),{type:'line',data:{labels:MONTHS_TH,datasets:[{label:'Occupancy (%)',data:oc,borderColor:_cc3.c1,backgroundColor:_cc3.c1+'1a',tension:0.4,fill:true,pointRadius:3,yAxisID:'y'},{label:'Avg LOS',data:ls,borderColor:_cc3.c3,tension:0.4,fill:false,pointRadius:3,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,labels:{font:{size:10},usePointStyle:true}}},scales:{y:{beginAtZero:true,max:100,ticks:{font:{size:9}}},y1:{beginAtZero:true,position:'right',ticks:{font:{size:9}},grid:{drawOnChartArea:false}},x:{ticks:{font:{size:9}}}}}});
   // ใช้ key จาก typeCount จริงๆ ไม่ hardcode
