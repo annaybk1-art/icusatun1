@@ -444,7 +444,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
       4. Execute as: <b>Me</b> | Who has access: <b>Anyone</b><br>
       5. Deploy → Copy URL แล้ววางด้านล่าง
     </div>
-    <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/AKfycbwIRuXKgiKYXpcczBI0vwLGU9KfgffSIpZKezIxPmTkoQpQyi3cZH4PYJGdZeMI5ZG2Qg/exec">
+    <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/xxxxxxx/exec">
     <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:8px" onclick="saveApiUrl()">💾 บันทึกและเริ่มใช้งาน</button>
     <button class="btn btn-outline" style="width:100%;justify-content:center;font-size:12px" onclick="testUrl()">🔗 ทดสอบการเชื่อมต่อ</button>
     <div id="testResult" style="margin-top:8px;font-size:12px;display:none;padding:8px;border-radius:6px"></div>
@@ -757,51 +757,52 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <button class="btn btn-outline" id="editPageBtn" style="display:none;font-size:10px;padding:4px 8px;flex-shrink:0" onclick="toggleEditMode('dashboard')">🎨</button>
       </div>
       <div class="top-row">
-        <div class="dash-card-title" data-ed-id="top5-title" style="flex-shrink:0">🔬 5 อันดับโรคสำคัญ</div>
-        <div style="flex:1;overflow:hidden;position:relative;min-height:180px" id="top5Viewport">
-          <div id="top5Track" style="display:flex;transition:transform .5s ease;height:100%;width:400%">
-            <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
-              <div class="top5-slide-hd" style="font-size:10px;font-weight:700;color:#2e7d32;margin-bottom:4px">📋 โรคที่ Admit บ่อย</div>
-              <table class="top5-tbl" id="top5TblDash" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
-            </div>
-            <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
-              <div class="top5-slide-hd" style="font-size:10px;font-weight:700;color:#c62828;margin-bottom:4px">💀 โรคที่เสียชีวิตบ่อย</div>
-              <table class="top5-tbl" id="top5TblDead" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
-            </div>
-            <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
-              <div class="top5-slide-hd" style="font-size:10px;font-weight:700;color:#1565c0;margin-bottom:4px">🚑 โรคที่ส่งต่อบ่อย</div>
-              <table class="top5-tbl" id="top5TblRefer" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
-            </div>
-            <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
-              <div class="top5-slide-hd" style="font-size:10px;font-weight:700;color:#6a1b9a;margin-bottom:4px">🏥 รพ.ที่ส่งต่อบ่อย</div>
-              <table class="top5-tbl" id="top5TblHosp" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
+        <!-- 5 อันดับโรค -->
+        <div class="dash-card" data-ed-id="top5-card" style="display:flex;flex-direction:column;overflow:hidden">
+          <div class="dash-card-title" data-ed-id="top5-title" style="flex-shrink:0">🔬 5 อันดับโรคสำคัญ</div>
+          <div style="flex:1;overflow:hidden;position:relative;min-height:180px" id="top5Viewport">
+            <div id="top5Track" style="display:flex;transition:transform .5s ease;height:100%;width:400%">
+              <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
+                <div class="top5-slide-hd" style="font-size:10px;font-weight:700;color:#2e7d32;margin-bottom:4px">📋 โรคที่ Admit บ่อย</div>
+                <table class="top5-tbl" id="top5TblDash" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
+              </div>
+              <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
+                <div class="top5-slide-hd" style="font-size:10px;font-weight:700;color:#c62828;margin-bottom:4px">💀 โรคที่เสียชีวิตบ่อย</div>
+                <table class="top5-tbl" id="top5TblDead" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
+              </div>
+              <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
+                <div class="top5-slide-hd" style="font-size:10px;font-weight:700;color:#1565c0;margin-bottom:4px">🚑 โรคที่ส่งต่อบ่อย</div>
+                <table class="top5-tbl" id="top5TblRefer" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
+              </div>
+              <div class="top5-slide" style="width:25%;flex-shrink:0;display:flex;flex-direction:column;padding:4px 2px">
+                <div class="top5-slide-hd" style="font-size:10px;font-weight:700;color:#6a1b9a;margin-bottom:4px">🏥 รพ.ที่ส่งต่อบ่อย</div>
+                <table class="top5-tbl" id="top5TblHosp" style="flex:1"><tr><td colspan="3" class="loading-msg">กำลังโหลด...</td></tr></table>
+              </div>
             </div>
           </div>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding-top:8px;flex-shrink:0">
-          <button onclick="top5Go(-1)" style="background:none;border:none;cursor:pointer;color:var(--gray400);font-size:16px;padding:2px 6px">‹</button>
-          <div id="top5Dots" style="display:flex;gap:6px">
-            <span class="top5-dot active" onclick="top5Go(0,true)"></span>
-            <span class="top5-dot" onclick="top5Go(1,true)"></span>
-            <span class="top5-dot" onclick="top5Go(2,true)"></span>
-            <span class="top5-dot" onclick="top5Go(3,true)"></span>
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;padding-top:8px;flex-shrink:0">
+            <button onclick="top5Go(-1)" style="background:none;border:none;cursor:pointer;color:var(--gray400);font-size:16px;padding:2px 6px">‹</button>
+            <div id="top5Dots" style="display:flex;gap:6px">
+              <span class="top5-dot active" onclick="top5Go(0,true)"></span>
+              <span class="top5-dot" onclick="top5Go(1,true)"></span>
+              <span class="top5-dot" onclick="top5Go(2,true)"></span>
+              <span class="top5-dot" onclick="top5Go(3,true)"></span>
+            </div>
+            <button onclick="top5Go(1)" style="background:none;border:none;cursor:pointer;color:var(--gray400);font-size:16px;padding:2px 6px">›</button>
           </div>
-          <button onclick="top5Go(1)" style="background:none;border:none;cursor:pointer;color:var(--gray400);font-size:16px;padding:2px 6px">›</button>
         </div>
-      </div>
+        <!-- Trend Chart -->
+        <div class="dash-card" data-ed-id="trend-card" style="display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;flex-shrink:0">
+            <div class="dash-card-title" data-ed-id="trend-title" style="margin:0">📈 Trend ผู้ป่วย ICU</div>
+            <div style="display:flex;border:1.5px solid var(--g200);border-radius:8px;overflow:hidden">
+              <button id="trendBtnDay" onclick="setTrendMode('day')" style="padding:4px 14px;font-size:11px;font-weight:700;background:var(--theme-btn-primary);color:var(--theme-btn-primary-text);border:none;cursor:pointer">รายวัน</button>
+              <button id="trendBtnWeek" onclick="setTrendMode('week')" style="padding:4px 14px;font-size:11px;font-weight:700;background:white;color:var(--gray600);border:none;cursor:pointer">รายสัปดาห์</button>
+            </div>
+          </div>
+          <div class="chart-container" style="flex:1"><canvas id="trendChart"></canvas></div>
+        </div>
       </div><!-- end top-row -->
-
-      <!-- Trend Chart -->
-      <div class="dash-card" style="margin-bottom:14px" data-ed-id="trend-card">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-          <div class="dash-card-title" data-ed-id="trend-title" style="margin:0">📈 Trend ผู้ป่วย ICU</div>
-          <div style="display:flex;border:1.5px solid var(--g200);border-radius:8px;overflow:hidden">
-            <button id="trendBtnDay" onclick="setTrendMode('day')" style="padding:4px 14px;font-size:11px;font-weight:700;background:var(--theme-btn-primary);color:var(--theme-btn-primary-text);border:none;cursor:pointer">รายวัน</button>
-            <button id="trendBtnWeek" onclick="setTrendMode('week')" style="padding:4px 14px;font-size:11px;font-weight:700;background:white;color:var(--gray600);border:none;cursor:pointer">รายสัปดาห์</button>
-          </div>
-        </div>
-        <div class="chart-container"><canvas id="trendChart"></canvas></div>
-      </div>
       <div class="kpi-grid" id="dashKpi" data-ed-id="dashKpi-section"></div>
       <div class="dash-grid">
         <div class="dash-card" data-ed-id="admitdc-card"><div class="dash-card-title" data-ed-id="admitdc-title">📊 ยอดผู้ป่วย รับ/DC (รายปี)</div><div class="chart-container"><canvas id="admitDCChart"></canvas></div></div>
