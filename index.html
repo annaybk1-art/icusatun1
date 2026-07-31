@@ -4371,17 +4371,12 @@ function renderTrendChart(pts, selMonth, selYear){
     const label=`${day}`;
     const count=pts.filter(p=>{
       if(!p['Admit (Date)']) return false;
-      // วันที่ admit
       const admitStr=String(p['Admit (Date)']||'').trim();
       if(!admitStr) return false;
       const admitD=new Date(admitStr); admitD.setHours(0,0,0,0);
       if(isNaN(admitD)) return false;
-      // วันที่ DC (ถ้ามี)
-      const dcStr=String(p['DC (Date)']||'').trim();
-      let dcD=null;
-      if(dcStr){dcD=new Date(dcStr);dcD.setHours(23,59,59,0);if(isNaN(dcD))dcD=null;}
-      // อยู่ใน ICU วันนี้ = admit ก่อนหรือเท่ากับวันนี้ และยังไม่ DC หรือ DC หลังจากวันนี้
-      return admitD<=d && (!dcD||dcD>=dStart);
+      // นับเฉพาะวันที่ admit เข้ามาในวันนั้น
+      return admitD.getTime()===dStart.getTime();
     }).length;
     labels.push(label);
     admitData.push(count);
