@@ -1548,7 +1548,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
           <label>🔒 สิทธิ์การมองเห็น</label>
           <select id="uViewAccess">
             <option value="full">เข้าถึงทุกหน้า (ปกติ)</option>
-            <option value="dashboard_only">จำกัด — เห็นเฉพาะหน้า Dashboard</option>
+            <option value="dashboard_bedmap">จำกัด — เห็นเฉพาะ Dashboard และแผนผังเตียง</option>
           </select>
           <div style="font-size:10.5px;color:var(--gray500);margin-top:4px">เลือก "จำกัด" หากต้องการให้บัญชีนี้เห็นแค่หน้า Dashboard</div>
         </div>
@@ -1880,12 +1880,16 @@ function showApp(user){
     document.getElementById('nav-carryover').style.display='';
   }
   showEditButtonIfAdmin();
-  if(user.viewAccess==='dashboard_only'){
-    applyDashboardOnlyRestriction();
+  if(user.viewAccess==='dashboard_bedmap'){
+    // เห็นแค่ Dashboard และแผนผังเตียง
+    document.getElementById('nav-patients').style.display='none';
+    document.getElementById('nav-ic').style.display='none';
+    document.getElementById('nav-monthly').style.display='none';
+    document.getElementById('nav-yearly').style.display='none';
     document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
     document.getElementById('sec-dashboard').classList.add('active');
     document.getElementById('nav-dashboard').classList.add('active');
-    loadDash();loadLog();return;
+    loadDash(); loadLog(); return;
   }
   // โหลดหน้าเดิมที่เคยอยู่
   const lastSec=localStorage.getItem('icu_last_sec')||'patients';
@@ -2038,7 +2042,7 @@ async function loadLog(){
 // NAV
 // ============================================================
 function showSec(name,el){
-  if(currentUser&&currentUser.viewAccess==='dashboard_only'&&name!=='dashboard'){toast('🔒 เข้าถึงได้เฉพาะหน้า Dashboard',true);return;}
+  if(currentUser&&currentUser.viewAccess==='dashboard_bedmap'&&name!=='dashboard'&&name!=='bedmap'){toast('🔒 เข้าถึงได้เฉพาะหน้า Dashboard และแผนผังเตียง',true);return;}
   if((name==='users'||name==='opts'||name==='theme')&&currentUser?.role!=='admin'){toast('🔒 เฉพาะผู้ดูแลระบบ (Admin) เท่านั้น',true);return;}
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -3921,7 +3925,7 @@ async function renderUsers(){
   try{
     const users=await api('getUsers');
     document.getElementById('userTbl').innerHTML=users.map(u=>{
-      const isLim=u.viewAccess==='dashboard_only';
+      const isLim=u.viewAccess==='dashboard_bedmap';
       const status=u.status||'approved';
       const roleLabel=u.role==='admin'?'👑 Admin':u.role==='doctor'?'👨‍⚕️ แพทย์':'👩‍⚕️ พยาบาล';
       const roleBg=u.role==='admin'?'#e8f5e9':'#dbeafe';
