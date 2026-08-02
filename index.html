@@ -1542,7 +1542,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <div class="fg"><label>ชื่อผู้ใช้ *</label><input type="text" id="uUsername"></div>
         <div class="fg"><label>รหัสผ่าน *</label><input type="text" id="uPassword"></div>
         <div class="fg full"><label>ชื่อ-สกุล *</label><input type="text" id="uFullname"></div>
-        <div class="fg"><label>บทบาท</label><select id="uRole2"><option value="nurse">พยาบาล</option><option value="admin">ผู้ดูแลระบบ</option></select></div>
+        <div class="fg"><label>บทบาท</label><select id="uRole2"><option value="nurse">พยาบาล</option><option value="admin2">ผู้ดูแลระบบ (จำกัด)</option><option value="admin">ผู้ดูแลระบบ (เต็ม)</option></select></div>
         <div class="fg"><label>สถานะ</label><select id="uActive"><option value="TRUE">ใช้งานได้</option><option value="FALSE">ระงับ</option></select></div>
         <div class="fg full">
           <label>🔒 สิทธิ์การมองเห็น</label>
@@ -1871,12 +1871,17 @@ function showApp(user){
   const init=(user.fullname||'U').replace(/นาง(สาว)?|นาย|พญ\.|นพ\./g,'').trim().charAt(0)||'U';
   document.getElementById('uAv').textContent=init;
   document.getElementById('uName').textContent=user.fullname;
-  document.getElementById('uRole').textContent=user.role==='admin'?'👑 ผู้ดูแลระบบ':'👩‍⚕️ พยาบาล';
+  document.getElementById('uRole').textContent=user.role==='admin'?'👑 ผู้ดูแลระบบ':user.role==='admin2'?'🔑 ผู้ดูแล (จำกัด)':'👩‍⚕️ พยาบาล';
   if(user.role==='admin'){
     document.getElementById('adminNav').style.display='';
     document.getElementById('nav-users').style.display='';
     document.getElementById('nav-opts').style.display='';
     document.getElementById('nav-theme').style.display='';
+    document.getElementById('nav-carryover').style.display='';
+  } else if(user.role==='admin2'){
+    // admin2 เห็นแค่ จัดการผู้ใช้ และยกยอดเดือน
+    document.getElementById('adminNav').style.display='';
+    document.getElementById('nav-users').style.display='';
     document.getElementById('nav-carryover').style.display='';
   }
   showEditButtonIfAdmin();
@@ -2034,7 +2039,7 @@ async function loadLog(){
     if(!_adminUsernames.length){
       try{
         const users=await api('getUsers');
-        _adminUsernames=(users||[]).filter(u=>u.role==='admin').map(u=>u.fullname||u.username);
+        _adminUsernames=(users||[]).filter(u=>u.role==='admin'||u.role==='admin2').map(u=>u.fullname||u.username);
       }catch(e){}
     }
     const logs=await api('getLog');
@@ -2057,7 +2062,8 @@ async function loadLog(){
 // ============================================================
 function showSec(name,el){
   if(currentUser&&currentUser.viewAccess==='dashboard_bedmap'&&name!=='dashboard'&&name!=='bedmap'){toast('🔒 เข้าถึงได้เฉพาะหน้า Dashboard และแผนผังเตียง',true);return;}
-  if((name==='users'||name==='opts'||name==='theme')&&currentUser?.role!=='admin'){toast('🔒 เฉพาะผู้ดูแลระบบ (Admin) เท่านั้น',true);return;}
+  if((name==='opts'||name==='theme')&&currentUser?.role!=='admin'){toast('🔒 เฉพาะผู้ดูแลระบบ (Admin) เท่านั้น',true);return;}
+  if((name==='users')&&currentUser?.role!=='admin'&&currentUser?.role!=='admin2'){toast('🔒 เฉพาะผู้ดูแลระบบเท่านั้น',true);return;}
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('sec-'+name).classList.add('active');
@@ -3260,7 +3266,7 @@ function closeConf(){document.getElementById('confDlg').classList.remove('open')
 // ============================================================
 // ADMIN GUARD
 // ============================================================
-function isAdmin(){return currentUser?.role==='admin';}
+function isAdmin(){return currentUser?.role==='admin'||currentUser?.role==='admin2';}
 function requireAdmin(){if(!isAdmin()){toast('🔒 เฉพาะผู้ดูแลระบบ (Admin) เท่านั้น',true);return false;}return true;}
 
 // ============================================================
@@ -3941,8 +3947,8 @@ async function renderUsers(){
     document.getElementById('userTbl').innerHTML=users.map(u=>{
       const isLim=u.viewAccess==='dashboard_bedmap';
       const status=u.status||'approved';
-      const roleLabel=u.role==='admin'?'👑 Admin':u.role==='doctor'?'👨‍⚕️ แพทย์':'👩‍⚕️ พยาบาล';
-      const roleBg=u.role==='admin'?'#e8f5e9':'#dbeafe';
+      const roleLabel=u.role==='admin'?'👑 Admin':u.role==='admin2'?'🔑 Admin (จำกัด)':u.role==='doctor'?'👨‍⚕️ แพทย์':'👩‍⚕️ พยาบาล';
+      const roleBg=u.role==='admin'?'#e8f5e9':u.role==='admin2'?'#f0fdf4':'#dbeafe';
       const roleColor=u.role==='admin'?'#1b5e20':'#1e40af';
       const statusCell = status==='pending'
         ? `<span style="padding:2px 8px;border-radius:9px;font-size:10.5px;font-weight:600;background:#fff3e0;color:#e65100">⏳ รออนุมัติ</span>`
