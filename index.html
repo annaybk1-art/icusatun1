@@ -1879,11 +1879,16 @@ function showApp(user){
     document.getElementById('nav-theme').style.display='';
     document.getElementById('nav-carryover').style.display='';
   } else if(user.role==='admin2'){
-    document.getElementById('adminNav').style.display='flex';
-    document.getElementById('adminMenuItems').style.display='block';
-    document.getElementById('adminMenuArrow').textContent='▼';
-    document.getElementById('nav-users').style.display='';
-    document.getElementById('nav-carryover').style.display='';
+    const an=document.getElementById('adminNav');
+    const am=document.getElementById('adminMenuItems');
+    const ar=document.getElementById('adminMenuArrow');
+    if(an){an.style.cssText='display:flex!important';}
+    if(am){am.style.cssText='display:block!important';}
+    if(ar) ar.textContent='▼';
+    const nu=document.getElementById('nav-users');
+    const nc=document.getElementById('nav-carryover');
+    if(nu) nu.style.cssText='display:flex!important';
+    if(nc) nc.style.cssText='display:flex!important';
   }
   showEditButtonIfAdmin();
   if(user.viewAccess==='dashboard_bedmap'){
