@@ -1879,8 +1879,9 @@ function showApp(user){
     document.getElementById('nav-theme').style.display='';
     document.getElementById('nav-carryover').style.display='';
   } else if(user.role==='admin2'){
-    // admin2 เห็นแค่ จัดการผู้ใช้ และยกยอดเดือน
-    document.getElementById('adminNav').style.display='';
+    document.getElementById('adminNav').style.display='flex';
+    document.getElementById('adminMenuItems').style.display='block';
+    document.getElementById('adminMenuArrow').textContent='▼';
     document.getElementById('nav-users').style.display='';
     document.getElementById('nav-carryover').style.display='';
   }
@@ -2039,7 +2040,7 @@ async function loadLog(){
     if(!_adminUsernames.length){
       try{
         const users=await api('getUsers');
-        _adminUsernames=(users||[]).filter(u=>u.role==='admin'||u.role==='admin2').map(u=>u.fullname||u.username);
+        _adminUsernames=(users||[]).filter(u=>u.role==='admin').map(u=>u.fullname||u.username);
       }catch(e){}
     }
     const logs=await api('getLog');
