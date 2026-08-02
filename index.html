@@ -2024,12 +2024,26 @@ document.getElementById('inPass').addEventListener('keypress',e=>{if(e.key==='En
 // ============================================================
 // LOG
 // ============================================================
+let _adminUsernames=[];
+
 async function loadLog(){
+  const logBox=document.querySelector('.log-box');
+  if(logBox) logBox.style.display='';
   try{
+    // โหลด admin list ถ้ายังไม่มี
+    if(!_adminUsernames.length){
+      try{
+        const users=await api('getUsers');
+        _adminUsernames=(users||[]).filter(u=>u.role==='admin').map(u=>u.fullname||u.username);
+      }catch(e){}
+    }
     const logs=await api('getLog');
     const el=document.getElementById('logList');
-    if(!logs.length){el.innerHTML='<div class="log-row" style="color:#9ca3af">ยังไม่มีกิจกรรม</div>';return;}
-    el.innerHTML=logs.map(l=>{
+    if(!el) return;
+    // กรองกิจกรรมของ Admin ออก
+    const filtered=logs.filter(l=>!_adminUsernames.includes(l.user));
+    if(!filtered.length){el.innerHTML='<div class="log-row" style="color:#9ca3af">ยังไม่มีกิจกรรม</div>';return;}
+    el.innerHTML=filtered.map(l=>{
       let d=String(l.date||''),t=String(l.time||'');
       if(d.length>10){try{const dt=new Date(d);if(!isNaN(dt))d=dt.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'});}catch(e){}}
       if(t.length>5){try{const dt=new Date(t);if(!isNaN(dt))t=dt.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});}catch(e){}}
