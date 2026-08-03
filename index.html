@@ -3032,9 +3032,6 @@ function buildForm(p){
         ${fg('ICD Start',inp('ICD (Start)','date',p['ICD (Start)']?di(p['ICD (Start)']):''))}
         ${fg('ICD End',inp('ICD (End)','date',p['ICD (End)']?di(p['ICD (End)']):''))}
         ${fg('ICD Day',`<input type="number" name="ICD (day)" value="${p['ICD (day)']||''}" readonly style="background:#f0f0f0">`,'','auto')}
-      </div></div>
-      <div class="fsec"><div class="fsec-title">👩‍⚕️ พยาบาลผู้ดูแล</div><div class="fgrid">
-        ${fg('พยาบาลผู้ดูแล',sel('nurseInCharge',o('incharge'),p['nurseInCharge'],'incharge'))}
       </div></div>`,
     'tab-assess':`
       <div class="fsec"><div class="fsec-title">การประเมินความเสี่ยง</div><div class="fgrid">
