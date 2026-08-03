@@ -134,7 +134,7 @@ body.has-marquee .sidebar{padding-top:28px}
 body.has-marquee .edit-sidebar{top:calc(var(--topbar-h) + 28px)}
 .main.full-width{margin-left:0}
 .sec{display:none}.sec.active{display:block}
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:white;border-top:1px solid var(--g200);z-index:95;flex-direction:row;align-items:stretch}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:white;border-top:1px solid var(--g200);z-index:999;flex-direction:row;align-items:stretch}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--gray500);font-size:9px;font-weight:600;border:none;background:none;font-family:'Sarabun',sans-serif;padding:4px 2px}
 .bn-item svg{width:18px;height:18px}
 .bn-item.active{color:var(--g700)}
@@ -1542,7 +1542,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
         <div class="fg"><label>ชื่อผู้ใช้ *</label><input type="text" id="uUsername"></div>
         <div class="fg"><label>รหัสผ่าน *</label><input type="text" id="uPassword"></div>
         <div class="fg full"><label>ชื่อ-สกุล *</label><input type="text" id="uFullname"></div>
-        <div class="fg"><label>บทบาท</label><select id="uRole2"><option value="nurse">พยาบาล</option><option value="admin2">ผู้ดูแลระบบ (จำกัด)</option><option value="admin">ผู้ดูแลระบบ (เต็ม)</option></select></div>
+        <div class="fg"><label>บทบาท</label><select id="uRole2"><option value="nurse">พยาบาล</option><option value="admin">ผู้ดูแลระบบ</option></select></div>
         <div class="fg"><label>สถานะ</label><select id="uActive"><option value="TRUE">ใช้งานได้</option><option value="FALSE">ระงับ</option></select></div>
         <div class="fg full">
           <label>🔒 สิทธิ์การมองเห็น</label>
@@ -1871,11 +1871,7 @@ function showApp(user){
   const init=(user.fullname||'U').replace(/นาง(สาว)?|นาย|พญ\.|นพ\./g,'').trim().charAt(0)||'U';
   document.getElementById('uAv').textContent=init;
   document.getElementById('uName').textContent=user.fullname;
-  document.getElementById('uRole').textContent=user.role==='admin'?'👑 ผู้ดูแลระบบ':user.role==='admin2'?'🔑 ผู้ดูแล (จำกัด)':'👩‍⚕️ พยาบาล';
-  // แสดงเมนูจัดการระบบ
-  const _showEl=(id)=>{const el=document.getElementById(id);if(el){el.style.display='';el.removeAttribute('hidden');}};
-  const _hideEl=(id)=>{const el=document.getElementById(id);if(el) el.style.display='none';};
-  
+  document.getElementById('uRole').textContent=user.role==='admin'?'👑 ผู้ดูแลระบบ':'👩‍⚕️ พยาบาล';
   if(user.role==='admin'){
     _showEl('adminNav');
     _showEl('adminMenuItems');
@@ -1883,13 +1879,6 @@ function showApp(user){
     _showEl('nav-opts');
     _showEl('nav-theme');
     _showEl('nav-carryover');
-  } else if(user.role==='admin2'){
-    _showEl('adminNav');
-    _showEl('adminMenuItems');
-    _showEl('nav-users');
-    _showEl('nav-carryover');
-    _hideEl('nav-opts');
-    _hideEl('nav-theme');
   }
   showEditButtonIfAdmin();
   if(user.viewAccess==='dashboard_bedmap'){
@@ -3269,7 +3258,7 @@ function closeConf(){document.getElementById('confDlg').classList.remove('open')
 // ============================================================
 // ADMIN GUARD
 // ============================================================
-function isAdmin(){return currentUser?.role==='admin'||currentUser?.role==='admin2';}
+function isAdmin(){return currentUser?.role==='admin';}
 function requireAdmin(){if(!isAdmin()){toast('🔒 เฉพาะผู้ดูแลระบบ (Admin) เท่านั้น',true);return false;}return true;}
 
 // ============================================================
@@ -3950,8 +3939,8 @@ async function renderUsers(){
     document.getElementById('userTbl').innerHTML=users.map(u=>{
       const isLim=u.viewAccess==='dashboard_bedmap';
       const status=u.status||'approved';
-      const roleLabel=u.role==='admin'?'👑 Admin':u.role==='admin2'?'🔑 Admin (จำกัด)':u.role==='doctor'?'👨‍⚕️ แพทย์':'👩‍⚕️ พยาบาล';
-      const roleBg=u.role==='admin'?'#e8f5e9':u.role==='admin2'?'#f0fdf4':'#dbeafe';
+      const roleLabel=u.role==='admin'?'👑 Admin':u.role==='doctor'?'👨‍⚕️ แพทย์':'👩‍⚕️ พยาบาล';
+      const roleBg=u.role==='admin'?'#e8f5e9':'#dbeafe';
       const roleColor=u.role==='admin'?'#1b5e20':'#1e40af';
       const statusCell = status==='pending'
         ? `<span style="padding:2px 8px;border-radius:9px;font-size:10.5px;font-weight:600;background:#fff3e0;color:#e65100">⏳ รออนุมัติ</span>`
