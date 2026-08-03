@@ -1882,13 +1882,19 @@ function showApp(user){
     const an=document.getElementById('adminNav');
     const am=document.getElementById('adminMenuItems');
     const ar=document.getElementById('adminMenuArrow');
-    if(an){an.style.cssText='display:flex!important';}
-    if(am){am.style.cssText='display:block!important';}
+    if(an){ an.style.display='flex'; an.style.cursor='pointer'; }
+    if(am){ am.style.display='block'; }
     if(ar) ar.textContent='▼';
-    const nu=document.getElementById('nav-users');
-    const nc=document.getElementById('nav-carryover');
-    if(nu) nu.style.cssText='display:flex!important';
-    if(nc) nc.style.cssText='display:flex!important';
+    // แสดงเฉพาะ จัดการผู้ใช้ และ ยกยอดเดือน
+    ['nav-users','nav-carryover'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){ el.style.removeProperty('display'); el.style.display='flex'; }
+    });
+    // ซ่อน opts และ theme
+    ['nav-opts','nav-theme'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.style.display='none';
+    });
   }
   showEditButtonIfAdmin();
   if(user.viewAccess==='dashboard_bedmap'){
