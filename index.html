@@ -549,10 +549,10 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     <div class="nav-item" id="nav-yearly" onclick="showSec('yearly',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>รายปี
     </div>
-    <div class="nav-sec" id="adminNav" style="cursor:pointer;user-select:none;display:none" onclick="toggleAdminMenu()">
+    <div class="nav-sec admin-only" id="adminNav" style="cursor:pointer;user-select:none;display:none" onclick="toggleAdminMenu()">
       ⚙️ จัดการระบบ <span id="adminMenuArrow" style="margin-left:auto;font-size:10px">▶</span>
     </div>
-    <div id="adminMenuItems" style="display:none">
+    <div id="adminMenuItems" class="admin-only" style="display:none">
       <div class="nav-item" id="nav-users" onclick="showSec('users',this)" style="padding-left:28px">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         จัดการผู้ใช้งาน
@@ -1872,17 +1872,21 @@ function showApp(user){
   document.getElementById('uAv').textContent=init;
   document.getElementById('uName').textContent=user.fullname;
   document.getElementById('uRole').textContent=user.role==='admin'?'👑 ผู้ดูแลระบบ':user.role==='admin2'?'🔑 ผู้ดูแล (จำกัด)':'👩‍⚕️ พยาบาล';
-  if(user.role==='admin'){
-    document.getElementById('adminNav').style.display='';
-    document.getElementById('nav-users').style.display='';
-    document.getElementById('nav-opts').style.display='';
-    document.getElementById('nav-theme').style.display='';
-    document.getElementById('nav-carryover').style.display='';
-  } else if(user.role==='admin2'){
-    document.getElementById('adminNav').style.display='';
-    document.getElementById('nav-users').style.display='';
-    document.getElementById('nav-carryover').style.display='';
-    // ไม่เห็น ตั้งค่า Dropdown และตกแต่งสี
+  if(user.role==='admin'||user.role==='admin2'){
+    const an=document.getElementById('adminNav');
+    const am=document.getElementById('adminMenuItems');
+    if(an) an.removeAttribute('style'), an.style.cursor='pointer', an.style.userSelect='none';
+    if(am) am.removeAttribute('style');
+    if(user.role==='admin'){
+      document.getElementById('nav-users').removeAttribute('style');
+      document.getElementById('nav-opts').removeAttribute('style');
+      document.getElementById('nav-theme').removeAttribute('style');
+      document.getElementById('nav-carryover').removeAttribute('style');
+    } else {
+      // admin2 — เห็นทุกอย่างยกเว้น opts และ theme
+      document.getElementById('nav-users').removeAttribute('style');
+      document.getElementById('nav-carryover').removeAttribute('style');
+    }
   }
   showEditButtonIfAdmin();
   if(user.viewAccess==='dashboard_bedmap'){
