@@ -549,7 +549,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     <div class="nav-item" id="nav-yearly" onclick="showSec('yearly',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>รายปี
     </div>
-    <div class="nav-sec admin-only" id="adminNav" style="cursor:pointer;user-select:none;display:none" onclick="toggleAdminMenu()">
+    <div class="nav-sec" id="adminNav" style="display:none;cursor:pointer;user-select:none" onclick="toggleAdminMenu()">
       ⚙️ จัดการระบบ <span id="adminMenuArrow" style="margin-left:auto;font-size:10px">▶</span>
     </div>
     <div id="adminMenuItems" class="admin-only" style="display:none">
@@ -1872,21 +1872,24 @@ function showApp(user){
   document.getElementById('uAv').textContent=init;
   document.getElementById('uName').textContent=user.fullname;
   document.getElementById('uRole').textContent=user.role==='admin'?'👑 ผู้ดูแลระบบ':user.role==='admin2'?'🔑 ผู้ดูแล (จำกัด)':'👩‍⚕️ พยาบาล';
-  if(user.role==='admin'||user.role==='admin2'){
-    const an=document.getElementById('adminNav');
-    const am=document.getElementById('adminMenuItems');
-    if(an) an.removeAttribute('style'), an.style.cursor='pointer', an.style.userSelect='none';
-    if(am) am.removeAttribute('style');
-    if(user.role==='admin'){
-      document.getElementById('nav-users').removeAttribute('style');
-      document.getElementById('nav-opts').removeAttribute('style');
-      document.getElementById('nav-theme').removeAttribute('style');
-      document.getElementById('nav-carryover').removeAttribute('style');
-    } else {
-      // admin2 — เห็นทุกอย่างยกเว้น opts และ theme
-      document.getElementById('nav-users').removeAttribute('style');
-      document.getElementById('nav-carryover').removeAttribute('style');
-    }
+  // แสดงเมนูจัดการระบบ
+  const _showEl=(id)=>{const el=document.getElementById(id);if(el){el.style.display='';el.removeAttribute('hidden');}};
+  const _hideEl=(id)=>{const el=document.getElementById(id);if(el) el.style.display='none';};
+  
+  if(user.role==='admin'){
+    _showEl('adminNav');
+    _showEl('adminMenuItems');
+    _showEl('nav-users');
+    _showEl('nav-opts');
+    _showEl('nav-theme');
+    _showEl('nav-carryover');
+  } else if(user.role==='admin2'){
+    _showEl('adminNav');
+    _showEl('adminMenuItems');
+    _showEl('nav-users');
+    _showEl('nav-carryover');
+    _hideEl('nav-opts');
+    _hideEl('nav-theme');
   }
   showEditButtonIfAdmin();
   if(user.viewAccess==='dashboard_bedmap'){
