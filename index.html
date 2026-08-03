@@ -549,7 +549,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
     <div class="nav-item" id="nav-yearly" onclick="showSec('yearly',this)">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>รายปี
     </div>
-    <div class="nav-sec" id="adminNav" style="display:none;cursor:pointer;user-select:none" onclick="toggleAdminMenu()">
+    <div class="nav-sec" id="adminNav" style="cursor:pointer;user-select:none;display:none" onclick="toggleAdminMenu()">
       ⚙️ จัดการระบบ <span id="adminMenuArrow" style="margin-left:auto;font-size:10px">▶</span>
     </div>
     <div id="adminMenuItems" style="display:none">
@@ -1879,22 +1879,10 @@ function showApp(user){
     document.getElementById('nav-theme').style.display='';
     document.getElementById('nav-carryover').style.display='';
   } else if(user.role==='admin2'){
-    const an=document.getElementById('adminNav');
-    const am=document.getElementById('adminMenuItems');
-    const ar=document.getElementById('adminMenuArrow');
-    if(an){ an.style.display='flex'; an.style.cursor='pointer'; }
-    if(am){ am.style.display='block'; }
-    if(ar) ar.textContent='▼';
-    // แสดงเฉพาะ จัดการผู้ใช้ และ ยกยอดเดือน
-    ['nav-users','nav-carryover'].forEach(id=>{
-      const el=document.getElementById(id);
-      if(el){ el.style.removeProperty('display'); el.style.display='flex'; }
-    });
-    // ซ่อน opts และ theme
-    ['nav-opts','nav-theme'].forEach(id=>{
-      const el=document.getElementById(id);
-      if(el) el.style.display='none';
-    });
+    document.getElementById('adminNav').style.display='';
+    document.getElementById('nav-users').style.display='';
+    document.getElementById('nav-carryover').style.display='';
+    // ไม่เห็น ตั้งค่า Dropdown และตกแต่งสี
   }
   showEditButtonIfAdmin();
   if(user.viewAccess==='dashboard_bedmap'){
@@ -2075,7 +2063,6 @@ async function loadLog(){
 function showSec(name,el){
   if(currentUser&&currentUser.viewAccess==='dashboard_bedmap'&&name!=='dashboard'&&name!=='bedmap'){toast('🔒 เข้าถึงได้เฉพาะหน้า Dashboard และแผนผังเตียง',true);return;}
   if((name==='opts'||name==='theme')&&currentUser?.role!=='admin'){toast('🔒 เฉพาะผู้ดูแลระบบ (Admin) เท่านั้น',true);return;}
-  if((name==='users')&&currentUser?.role!=='admin'&&currentUser?.role!=='admin2'){toast('🔒 เฉพาะผู้ดูแลระบบเท่านั้น',true);return;}
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('sec-'+name).classList.add('active');
