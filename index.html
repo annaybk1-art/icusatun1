@@ -1653,7 +1653,7 @@ function hideLoad(){document.getElementById('loadOverlay').classList.remove('ope
 // CONSTANTS
 // ============================================================
 const MONTHS_TH=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-const WARD_OPTS=['ER','อายุรกรรมชาย','อายุรกรรมหญิง','ศัลยกรรมชาย','ศัลยกรรมหญิง','นรีเวชกรรม','OR','Semi-ICU'];
+const WARD_OPTS=['ER','อายุรกรรมชาย','อายุรกรรมหญิง','ศัลยกรรมชาย','ศัลยกรรมหญิง','Semi-ICU'];
 const DC_WARD=['อายุรกรรมชาย','อายุรกรรมหญิง','ศัลยกรรมชาย','ศัลยกรรมหญิง','Semi-ICU','รพ.หาดใหญ่','กลับบ้าน','รพ.มอ','รพ.ตรัง','รพ.สงขลา','รพ.ละงู','รพ.ควนโดน','รพ.ท่าแพ','รพ.มะนัง','รพ.ควนกาหลง','รพ.ทุ้งหว้า'];
 const DC_REASON=['Dead','Refer','ย้ายทุเลา','ย้ายต้องการเตียง','ไม่สมัครใจอยู่','palliative','ค้างเดือน'];
 
@@ -1703,7 +1703,7 @@ function dcMatch(val, type){
   return false;
 }
 const TOTAL_BEDS=14;
-const OPTS_LABELS={beds:'🛏️ เตียง ICU',doctors:'👨‍⚕️ แพทย์เจ้าของไข้',ward:'🏥 Ward ที่รับ',ventilatorMode:'🌬️ การหายใจ',ventilator:'🫁 ชนิด Ventilator',rights:'💳 สิทธิ์การรักษา',patientType:'🏷️ ประเภทผู้ป่วย',drugAllergy:'💊 แพ้ยา',surgeryType:'🔪 ชนิดการผ่าตัด',diagnosis:'🔬 Diagnosis (Dx)',recorderAdmit:'📝 ผู้บันทึก Admit',recorderDC:'📝 ผู้บันทึก D/C',incharge:'👩‍⚕️ รายชื่อ In Charge',udOptions:'📋 U/D (โรคประจำตัว)',specimenType:'🧪 ชนิดสิ่งส่งตรวจ',pathogenType:'🦠 ชนิดของเชื้อที่พบ',haOptions:'💊 ยา High Alert Drug'};
+const OPTS_LABELS={beds:'🛏️ เตียง ICU',doctors:'👨‍⚕️ แพทย์เจ้าของไข้',ventilatorMode:'🌬️ การหายใจ',ventilator:'🫁 ชนิด Ventilator',rights:'💳 สิทธิ์การรักษา',patientType:'🏷️ ประเภทผู้ป่วย',drugAllergy:'💊 แพ้ยา',surgeryType:'🔪 ชนิดการผ่าตัด',diagnosis:'🔬 Diagnosis (Dx)',recorderAdmit:'📝 ผู้บันทึก Admit',recorderDC:'📝 ผู้บันทึก D/C',incharge:'👩‍⚕️ รายชื่อ In Charge',udOptions:'📋 U/D (โรคประจำตัว)',specimenType:'🧪 ชนิดสิ่งส่งตรวจ',pathogenType:'🦠 ชนิดของเชื้อที่พบ',haOptions:'💊 ยา High Alert Drug'};
 const MODAL_TABS=[{id:'tab-admit',label:'📋 ข้อมูลรับ'},{id:'tab-ic',label:'🫁 IC / Ventilator'},{id:'tab-assess',label:'📊 การประเมิน'},{id:'tab-infection',label:'🦠 การติดเชื้อ'},{id:'tab-dc',label:'🚪 ข้อมูล D/C'},{id:'tab-extra',label:'📎 ข้อมูลเพิ่มเติม'}];
 
 let currentUser=null,_opts={},_pts=[],_filtPts=[],_curPg=1;
@@ -1723,7 +1723,7 @@ function initStickyScroll(){
   wrap.addEventListener('scroll',()=>{ if(syncing)return; syncing=true; mirror.scrollLeft=wrap.scrollLeft; syncing=false; });
   mirror.addEventListener('scroll',()=>{ if(syncing)return; syncing=true; wrap.scrollLeft=mirror.scrollLeft; syncing=false; });
 }
-const pgSz=20;
+const pgSz=99999;
 let editPtId=null,editUserId=null,dashCharts={};
 const _dashCache={};
 
@@ -2944,7 +2944,7 @@ function buildForm(p){
         ${fg('เวลา Admit',inp('Admit (Time)','time',p['Admit (Time)']||timeV),'','',true)}
         ${fg('เตียง',sel('เตียง',o('beds'),p['เตียง'],'beds'),'','',true)}
         ${fg('ประเภทการรับ',sel('การรับ',['รับใหม่','รับย้าย','ยกมา'],p['การรับ']),'','',true)}
-        ${fg('Ward ที่รับ',sel('wardที่รับ',WARD_OPTS,p['wardที่รับ']),'','',true)}
+        ${fg('Ward ที่รับ',quickAddSelectOpt('Ward ที่รับ',o('ward'),p['Ward ที่รับ'],'ward'),'','',true)}
         ${fg('ผู้บันทึก Admit',sel('ผู้บันทึก Admit',o('recorderAdmit'),p['ผู้บันทึก Admit']||currentUser.fullname,'recorderAdmit'),'','',true)}
         ${fg('Unplanned ICU',sel('Unplanned ICU',['ใช่','ไม่ใช่'],p['Unplanned ICU']),'','',true)}
         ${fg('Re-admit ICU',sel('Re-admit ICU',['ใช่','ไม่ใช่'],p['Re-admit ICU']),'','',true)}
@@ -3231,7 +3231,10 @@ async function savePatient(){
   const missing=Object.entries(baseReq).filter(([k])=>!data[k]).map(([,v])=>v);
   if(missing.length){toast('กรุณากรอก: '+missing.join(', '),true);return;}
   if(data['สถานะ']==='จำหน่ายแล้ว'){const dcReq={'D/C (Date)':'วันที่ D/C','D/C (Time)':'เวลา D/C','เหตุผลจำหน่าย':'เหตุผลจำหน่าย','Ward/Hospital':'Ward/Hospital','CPR':'CPR','Palliative':'Palliative'};const mDC=Object.entries(dcReq).filter(([k])=>!data[k]).map(([,v])=>v);if(mDC.length){toast('🚪 D/C: '+mDC.join(', '),true);return;}}
-  if(data['Admit (Date)']&&data['D/C (Date)'])data['รวมวันนอน']=daysBetween(data['Admit (Date)'],data['D/C (Date)']);
+  if(data['Admit (Date)']){
+    const dcDate=data['D/C (Date)']||new Date().toISOString().split('T')[0];
+    data['รวมวันนอน']=daysBetween(data['Admit (Date)'],dcDate);
+  }
   if(dcMatch(data['เหตุผลจำหน่าย'],'carryover')) data['สถานะ']='ค้างเดือน';
   else data['สถานะ']=data['D/C (Date)']?'จำหน่ายแล้ว':'กำลัง admit';
   const dupBed=data['เตียง']&&_pts.find(p=>{const pid=p.id||String(p._row);return pid!==editPtId&&p['สถานะ']!=='จำหน่ายแล้ว'&&p['เตียง']===data['เตียง'];});
