@@ -1873,12 +1873,10 @@ function showApp(user){
   document.getElementById('uName').textContent=user.fullname;
   document.getElementById('uRole').textContent=user.role==='admin'?'👑 ผู้ดูแลระบบ':'👩‍⚕️ พยาบาล';
   if(user.role==='admin'){
-    _showEl('adminNav');
-    _showEl('adminMenuItems');
-    _showEl('nav-users');
-    _showEl('nav-opts');
-    _showEl('nav-theme');
-    _showEl('nav-carryover');
+    ['adminNav','adminMenuItems','nav-users','nav-opts','nav-theme','nav-carryover'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.style.display='';
+    });
   }
   showEditButtonIfAdmin();
   if(user.viewAccess==='dashboard_bedmap'){
@@ -2870,7 +2868,7 @@ function nextPg(){if(_curPg<Math.ceil(_filtPts.length/pgSz)){_curPg++;renderTbl(
 function fmtDate(v){if(!v)return'';try{const d=new Date(v);return isNaN(d)?String(v):d.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'});}catch(e){return String(v);}}
 function esc(s){return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;');}
 function di(v){if(!v)return'';try{const d=new Date(v);return isNaN(d)?'':(d.toISOString().split('T')[0]);}catch(e){return'';}}
-function daysBetween(a,b){if(!a||!b)return 0;return Math.max(0,Math.ceil((new Date(b)-new Date(a))/864e5));}
+function daysBetween(a,b){if(!a||!b)return 0;const diff=Math.ceil((new Date(b)-new Date(a))/864e5);return Math.max(1,diff);}
 
 // ============================================================
 // MODAL / FORM
