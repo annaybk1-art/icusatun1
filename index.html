@@ -1545,6 +1545,7 @@ td{padding:7px 7px;border-bottom:1px solid var(--theme-tbl-border);vertical-alig
           <select id="uViewAccess">
             <option value="full">เข้าถึงทุกหน้า (ปกติ)</option>
             <option value="no_opts">จำกัด — ไม่เห็น ตั้งค่า Dropdown และตกแต่งสี</option>
+            <option value="no_admin">จำกัด — ไม่เห็นเมนูจัดการระบบ</option>
             <option value="dashboard_bedmap">จำกัด — เห็นเฉพาะ Dashboard และแผนผังเตียง</option>
           </select>
           <div style="font-size:10.5px;color:var(--gray500);margin-top:4px">เลือก "จำกัด" หากต้องการให้บัญชีนี้เห็นแค่หน้า Dashboard</div>
@@ -1882,6 +1883,13 @@ function showApp(user){
   showEditButtonIfAdmin();
   if(user.viewAccess==='no_opts'){
     ['nav-opts','nav-theme'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.style.display='none';
+    });
+  }
+  if(user.viewAccess==='no_admin'){
+    // ซ่อนเมนูจัดการระบบทั้งหมด
+    ['adminNav','adminMenuItems','nav-users','nav-opts','nav-theme','nav-carryover'].forEach(id=>{
       const el=document.getElementById(id);
       if(el) el.style.display='none';
     });
