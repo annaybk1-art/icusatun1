@@ -2955,7 +2955,7 @@ function buildForm(p){
         ${fg('เวลา Admit',inp('Admit (Time)','time',p['Admit (Time)']||timeV),'','',true)}
         ${fg('เตียง',sel('เตียง',o('beds'),p['เตียง'],'beds'),'','',true)}
         ${fg('ประเภทการรับ',sel('การรับ',['รับใหม่','รับย้าย','ยกมา'],p['การรับ']),'','',true)}
-        ${fg('Ward ที่รับ',quickAddSelectOpt('Ward ที่รับ',o('ward'),p['Ward ที่รับ'],'ward'),'','',true)}
+        ${fg('Ward ที่รับ',sel('Ward ที่รับ',WARD_OPTS,p['Ward ที่รับ']),'','',true)}
         ${fg('ผู้บันทึก Admit',sel('ผู้บันทึก Admit',o('recorderAdmit'),p['ผู้บันทึก Admit']||currentUser.fullname,'recorderAdmit'),'','',true)}
         ${fg('Unplanned ICU',sel('Unplanned ICU',['ใช่','ไม่ใช่'],p['Unplanned ICU']),'','',true)}
         ${fg('Re-admit ICU',sel('Re-admit ICU',['ใช่','ไม่ใช่'],p['Re-admit ICU']),'','',true)}
