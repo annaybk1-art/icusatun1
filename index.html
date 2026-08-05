@@ -3157,8 +3157,33 @@ function msdClose(id){const l=document.getElementById(id+'-list');if(l)l.classLi
 function msdChange(id,fieldName){const items=document.querySelectorAll(`#${CSS.escape(id)}-items input[type=checkbox]:checked`);const vals=Array.from(items).map(cb=>cb.value);const h=document.getElementById(id+'-hidden'),d=document.getElementById(id+'-display');if(h)h.value=vals.join(', ');if(d)d.textContent=vals.length?vals.join(', '):'-- เลือกได้หลายตัว --';}
 function msdClear(id){document.querySelectorAll(`#${CSS.escape(id)}-items input[type=checkbox]`).forEach(cb=>cb.checked=false);const h=document.getElementById(id+'-hidden'),d=document.getElementById(id+'-display');if(h)h.value='';if(d)d.textContent='-- เลือกได้หลายตัว --';}
 function msdFilter(id,q){document.querySelectorAll(`#${CSS.escape(id)}-items .msd-item`).forEach(item=>{const t=item.querySelector('span')?.textContent.toLowerCase()||'';item.style.display=t.includes(q.toLowerCase())?'':' none';});}
+function showInlinePrompt(label){
+  return new Promise(resolve=>{
+    const old=document.getElementById('inlinePromptBox');
+    if(old) old.remove();
+    const box=document.createElement('div');
+    box.id='inlinePromptBox';
+    box.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:white;border-radius:12px;padding:20px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.25);width:min(320px,90vw)';
+    box.innerHTML=`
+      <div style="font-size:13px;font-weight:700;margin-bottom:10px;color:#1b5e20">${label}</div>
+      <input id="inlinePromptInput" type="text" style="width:100%;padding:8px 12px;border:1.5px solid #a5d6a7;border-radius:8px;font-size:14px;outline:none;box-sizing:border-box" placeholder="พิมพ์ที่นี่...">
+      <div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">
+        <button onclick="document.getElementById('inlinePromptBox').remove();window._inlinePromptResolve('')" style="padding:6px 16px;border-radius:8px;border:1.5px solid #ccc;background:white;cursor:pointer;font-size:13px">ยกเลิก</button>
+        <button onclick="const v=document.getElementById('inlinePromptInput').value;document.getElementById('inlinePromptBox').remove();window._inlinePromptResolve(v)" style="padding:6px 16px;border-radius:8px;border:none;background:#2e7d32;color:white;cursor:pointer;font-size:13px;font-weight:700">ตกลง</button>
+      </div>`;
+    window._inlinePromptResolve=resolve;
+    document.body.appendChild(box);
+    setTimeout(()=>document.getElementById('inlinePromptInput')?.focus(),100);
+    // กด Enter = ตกลง
+    box.querySelector('input').addEventListener('keydown',e=>{
+      if(e.key==='Enter'){const v=e.target.value;box.remove();resolve(v);}
+      if(e.key==='Escape'){box.remove();resolve('');}
+    });
+  });
+}
+
 async function quickAddToMsd(optKey,msdId,fieldName){
-  const v=prompt('เพิ่มรายการใหม่ (จะใช้ได้ทันที แต่ต้องรอ Admin อนุมัติอย่างเป็นทางการ):');
+  const v=await showInlinePrompt('เพิ่มรายการใหม่:');
   if(!v||!v.trim())return;
   const trimmed=v.trim();
   if(_opts[optKey] && _opts[optKey].includes(trimmed)){toast('มีรายการนี้อยู่แล้ว');return;}
@@ -3182,7 +3207,7 @@ async function quickAddToMsd(optKey,msdId,fieldName){
 
 // ปุ่ม ＋ ข้าง select dropdown ปกติ — เพิ่มแล้วใช้ได้ทันที + เข้าคิวรออนุมัติ
 async function quickAddSelectOpt(optKey, fieldName){
-  const v=prompt('เพิ่มรายการใหม่ (จะใช้ได้ทันที แต่ต้องรอ Admin อนุมัติอย่างเป็นทางการ):');
+  const v=await showInlinePrompt('เพิ่มรายการใหม่:');
   if(!v||!v.trim())return;
   const trimmed=v.trim();
   if(_opts[optKey] && _opts[optKey].includes(trimmed)){toast('มีรายการนี้อยู่แล้ว');return;}
