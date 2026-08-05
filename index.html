@@ -134,7 +134,7 @@ body.has-marquee .sidebar{padding-top:28px}
 body.has-marquee .edit-sidebar{top:calc(var(--topbar-h) + 28px)}
 .main.full-width{margin-left:0}
 .sec{display:none}.sec.active{display:block}
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:white;border-top:1px solid var(--g200);z-index:999;flex-direction:row;align-items:stretch}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:white;border-top:1px solid var(--g200);z-index:9999;flex-direction:row;align-items:stretch;transform:none!important}
 .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--gray500);font-size:9px;font-weight:600;border:none;background:none;font-family:'Sarabun',sans-serif;padding:4px 2px}
 .bn-item svg{width:18px;height:18px}
 .bn-item.active{color:var(--g700)}
@@ -3263,7 +3263,7 @@ async function savePatient(){
   }
   // ─────────────────────────────────────────────────────────
 
-  const baseReq={'ชื่อ-สกุล':'ชื่อ-สกุล','HN':'HN','อายุ':'อายุ','สิทธิ':'สิทธิ์','Admit (Date)':'วันที่ Admit','Admit (Time)':'เวลา Admit','เตียง':'เตียง','การรับ':'ประเภทการรับ','Ward ที่รับ':'Ward ที่รับ','ผู้บันทึก Admit':'ผู้บันทึก Admit','Unplanned ICU':'Unplanned ICU','Re-admit ICU':'Re-admit ICU','ประเภทผู้ป่วย':'ประเภทผู้ป่วย','Falling':'Falling score','ผ่าตัด':'ผ่าตัด','Diagnosis แรกรับ':'Diagnosis แรกรับ (Dx)','U/D':'โรคประจำตัว (U/D)'};
+  const baseReq={'ชื่อ-สกุล':'ชื่อ-สกุล','HN':'HN','อายุ':'อายุ','สิทธิ':'สิทธิ์','Admit (Date)':'วันที่ Admit','Admit (Time)':'เวลา Admit','เตียง':'เตียง','การรับ':'ประเภทการรับ','ผู้บันทึก Admit':'ผู้บันทึก Admit','Unplanned ICU':'Unplanned ICU','Re-admit ICU':'Re-admit ICU','ประเภทผู้ป่วย':'ประเภทผู้ป่วย','Falling':'Falling score','ผ่าตัด':'ผ่าตัด','Diagnosis แรกรับ':'Diagnosis แรกรับ (Dx)','U/D':'โรคประจำตัว (U/D)'};
   const missing=Object.entries(baseReq).filter(([k])=>!data[k]).map(([,v])=>v);
   if(missing.length){toast('กรุณากรอก: '+missing.join(', '),true);return;}
   if(data['สถานะ']==='จำหน่ายแล้ว'){const dcReq={'D/C (Date)':'วันที่ D/C','D/C (Time)':'เวลา D/C','เหตุผลจำหน่าย':'เหตุผลจำหน่าย','Ward/Hospital':'Ward/Hospital','CPR':'CPR','Palliative':'Palliative'};const mDC=Object.entries(dcReq).filter(([k])=>!data[k]).map(([,v])=>v);if(mDC.length){toast('🚪 D/C: '+mDC.join(', '),true);return;}}
